@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
@@ -27,7 +28,7 @@ use Wildside\Userstamps\Userstamps;
  */
 class Paiement extends Model
 {
-    use SoftDeletes, Userstamps;
+    use SoftDeletes, Userstamps, Sluggable;
     /**
      * @var array
      */
@@ -55,5 +56,14 @@ class Paiement extends Model
     public function modePaiement()
     {
         return $this->belongsTo('App\Models\ModePaiement');
+    }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => ['employee.nom', 'employee.prenoms', 'date_debut', 'date_fin']
+            ]
+        ];
     }
 }
