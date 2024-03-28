@@ -44,4 +44,9 @@ class Fonction extends Model
             ],
         ];
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

@@ -120,4 +120,9 @@ class Employee extends Model
             ],
         ];
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

@@ -46,4 +46,9 @@ class Annee extends Model
             ],
         ];
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

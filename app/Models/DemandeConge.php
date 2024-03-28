@@ -47,4 +47,9 @@ class DemandeConge extends Model
             ],
         ];
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

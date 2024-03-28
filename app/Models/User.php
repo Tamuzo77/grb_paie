@@ -63,6 +63,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         ];
     }
 
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return true;
