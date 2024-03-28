@@ -11,6 +11,7 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
 use Filament\Widgets;
 use Hasnayeen\Themes\Http\Middleware\SetTheme;
 use Hasnayeen\Themes\ThemesPlugin;
@@ -52,10 +53,14 @@ class AdminPanelProvider extends PanelProvider
                 'success' => '#00e5aa',
                 'warning' => '#bb9900',
                 'error' => '#ff8a90',
+                'gray' => Color::Slate,
+
             ])
+//            ->font('K2D')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
+            ->sidebarFullyCollapsibleOnDesktop()
             ->pages([
                 Pages\Dashboard::class,
             ])
