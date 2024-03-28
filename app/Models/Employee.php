@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
 /**
- * @property integer $id
- * @property integer $annee_id
- * @property integer $client_id
- * @property integer $bank_id
+ * @property int $id
+ * @property int $annee_id
+ * @property int $client_id
+ * @property int $bank_id
  * @property string $slug
  * @property string $npi
  * @property string $nom
@@ -22,22 +22,22 @@ use Wildside\Userstamps\Userstamps;
  * @property string $lieu_naissance
  * @property string $situation_matrimoniale
  * @property string $sexe
- * @property integer $nb_enfants
+ * @property int $nb_enfants
  * @property string $date_embauche
  * @property string $date_depart
  * @property string $categorie
- * @property boolean $cadre
- * @property integer $salaire
+ * @property bool $cadre
+ * @property int $salaire
  * @property string $numero_compte
- * @property integer $tauxIts
- * @property integer $tauxCnss
- * @property integer $nb_jours_conges_acquis
- * @property integer $solde_jours_conges_payes
+ * @property int $tauxIts
+ * @property int $tauxCnss
+ * @property int $nb_jours_conges_acquis
+ * @property int $solde_jours_conges_payes
  * @property string $created_at
  * @property string $updated_at
- * @property integer $created_by
- * @property integer $updated_by
- * @property integer $deleted_by
+ * @property int $created_by
+ * @property int $updated_by
+ * @property int $deleted_by
  * @property string $deleted_at
  * @property Fonction[] $fonctions
  * @property Annee $annee
@@ -49,7 +49,8 @@ use Wildside\Userstamps\Userstamps;
  */
 class Employee extends Model
 {
-    use SoftDeletes, Userstamps, Sluggable;
+    use Sluggable, SoftDeletes, Userstamps;
+
     /**
      * @var array
      */
@@ -110,12 +111,13 @@ class Employee extends Model
     {
         return $this->hasMany('App\Models\DemandeConge');
     }
+
     public function sluggable(): array
     {
         return [
             'slug' => [
-                'source' => ['nom', 'prenoms', 'client.nom']
-            ]
+                'source' => ['nom', 'prenoms', 'client.nom'],
+            ],
         ];
     }
 }

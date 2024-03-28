@@ -8,22 +8,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
 /**
- * @property integer $id
+ * @property int $id
  * @property string $slug
  * @property string $code
  * @property string $name
  * @property string $created_at
  * @property string $updated_at
- * @property integer $created_by
- * @property integer $updated_by
- * @property integer $deleted_by
+ * @property int $created_by
+ * @property int $updated_by
+ * @property int $deleted_by
  * @property string $deleted_at
  * @property Client[] $clients
  * @property Employee[] $employees
  */
 class Bank extends Model
 {
-    use SoftDeletes, Userstamps, Sluggable;
+    use Sluggable, SoftDeletes, Userstamps;
+
     /**
      * @var array
      */
@@ -49,8 +50,8 @@ class Bank extends Model
     {
         return [
             'slug' => [
-                'source' => 'name'
-            ]
+                'source' => 'name',
+            ],
         ];
     }
 }

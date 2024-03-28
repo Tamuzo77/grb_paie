@@ -8,19 +8,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
 /**
- * @property integer $id
- * @property integer $employee_id
- * @property integer $type_paiement_id
- * @property integer $mode_paiement_id
+ * @property int $id
+ * @property int $employee_id
+ * @property int $type_paiement_id
+ * @property int $mode_paiement_id
  * @property string $slug
  * @property string $date_debut
  * @property string $date_fin
- * @property integer $solde
+ * @property int $solde
  * @property string $created_at
  * @property string $updated_at
- * @property integer $created_by
- * @property integer $updated_by
- * @property integer $deleted_by
+ * @property int $created_by
+ * @property int $updated_by
+ * @property int $deleted_by
  * @property string $deleted_at
  * @property Employee $employee
  * @property TypePaiement $typePaiement
@@ -28,7 +28,8 @@ use Wildside\Userstamps\Userstamps;
  */
 class Paiement extends Model
 {
-    use SoftDeletes, Userstamps, Sluggable;
+    use Sluggable, SoftDeletes, Userstamps;
+
     /**
      * @var array
      */
@@ -62,8 +63,8 @@ class Paiement extends Model
     {
         return [
             'slug' => [
-                'source' => ['employee.nom', 'employee.prenoms', 'date_debut', 'date_fin']
-            ]
+                'source' => ['employee.nom', 'employee.prenoms', 'date_debut', 'date_fin'],
+            ],
         ];
     }
 }

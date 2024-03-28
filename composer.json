@@ -9,7 +9,9 @@
         "cviebrock/eloquent-sluggable": "^10.0",
         "filament/filament": "^3.2",
         "guzzlehttp/guzzle": "^7.2",
+        "hasnayeen/themes": "^3.0",
         "inertiajs/inertia-laravel": "^0.6.3",
+        "jeffgreco13/filament-breezy": "^2.3",
         "krlove/eloquent-model-generator": "^2.0",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
@@ -41,6 +43,8 @@
         }
     },
     "scripts": {
+        "pest": "./vendor/bin/pest",
+        "pint": "./vendor/bin/pint",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
