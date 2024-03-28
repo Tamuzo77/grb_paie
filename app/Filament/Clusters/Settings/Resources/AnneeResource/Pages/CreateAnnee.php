@@ -3,7 +3,6 @@
 namespace App\Filament\Clusters\Settings\Resources\AnneeResource\Pages;
 
 use App\Filament\Clusters\Settings\Resources\AnneeResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateAnnee extends CreateRecord
@@ -12,7 +11,8 @@ class CreateAnnee extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-         $data['nom'] = date('Y', $data['debut']) . ' - ' . date('Y', $data['fin']);
-         return $data;
+        $data['nom'] = date('Y', $data['debut']).' - '.date('Y', $data['fin']);
+
+        return $data;
     }
 }

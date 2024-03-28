@@ -4,16 +4,12 @@ namespace App\Filament\Clusters\Settings\Resources;
 
 use App\Filament\Clusters\Settings;
 use App\Filament\Clusters\Settings\Resources\AnneeResource\Pages;
-use App\Filament\Clusters\Settings\Resources\AnneeResource\RelationManagers;
 use App\Models\Annee;
-use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AnneeResource extends Resource
 {
@@ -53,13 +49,13 @@ class AnneeResource extends Resource
                     ->trueLabel('Toutes')
                     ->falseLabel('Archives')
                     ->label('Corbeille')
-                    ->placeholder('Années')
+                    ->placeholder('Années'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
-                Tables\Actions\ForceDeleteAction::make()
+                Tables\Actions\ForceDeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -81,7 +77,7 @@ class AnneeResource extends Resource
     {
         return [
             'index' => Pages\ListAnnees::route('/'),
-//            'create' => Pages\CreateAnnee::route('/create'),
+            //            'create' => Pages\CreateAnnee::route('/create'),
             'edit' => Pages\EditAnnee::route('/{record}/edit'),
         ];
     }

@@ -6,7 +6,6 @@ use App\Filament\Clusters\Settings\Resources\AnneeResource;
 use Filament\Actions;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Set;
 use Filament\Resources\Pages\ListRecords;
@@ -21,7 +20,7 @@ class ListAnnees extends ListRecords
             Actions\CreateAction::make()
                 ->modalHeading("Session d'exercice")
                 ->form([
-                    Fieldset::make("Ouvrir une nouvelle année")
+                    Fieldset::make('Ouvrir une nouvelle année')
                         ->schema([
                             TextInput::make('nom')
                                 ->label('Session')
@@ -32,17 +31,16 @@ class ListAnnees extends ListRecords
                                 ->required()
                                 ->columnSpan(1)
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('nom', state: date('Y', strtotime($state)) ) )
+                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('nom', state: date('Y', strtotime($state))))
                                 ->placeholder('Date de début de l\'année'),
                             DatePicker::make('fin')
                                 ->label('Date de fin')
                                 ->required()
                                 ->columnSpan(1)
                                 ->placeholder('Date de fin de l\'année'),
-                        ])
+                        ]),
 
-
-                ])->modalWidth('xl')
+                ])->modalWidth('xl'),
         ];
     }
 }

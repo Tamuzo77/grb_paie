@@ -56,51 +56,51 @@ class BankResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label("Création")
+                    ->label('Création')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label("Dernière modification")
+                    ->label('Dernière modification')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->label("Suppression")
+                    ->label('Suppression')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-//                Tables\Filters\TernaryFilter::make('deleted_at')
-//                    ->label('Corbeille')
-//                    ->placeholder('Sans banques archivées')
-//                    ->trueLabel('Avec banques archivées')
-//                    ->falseLabel('Banques archivées seulement')
-//                    ->queries(
-//                        true: fn (Builder $query) => $query->withTrashed()->get(),
-//                        false: fn (Builder $query) => $query->onlyTrashed()->get(),
-//                        blank: fn (Builder $query) => $query->withoutTrashed()->get(),
-//                    )
-            Tables\Filters\TrashedFilter::make()
-                ->trueLabel('Avec banques archivées')
-                ->falseLabel('Banques archivées seulement')
-                ->label('Corbeille')
-                ->placeholder('Sans banques archivées')
+                //                Tables\Filters\TernaryFilter::make('deleted_at')
+                //                    ->label('Corbeille')
+                //                    ->placeholder('Sans banques archivées')
+                //                    ->trueLabel('Avec banques archivées')
+                //                    ->falseLabel('Banques archivées seulement')
+                //                    ->queries(
+                //                        true: fn (Builder $query) => $query->withTrashed()->get(),
+                //                        false: fn (Builder $query) => $query->onlyTrashed()->get(),
+                //                        blank: fn (Builder $query) => $query->withoutTrashed()->get(),
+                //                    )
+                Tables\Filters\TrashedFilter::make()
+                    ->trueLabel('Avec banques archivées')
+                    ->falseLabel('Banques archivées seulement')
+                    ->label('Corbeille')
+                    ->placeholder('Sans banques archivées'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
-                Tables\Actions\ForceDeleteAction::make()
+                Tables\Actions\ForceDeleteAction::make(),
 
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make()
+                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }
