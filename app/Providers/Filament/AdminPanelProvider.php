@@ -66,7 +66,6 @@ class AdminPanelProvider extends PanelProvider
                         rules: [Password::default()->mixedCase()->uncompromised(3)],
                     )
                     ->enableTwoFactorAuthentication(
-                        force: true
                     ),
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
