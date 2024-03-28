@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -62,6 +63,7 @@ class AdminPanelProvider extends PanelProvider
                     ->myProfile(
                         hasAvatars: true,
                     )
+                    ->avatarUploadComponent(fn()=> FileUpload::make('avatar')->imageEditor()->storeFiles(condition: true)->directory('usersAvatars')->avatar())
                     ->passwordUpdateRules(
                         rules: [Password::default()->mixedCase()->uncompromised(3)],
                     )
