@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Panel;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 use Wildside\Userstamps\Userstamps;
 use Illuminate\Support\Facades\Storage;
 use Filament\Models\Contracts\HasAvatar;
