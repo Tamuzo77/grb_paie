@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
@@ -49,7 +50,7 @@ use Wildside\Userstamps\Userstamps;
  */
 class Employee extends Model
 {
-    use Sluggable, SoftDeletes, Userstamps;
+    use Sluggable, SoftDeletes, Userstamps, HasFactory;
 
     /**
      * @var array
