@@ -20,6 +20,7 @@ class EmployeeFactory extends Factory
     public function definition(): array
     {
         $salaire = rand(0, 90000000);
+
         return [
             'nom' => fake()->lastName,
             'prenoms' => fake()->firstName,
@@ -32,10 +33,10 @@ class EmployeeFactory extends Factory
             'categorie' => fake()->jobTitle,
             'date_naissance' => fake()->date(),
             'lieu_naissance' => fake()->city,
-            'nb_enfants' => rand(0,8),
-            'sexe' => array_rand(['M','F','I']),
-            'tauxIts' => ItsService::getIts(rand($salaire)),
-            'situation_matrimoniale' => fake()->realText(3),
+            'nb_enfants' => rand(0, 8),
+            'sexe' => 'M',
+            'tauxIts' => ItsService::getIts($salaire),
+            'situation_matrimoniale' => fake()->word(),
             'npi' => rand(1000000000000000, 9999999999999999),
             'numero_compte' => fake()->creditCardNumber,
         ];

@@ -50,7 +50,7 @@ use Wildside\Userstamps\Userstamps;
  */
 class Employee extends Model
 {
-    use Sluggable, SoftDeletes, Userstamps, HasFactory;
+    use HasFactory, Sluggable, SoftDeletes, Userstamps;
 
     /**
      * @var array
