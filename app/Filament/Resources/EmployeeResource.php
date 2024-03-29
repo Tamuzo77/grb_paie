@@ -43,6 +43,19 @@ class EmployeeResource extends Resource
                             ->label('Catégorie')
                             ->maxLength(10)
                             ->default(null),
+                        Forms\Components\Select::make('fonctions')
+                            ->label('Fonctions')
+                            ->relationship(titleAttribute:  'nom')
+                            ->multiple()
+                            ->searchable()
+                            ->columnSpan(2)
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('nom')
+                                    ->required()
+                                    ->maxLength(255),
+                            ])
+                            ->optionsLimit(5)
+                            ->preload(),
                         ToggleButtons::make('cadre')
                             ->label('Est il cadre ?')
                             ->options([
@@ -58,7 +71,8 @@ class EmployeeResource extends Resource
                         Forms\Components\DatePicker::make('date_embauche'),
                         Forms\Components\DatePicker::make('date_depart'),
 
-                    ]),
+                    ])
+                    ->columns(3),
                 Forms\Components\Fieldset::make(label: 'Informations personnelles')
                     ->schema([
                         Forms\Components\TextInput::make('npi')
