@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    protected $toTruncate = ['banks', 'clients'];
+    protected $toTruncate = ['banks', 'clients', 'annees', 'employees'];
 
     /**
      * Seed the application's database.
