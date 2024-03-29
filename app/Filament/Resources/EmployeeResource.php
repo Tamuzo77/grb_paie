@@ -10,8 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Database\Eloquent\Model;
 
 class EmployeeResource extends Resource
 {
@@ -20,6 +18,7 @@ class EmployeeResource extends Resource
     protected static ?string $modelLabel = 'Employés';
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
     protected static ?string $recordTitleAttribute = 'nom';
 
     public static function form(Form $form): Form
@@ -45,7 +44,7 @@ class EmployeeResource extends Resource
                             ->default(null),
                         Forms\Components\Select::make('fonctions')
                             ->label('Fonctions')
-                            ->relationship(titleAttribute:  'nom')
+                            ->relationship(titleAttribute: 'nom')
                             ->multiple()
                             ->searchable()
                             ->columnSpan(2)

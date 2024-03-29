@@ -8,13 +8,13 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class EmployeesRelationManager extends RelationManager
 {
     protected static string $relationship = 'employees';
+
     protected static ?string $modelLabel = 'Employé';
+
     protected static ?string $title = 'Employés';
 
     public function form(Form $form): Form
@@ -29,7 +29,7 @@ class EmployeesRelationManager extends RelationManager
                             ->default(null),
                         Forms\Components\Select::make('fonctions')
                             ->label('Fonctions')
-                            ->relationship(titleAttribute:  'nom')
+                            ->relationship(titleAttribute: 'nom')
                             ->multiple()
                             ->searchable()
                             ->columnSpan(2)

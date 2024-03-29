@@ -4,15 +4,12 @@ namespace App\Filament\Clusters\Settings\Resources;
 
 use App\Filament\Clusters\Settings;
 use App\Filament\Clusters\Settings\Resources\FonctionResource\Pages;
-use App\Filament\Clusters\Settings\Resources\FonctionResource\RelationManagers;
 use App\Models\Fonction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class FonctionResource extends Resource
 {
@@ -85,8 +82,8 @@ class FonctionResource extends Resource
     {
         return [
             'index' => Pages\ListFonctions::route('/'),
-//            'create' => Pages\CreateFonction::route('/create'),
-//            'edit' => Pages\EditFonction::route('/{record}/edit'),
+            //            'create' => Pages\CreateFonction::route('/create'),
+            //            'edit' => Pages\EditFonction::route('/{record}/edit'),
         ];
     }
 }

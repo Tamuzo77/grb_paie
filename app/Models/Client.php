@@ -30,7 +30,7 @@ use Wildside\Userstamps\Userstamps;
  */
 class Client extends Model
 {
-    use Sluggable, SoftDeletes, Userstamps, HasFactory;
+    use HasFactory, Sluggable, SoftDeletes, Userstamps;
 
     /**
      * @var array
