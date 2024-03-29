@@ -2,17 +2,12 @@
 
 namespace App\Filament\Resources\EmployeeResource\RelationManagers;
 
-use App\Models\Client;
-use App\Models\Employee;
 use Filament\Forms;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class DemandeCongesRelationManager extends RelationManager
 {

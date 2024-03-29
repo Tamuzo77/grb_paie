@@ -4,22 +4,21 @@ namespace App\Filament\Clusters\Settings\Resources;
 
 use App\Filament\Clusters\Settings;
 use App\Filament\Clusters\Settings\Resources\ModePaiementResource\Pages;
-use App\Filament\Clusters\Settings\Resources\ModePaiementResource\RelationManagers;
 use App\Models\ModePaiement;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ModePaiementResource extends Resource
 {
     protected static ?string $model = ModePaiement::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cursor-arrow-ripple';
+
     protected static ?int $navigationSort = 5;
+
     protected static ?string $modelLabel = 'Mode Paiement';
 
     protected static ?string $cluster = Settings::class;

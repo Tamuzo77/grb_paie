@@ -14,11 +14,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 use Wildside\Userstamps\Userstamps;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
-    use HasApiTokens, HasFactory, Notifiable, Sluggable, SoftDeletes, TwoFactorAuthenticatable, Userstamps;
+    use HasApiTokens, HasFactory, Notifiable, Sluggable, SoftDeletes, TwoFactorAuthenticatable, Userstamps, HasRoles;
 
     /**
      * The attributes that are mass assignable.

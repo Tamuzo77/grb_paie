@@ -4,22 +4,21 @@ namespace App\Filament\Clusters\Settings\Resources;
 
 use App\Filament\Clusters\Settings;
 use App\Filament\Clusters\Settings\Resources\TypePaiementResource\Pages;
-use App\Filament\Clusters\Settings\Resources\TypePaiementResource\RelationManagers;
 use App\Models\TypePaiement;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TypePaiementResource extends Resource
 {
     protected static ?string $model = TypePaiement::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-swatch';
-    protected static ?string $modelLabel= 'Type Paiement';
+
+    protected static ?string $modelLabel = 'Type Paiement';
+
     protected static ?int $navigationSort = 6;
 
     protected static ?string $cluster = Settings::class;
