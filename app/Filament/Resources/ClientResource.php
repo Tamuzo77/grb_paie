@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ClientResource\Pages;
-use App\Filament\Resources\ClientResource\RelationManagers;
 use App\Models\Client;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ClientResource extends Resource
 {
@@ -33,7 +30,7 @@ class ClientResource extends Resource
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('nom')
                                     ->required()
-                                    ->helperText("Nom complet")
+                                    ->helperText('Nom complet')
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('adresse')
                                     ->required()
@@ -50,7 +47,7 @@ class ClientResource extends Resource
                                     ->required()
                                     ->maxLength(255),
                                 Forms\Components\Select::make('bank_id')
-                                    ->label("Banque")
+                                    ->label('Banque')
                                     ->live()
                                     ->relationship('bank', 'code')
                                     ->searchable()
@@ -62,12 +59,11 @@ class ClientResource extends Resource
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('prenom_donneur_ordre')
                                     ->required()
-                                    ->label("Prénoms donneur ordre")
+                                    ->label('Prénoms donneur ordre')
                                     ->maxLength(255),
                             ])
-                            ->grow()
+                            ->grow(),
                     ]),
-
 
             ]);
     }
@@ -127,7 +123,7 @@ class ClientResource extends Resource
     public static function getGloballySearchableAttributes(): array
     {
         return [
-            'nom'
+            'nom',
         ];
     }
 }

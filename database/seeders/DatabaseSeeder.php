@@ -16,11 +16,11 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        //        \App\Models\User::factory()->create([
-        //            'name' => 'GRB Admin',
-        //            'email' => 'jellaltamuzo@gmail.com',
-        //            'password' => bcrypt('password'),
-        //        ]);
+        \App\Models\User::factory()->create([
+            'name' => 'GRB Admin',
+            'email' => 'jellaltamuzo@gmail.com',
+            'password' => bcrypt('password'),
+        ]);
 
         $this->call(BankSeeder::class);
     }
