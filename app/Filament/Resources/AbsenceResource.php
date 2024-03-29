@@ -2,36 +2,36 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DemandeCongeResource\Pages;
-use App\Filament\Resources\DemandeCongeResource\RelationManagers;
+use App\Filament\Resources\AbsenceResource\Pages;
+use App\Filament\Resources\AbsenceResource\RelationManagers;
+use App\Models\Absence;
 use App\Models\Client;
-use App\Models\DemandeConge;
 use App\Models\Employee;
 use Filament\Forms;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class DemandeCongeResource extends Resource
+class AbsenceResource extends Resource
 {
-    protected static ?string $model = DemandeConge::class;
-    protected static ?string $modelLabel = 'Congés';
-    protected static ?int $navigationSort = 3;
+    protected static ?string $model = Absence::class;
+    protected static ?string $modelLabel = 'Absences';
+    protected static ?int $navigationSort = 4;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+
+    protected static ?string $navigationIcon = 'heroicon-o-question-mark-circle';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Demande de congés')
-                    ->description('Enregsitrement des demandes de congés des employés')
+                Forms\Components\Section::make('Absences')
+                    ->description('Enregsitrement des absences des employés')
                     ->schema([
                         Forms\Components\Select::make('client_id')
                             ->live()
@@ -55,22 +55,23 @@ class DemandeCongeResource extends Resource
                             ->preload(),
                         Forms\Components\DateTimePicker::make('date_debut'),
                         Forms\Components\DateTimePicker::make('date_fin'),
-                        ToggleButtons::make('statut')
-                            ->label('Statut')
+                        ToggleButtons::make('deductible')
+                            ->label('Est elle déductible ?')
                             ->options([
-                                'paye' => 'Payé',
-                                'non paye' => 'Non Payé',
+                                '1' => 'Oui',
+                                '0' => 'Non',
                             ])
                             ->colors([
-                                'paye' => 'accent',
-                                'non paye' => 'error',
+                                '1' => 'accent',
+                                '0' => 'error',
                             ])
                             ->grouped()
                             ->inline(),
+                        Forms\Components\Textarea::make('motif')
+                            ->default(null),
                     ]),
 
-            ])
-            ->columns(1);
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -80,6 +81,7 @@ class DemandeCongeResource extends Resource
                 Tables\Columns\TextColumn::make('employee.client.nom')
                     ->searchable(isIndividual: true)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('employee.nom')
                     ->description(fn($record) => $record->employee->prenoms)
                     ->numeric()
@@ -90,15 +92,15 @@ class DemandeCongeResource extends Resource
                 Tables\Columns\TextColumn::make('date_fin')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('statut')
+                Tables\Columns\IconColumn::make('deductible')
                     ->icon(fn (string $state): string => match ($state) {
-                        'non paye' => 'heroicon-o-x-circle',
-                        'paye' => 'heroicon-o-check-circle',
+                        '0' => 'heroicon-o-x-circle',
+                        '1' => 'heroicon-o-check-circle',
                         default => 'heroicon-o-information-circle',
                     })
                     ->color(fn (string $state): string => match ($state) {
-                        'non paye' => 'gray',
-                        'paye' => 'success',
+                        '0' => 'gray',
+                        '1' => 'success',
                         default => 'accent',
                     }),
                 Tables\Columns\TextColumn::make('created_at')
@@ -146,9 +148,9 @@ class DemandeCongeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDemandeConges::route('/'),
-            'create' => Pages\CreateDemandeConge::route('/create'),
-            'edit' => Pages\EditDemandeConge::route('/{record}/edit'),
+            'index' => Pages\ListAbsences::route('/'),
+            'create' => Pages\CreateAbsence::route('/create'),
+            'edit' => Pages\EditAbsence::route('/{record}/edit'),
         ];
     }
 }

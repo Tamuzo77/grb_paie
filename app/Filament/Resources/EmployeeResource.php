@@ -3,6 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmployeeResource\Pages;
+use App\Filament\Resources\EmployeeResource\RelationManagers\AbsencesRelationManager;
+use App\Filament\Resources\EmployeeResource\RelationManagers\DemandeCongesRelationManager;
 use App\Models\Employee;
 use Filament\Forms;
 use Filament\Forms\Components\ToggleButtons;
@@ -220,7 +222,8 @@ class EmployeeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            DemandeCongesRelationManager::class,
+            AbsencesRelationManager::class,
         ];
     }
 
