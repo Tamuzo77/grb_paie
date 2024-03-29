@@ -17,6 +17,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "owenvoke/blade-fontawesome": "^2.6",
+        "pxlrbt/filament-spotlight": "^1.2",
         "tightenco/ziggy": "^2.0",
         "wildside/userstamps": "^2.4"
     },

@@ -16,4 +16,9 @@ class EditClient extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    public static function shouldRegisterSpotlight(): bool
+    {
+        return false;
+    }
 }

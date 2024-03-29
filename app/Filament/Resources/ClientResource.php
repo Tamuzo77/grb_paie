@@ -15,6 +15,7 @@ class ClientResource extends Resource
     protected static ?string $model = Client::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
+    protected static ?string $recordTitleAttribute = 'nom';
 
     public static function form(Form $form): Form
     {
@@ -125,5 +126,10 @@ class ClientResource extends Resource
         return [
             'nom',
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return Client::count();
     }
 }

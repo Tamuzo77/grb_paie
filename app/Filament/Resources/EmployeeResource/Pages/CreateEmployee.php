@@ -14,7 +14,8 @@ class CreateEmployee extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['tauxIts'] = ItsService::getIts($data['salaire']);
-        $data['annee_id'] = Annee::latest()->get('id');
+        $annee = Annee::latest()->first()->get();
+        $data['annee_id'] = $annee[0]['id'] ?? 1 ;
 
         return $data;
     }

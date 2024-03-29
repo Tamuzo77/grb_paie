@@ -10,6 +10,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 
 class EmployeeResource extends Resource
 {
@@ -18,6 +20,7 @@ class EmployeeResource extends Resource
     protected static ?string $modelLabel = 'Employés';
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $recordTitleAttribute = 'nom';
 
     public static function form(Form $form): Form
     {
@@ -38,7 +41,7 @@ class EmployeeResource extends Resource
                             ->preload(),
                         Forms\Components\TextInput::make('categorie')
                             ->label('Catégorie')
-                            ->maxLength(255)
+                            ->maxLength(10)
                             ->default(null),
                         ToggleButtons::make('cadre')
                             ->label('Est il cadre ?')
@@ -60,19 +63,20 @@ class EmployeeResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('npi')
                             ->label('Numero d\' idendentification personnelle (NPI)')
-                            ->maxLength(255)
+                            ->maxLength(16)
+                            ->numeric()
                             ->default(null),
                         Forms\Components\TextInput::make('nom')
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(8),
                         Forms\Components\TextInput::make('prenoms')
                             ->label('Prénoms')
-                            ->maxLength(255)
+                            ->maxLength(15)
                             ->default(null),
                         Forms\Components\TextInput::make('telephone')
                             ->tel()
                             ->prefix('+229')
-                            ->maxLength(255)
+                            ->maxLength(8)
                             ->default(null),
                         Forms\Components\TextInput::make('email')
                             ->email()
@@ -80,10 +84,10 @@ class EmployeeResource extends Resource
                             ->default(null),
                         Forms\Components\DatePicker::make('date_naissance'),
                         Forms\Components\TextInput::make('lieu_naissance')
-                            ->maxLength(255)
+                            ->maxLength(20)
                             ->default(null),
                         Forms\Components\TextInput::make('situation_matrimoniale')
-                            ->maxLength(255)
+                            ->maxLength(15)
                             ->default(null),
                         Forms\Components\Select::make('sexe')
                             ->options([
@@ -114,16 +118,18 @@ class EmployeeResource extends Resource
                             ->preload(),
                         Forms\Components\TextInput::make('numero_compte')
                             ->maxLength(255)
+                            ->numeric()
                             ->default(null),
                         Forms\Components\TextInput::make('salaire')
                             ->required()
                             ->numeric()
+                            ->suffix('FCFA')
                             ->default(0),
                         Forms\Components\TextInput::make('tauxCnss')
                             ->numeric()
                             ->maxLength(2)
                             ->suffix('%')
-                            ->default(null),
+                            ->default(0),
 
                     ]),
                 Forms\Components\Fieldset::make(label: 'Informations complémentaires')
@@ -145,19 +151,9 @@ class EmployeeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('annee_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('client.nom')
+                    ->searchable(isIndividual: true)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('client_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('bank_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('npi')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('nom')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('prenoms')
@@ -166,43 +162,11 @@ class EmployeeResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('date_naissance')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('lieu_naissance')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('situation_matrimoniale')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('sexe')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('nb_enfants')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('date_embauche')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('date_depart')
-                    ->date()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('categorie')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('cadre')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('salaire')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('numero_compte')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('tauxIts')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('tauxCnss')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('nb_jours_conges_acquis')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('solde_jours_conges_payes')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -213,29 +177,29 @@ class EmployeeResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_by')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('updated_by')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('deleted_by')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make()
+                    ->trueLabel('Historique')
+                    ->falseLabel('Archives')
+                    ->label('Corbeille')
+                    ->placeholder('Employés'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -254,5 +218,15 @@ class EmployeeResource extends Resource
             'create' => Pages\CreateEmployee::route('/create'),
             'edit' => Pages\EditEmployee::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return Employee::count();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['nom', 'prenoms'];
     }
 }
