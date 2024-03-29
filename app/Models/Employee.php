@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
@@ -49,7 +50,7 @@ use Wildside\Userstamps\Userstamps;
  */
 class Employee extends Model
 {
-    use Sluggable, SoftDeletes, Userstamps;
+    use HasFactory, Sluggable, SoftDeletes, Userstamps;
 
     /**
      * @var array
@@ -119,5 +120,10 @@ class Employee extends Model
                 'source' => ['nom', 'prenoms', 'client.nom'],
             ],
         ];
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

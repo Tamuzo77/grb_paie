@@ -16,9 +16,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
-class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
+
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
-    use HasApiTokens, HasFactory, Notifiable, Sluggable, SoftDeletes, TwoFactorAuthenticatable, Userstamps,Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Sluggable, SoftDeletes, TwoFactorAuthenticatable, Userstamps, HasRoles;
+
 
     /**
      * The attributes that are mass assignable.
@@ -61,6 +63,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
                 'source' => ['name', 'surname'],
             ],
         ];
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 
     public function canAccessPanel(Panel $panel): bool

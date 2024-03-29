@@ -7,6 +7,8 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
+    protected $toTruncate = ['banks', 'clients', 'annees', 'employees'];
+
     /**
      * Seed the application's database.
      */
@@ -19,5 +21,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'jellaltamuzo@gmail.com',
             'password' => bcrypt('password'),
         ]);
+        //
+        $this->call(AnneeSeeder::class);
+        $this->call(BankSeeder::class);
+        $this->call(ClientSeeder::class);
+        $this->call(EmployeeSeeder::class);
     }
 }
