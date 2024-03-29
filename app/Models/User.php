@@ -3,22 +3,22 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Cviebrock\EloquentSluggable\Sluggable;
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Storage;
-use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Wildside\Userstamps\Userstamps;
-
-class User extends Authenticatable implements FilamentUser, HasAvatar
+use Illuminate\Support\Facades\Storage;
+use Filament\Models\Contracts\HasAvatar;
+use Illuminate\Notifications\Notifiable;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
+class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, Sluggable, SoftDeletes, TwoFactorAuthenticatable, Userstamps;
+    use HasApiTokens, HasFactory, Notifiable, Sluggable, SoftDeletes, TwoFactorAuthenticatable, Userstamps,Notifiable;
 
     /**
      * The attributes that are mass assignable.
