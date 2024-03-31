@@ -3,13 +3,10 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Address;
-
 
 class VerificationCodeEmail extends Mailable
 {
@@ -25,6 +22,7 @@ class VerificationCodeEmail extends Mailable
 
     /**
      * Get the message envelope.
+     *
      * @return \Illuminate\Mail\Mailables\Envelope
      */
     // public function envelope(): Envelope
@@ -35,10 +33,11 @@ class VerificationCodeEmail extends Mailable
     // }
     public function envelope()
     {
-       return new Envelope(
-        subject: 'My Test Email',
-       );
+        return new Envelope(
+            subject: 'My Test Email',
+        );
     }
+
     /**
      * Get the message content definition.
      */
@@ -61,9 +60,6 @@ class VerificationCodeEmail extends Mailable
     }
 }
 
- 
 /**
 * Get the message envelope.
-*
-
 */

@@ -30,6 +30,7 @@ class ClientResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('matricule')
                                     ->required()
+                                    ->unique(ignoreRecord: true)
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('nom')
                                     ->required()
@@ -95,6 +96,11 @@ class ClientResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('cotisations')
+                    ->url(fn ($record) => static::getUrl('cotisations', ['record' =>$record]))
+                    ->icon('heroicon-o-currency-dollar')
+                    ->color('success')
+                    ->label('Cotisations'),
                 Tables\Actions\RestoreAction::make(),
                 Tables\Actions\ForceDeleteAction::make(),
             ])
@@ -120,6 +126,7 @@ class ClientResource extends Resource
             'index' => Pages\ListClients::route('/'),
             'create' => Pages\CreateClient::route('/create'),
             'edit' => Pages\EditClient::route('/{record}/edit'),
+            'cotisations' => Pages\CotisationsClient::route('/{record}/cotisations'),
         ];
     }
 

@@ -67,8 +67,10 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->navigationGroups([
+                NavigationGroup::make(label: 'Etats et Paiements'),
                 NavigationGroup::make(label: 'Paramètres')
                     ->icon('heroicon-o-cog-6-tooth'),
+
 
             ])
             ->plugins([
@@ -84,7 +86,7 @@ class AdminPanelProvider extends PanelProvider
                     ->enableTwoFactorAuthentication(
                     ),
                 SpotlightPlugin::make(),
-                FilamentShieldPlugin::make()
+                FilamentShieldPlugin::make(),
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
