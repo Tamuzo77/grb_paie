@@ -24,6 +24,10 @@ class TypePaiement extends Model
 {
     use Sluggable, SoftDeletes, Userstamps;
 
+    public const AVANCE = 1;
+    public const PRET = 3;
+    public const SALAIRE = 4;
+
     /**
      * @var array
      */

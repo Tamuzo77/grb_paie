@@ -149,6 +149,39 @@ class EmployeesRelationManager extends RelationManager
             ]);
     }
 
+    protected function getContentSection()
+    {
+        return Forms\Components\Section::make('solde')
+            ->schema([
+                Forms\Components\Grid::make(columns: 1)
+                    ->schema([
+                        Forms\Components\TextInput::make('salaire_mensuel')
+                            ->label('Salaire mensuel')
+                            ->placeholder('Salaire mensuel')
+                            ->numeric()
+                            ->hiddenLabel()
+                            ->readOnly()
+                            ->suffix('FCFA'),
+                        Forms\Components\Checkbox::make('trezieme_mois')
+                            ->label('Treizième mois')
+                            ->default(false),
+                        Forms\Components\TextInput::make('nb_jours_conges_payes')
+                            ->hiddenLabel()
+                            ->placeholder('Nombre de jours de congés payés')
+                            ->numeric()
+                            ->default(11)
+                            ->maxValue(19),
+                    ])->columnSpan(1),
+                Forms\Components\Grid::make()
+                    ->schema([
+                        Forms\Components\ViewField::make('solde_preview')
+                            ->label('Solde')
+                            ->columnSpanFull()
+                            ->view('filament.employee.solde.preview'),
+                    ])->columnSpan(2),
+            ])->columns(3);
+    }
+
     public function table(Table $table): Table
     {
         return $table
@@ -204,14 +237,22 @@ class EmployeesRelationManager extends RelationManager
                                 Forms\Components\TextInput::make('solde')
                                     ->required()
                                     ->numeric()
-                                    ->default(fn(Employee $record) => $record->salaire)
+                                    ->live(onBlur: true)
+                                    ->hidden(fn(Forms\Get $get) => $get('type_paiement_id') == TypePaiement::SALAIRE)
+                                    ->maxValue(function (Employee $record, Forms\Get $get) {
+                                        if ($get('type_paiement_id') == TypePaiement::AVANCE)
+                                            return $record->salaire;
+                                    })
+                                    ->default(fn (Employee $record) => $record->salaire)
                                     ->suffix('FCFA'),
                                 Forms\Components\Select::make('mode_paiement_id')
                                     ->label('Mode de paiement')
                                     ->searchable()
                                     ->options(ModePaiement::query()->pluck('nom', 'id'))
                                     ->preload()
-                                    ->columnSpan(1)
+                                    ->columnSpan(function (Forms\Get $get){
+                                        return $get('type_paiement_id') == TypePaiement::SALAIRE ? 2 : 1;
+                                    })
                                     ->optionsLimit(3)
                                     ->required(),
                                 Forms\Components\Select::make('type_paiement_id')
@@ -219,8 +260,9 @@ class EmployeesRelationManager extends RelationManager
                                     ->required()
                                     ->columnSpan(2)
                                     ->searchable()
+                                    ->live(onBlur: true)
                                     ->preload()
-                                    ->options(TypePaiement::query()->pluck('nom', 'id'))
+                                    ->options(TypePaiement::query()->where('nom', '!=', 'Salaire')->pluck('nom', 'id'))
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('nom')
                                             ->required()
@@ -236,7 +278,9 @@ class EmployeesRelationManager extends RelationManager
                                     ->columnSpan(2)
                                     ->label('Date de fin'),
 
-                            ])->columns(4)
+                            ])->columns(4),
+//                        $this->getContentSection(),
+
                     ])
                     ->action(function (array $data, Employee $record) {
                         try {
@@ -247,7 +291,7 @@ class EmployeesRelationManager extends RelationManager
                                 ->iconColor('tertiary')
                                 ->icon('heroicon-o-banknotes')
                                 ->send();
-                        }catch ( Exception $e){
+                        } catch (Exception $e) {
                             Notification::make('paiement non operer')
                                 ->title('Paiement non opéré')
                                 ->body('Paiement non opéré. Veuillez réessayer')

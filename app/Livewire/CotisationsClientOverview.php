@@ -21,7 +21,7 @@ use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class CotisationsClientOverview extends Component implements HasForms, HasTable
 {
-    use InteractsWithForms, InteractsWithTable, HasTabs;
+    use HasTabs, InteractsWithForms, InteractsWithTable;
 
     public $client;
 
@@ -57,8 +57,8 @@ class CotisationsClientOverview extends Component implements HasForms, HasTable
                     ->groupBy(['mois', 'employees.id', 'trimestre'])
             )
             ->columns([
-//                TextColumn::make('trimestre')
-//                    ->label('Trimestre'),
+                //                TextColumn::make('trimestre')
+                //                    ->label('Trimestre'),
                 TextColumn::make('mois')
                     ->label('Agent'),
                 TextColumn::make('total')
@@ -76,7 +76,7 @@ class CotisationsClientOverview extends Component implements HasForms, HasTable
                     ->exports([
                         ExcelExport::make('table')
                             ->fromTable()
-                            ->withFilename('cotisations')
+                            ->withFilename('cotisations'),
                     ])
                     ->label('Exporter'),
 
@@ -98,7 +98,6 @@ class CotisationsClientOverview extends Component implements HasForms, HasTable
                 }),
         ];
     }
-
 
     public function makeFilamentTranslatableContentDriver(): ?TranslatableContentDriver
     {

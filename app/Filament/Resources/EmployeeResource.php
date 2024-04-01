@@ -216,7 +216,7 @@ class EmployeeResource extends Resource
                     ->modalDescription('Voulez-vous vraiment effectuer un paiement pour cet employé ?')
                     ->icon('heroicon-o-banknotes')
                     ->color('tertiary')
-                    ->action(function (){
+                    ->action(function () {
                         Notification::make('not ready')
                             ->title('Fonctionnalité non disponible')
                             ->body('Cette fonctionnalité n\'est pas encore disponible')

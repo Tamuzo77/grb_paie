@@ -9,12 +9,12 @@ class PaiementObserver
     /**
      * Handle the Paiement "created" event.
      */
-
     public function creating(Paiement $paiement): void
     {
         $paiement->statut = 'en attente';
         $paiement->date_paiement = now();
     }
+
     public function created(Paiement $paiement): void
     {
         //

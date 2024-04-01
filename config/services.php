@@ -35,6 +35,6 @@ return [
         'public_key' => env('KKIAPAY_API_PUBLIC_KEY'),
         'private_key' => env('KKIAPAY_API_PRIVATE_KEY'),
         'secret' => env('KKIAPAY_API_SECRET'),
-    ]
+    ],
 
 ];
