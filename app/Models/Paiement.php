@@ -16,6 +16,9 @@ use Wildside\Userstamps\Userstamps;
  * @property string $date_debut
  * @property string $date_fin
  * @property int $solde
+ * @property string $statut
+ * @property string $date_paiement
+ * @property int $annee_id
  * @property string $created_at
  * @property string $updated_at
  * @property int $created_by
@@ -33,7 +36,7 @@ class Paiement extends Model
     /**
      * @var array
      */
-    protected $fillable = ['employee_id', 'type_paiement_id', 'mode_paiement_id', 'slug', 'date_debut', 'date_fin', 'solde', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
+    protected $fillable = ['employee_id', 'type_paiement_id', 'mode_paiement_id', 'slug', 'date_debut', 'date_fin', 'solde', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at', 'statut', "annee_id", 'date_paiement'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

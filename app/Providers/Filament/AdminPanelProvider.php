@@ -56,6 +56,7 @@ class AdminPanelProvider extends PanelProvider
                 'warning' => '#bb9900',
                 'error' => '#ff8a90',
                 'gray' => Color::Slate,
+                'tertiary' => Color::Amber,
 
             ])
 //            ->font('K2D')
@@ -70,7 +71,6 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make(label: 'Etats et Paiements'),
                 NavigationGroup::make(label: 'Paramètres')
                     ->icon('heroicon-o-cog-6-tooth'),
-
 
             ])
             ->plugins([

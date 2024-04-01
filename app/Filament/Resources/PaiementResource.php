@@ -3,19 +3,17 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PaiementResource\Pages;
-use App\Filament\Resources\PaiementResource\RelationManagers;
 use App\Models\Paiement;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PaiementResource extends Resource
 {
     protected static ?string $model = Paiement::class;
+
     protected static ?string $navigationGroup = 'Etats et Paiements';
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';

@@ -97,7 +97,7 @@ class ClientResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('cotisations')
-                    ->url(fn ($record) => static::getUrl('cotisations', ['record' =>$record]))
+                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
                     ->icon('heroicon-o-currency-dollar')
                     ->color('success')
                     ->label('Cotisations'),

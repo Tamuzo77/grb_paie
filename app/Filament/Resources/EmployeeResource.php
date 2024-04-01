@@ -9,6 +9,7 @@ use App\Models\Employee;
 use Filament\Forms;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -205,10 +206,32 @@ class EmployeeResource extends Resource
                     ->placeholder('Employés'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\Action::make('cotisations')
+//                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
+                    ->icon('heroicon-o-currency-dollar')
+                    ->color('success')
+                    ->label('Cotisations'),
+                Tables\Actions\Action::make('payer')
+                    ->requiresConfirmation()
+                    ->modalDescription('Voulez-vous vraiment effectuer un paiement pour cet employé ?')
+                    ->icon('heroicon-o-banknotes')
+                    ->color('tertiary')
+                    ->action(function (){
+                        Notification::make('not ready')
+                            ->title('Fonctionnalité non disponible')
+                            ->body('Cette fonctionnalité n\'est pas encore disponible')
+                            ->color('tertiary')
+                            ->iconColor('tertiary')
+                            ->icon('heroicon-o-banknotes')
+                            ->send();
+                    })
+                    ->label('Effectuer un paiement'),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\RestoreAction::make(),
+                    Tables\Actions\ForceDeleteAction::make(),
+                ])->tooltip('Actions disponibles'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

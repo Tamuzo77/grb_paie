@@ -2,12 +2,17 @@
 
 namespace App\Filament\Resources\ClientResource\RelationManagers;
 
+use App\Models\Employee;
+use App\Models\ModePaiement;
+use App\Models\TypePaiement;
 use Filament\Forms;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use PHPUnit\Exception;
 
 class EmployeesRelationManager extends RelationManager
 {
@@ -185,10 +190,83 @@ class EmployeesRelationManager extends RelationManager
                     ->placeholder('Employés'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\Action::make('cotisations')
+//                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
+                    ->icon('heroicon-o-currency-dollar')
+                    ->color('success')
+                    ->label('Cotisations'),
+                Tables\Actions\Action::make('payer')
+                    ->icon('heroicon-o-banknotes')
+                    ->color('tertiary')
+                    ->form([
+                        Forms\Components\Section::make('Paiements')
+                            ->schema([
+                                Forms\Components\TextInput::make('solde')
+                                    ->required()
+                                    ->numeric()
+                                    ->default(fn(Employee $record) => $record->salaire)
+                                    ->suffix('FCFA'),
+                                Forms\Components\Select::make('mode_paiement_id')
+                                    ->label('Mode de paiement')
+                                    ->searchable()
+                                    ->options(ModePaiement::query()->pluck('nom', 'id'))
+                                    ->preload()
+                                    ->columnSpan(1)
+                                    ->optionsLimit(3)
+                                    ->required(),
+                                Forms\Components\Select::make('type_paiement_id')
+                                    ->label('Type de paiement')
+                                    ->required()
+                                    ->columnSpan(2)
+                                    ->searchable()
+                                    ->preload()
+                                    ->options(TypePaiement::query()->pluck('nom', 'id'))
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('nom')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                                    ->optionsLimit(3),
+                                Forms\Components\DateTimePicker::make('date_debut')
+                                    ->helperText('Intervalle du service payé')
+                                    ->columnSpan(2)
+                                    ->label('Date de début'),
+                                Forms\Components\DateTimePicker::make('date_fin')
+                                    ->helperText('Intervalle du service payé')
+                                    ->columnSpan(2)
+                                    ->label('Date de fin'),
+
+                            ])->columns(4)
+                    ])
+                    ->action(function (array $data, Employee $record) {
+                        try {
+                            Notification::make('paiement operer')
+                                ->title('Paiement opéré')
+                                ->body('Paiement opéré. Cependant, veuillez vérifier le statut(payé) du paiement')
+                                ->success()
+                                ->iconColor('tertiary')
+                                ->icon('heroicon-o-banknotes')
+                                ->send();
+                        }catch ( Exception $e){
+                            Notification::make('paiement non operer')
+                                ->title('Paiement non opéré')
+                                ->body('Paiement non opéré. Veuillez réessayer')
+                                ->danger()
+                                ->iconColor('tertiary')
+                                ->icon('heroicon-o-banknotes')
+                                ->send();
+
+                        }
+                        $record->paiements()->create($data);
+                    })
+                    ->label('Effectuer un paiement'),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\RestoreAction::make(),
+                    Tables\Actions\ForceDeleteAction::make(),
+                ]),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
