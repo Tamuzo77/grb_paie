@@ -56,6 +56,7 @@ class AdminPanelProvider extends PanelProvider
                 'warning' => '#bb9900',
                 'error' => '#ff8a90',
                 'gray' => Color::Slate,
+                'tertiary' => Color::Amber,
 
             ])
 //            ->font('K2D')
@@ -67,6 +68,7 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->navigationGroups([
+                NavigationGroup::make(label: 'Etats et Paiements'),
                 NavigationGroup::make(label: 'Paramètres')
                     ->icon('heroicon-o-cog-6-tooth'),
 
@@ -84,7 +86,7 @@ class AdminPanelProvider extends PanelProvider
                     ->enableTwoFactorAuthentication(
                     ),
                 SpotlightPlugin::make(),
-                FilamentShieldPlugin::make()
+                FilamentShieldPlugin::make(),
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([

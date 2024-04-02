@@ -97,7 +97,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'example@example.com','name' => 'App Name'],
+    'from' => ['address' => 'example@example.com', 'name' => 'App Name'],
     /*
     |--------------------------------------------------------------------------
     | Markdown Mail Settings

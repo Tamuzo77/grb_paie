@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-
 use Illuminate\Http\Request;
-use function Termwind\render;
+use Inertia\Inertia;
 
 class FicheController extends Controller
 {

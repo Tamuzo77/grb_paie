@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use Illuminate\Http\Request;
 
 class EtatController extends Controller
 {
@@ -13,5 +12,4 @@ class EtatController extends Controller
         //
         return Inertia::render('Paiement/Etat');
     }
-
 }

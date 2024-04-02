@@ -24,7 +24,7 @@ export default function Fiche(){
                             <th className="border border-slate-400 p-1"> Nom et Prénoms </th>
                             <th className="border border-slate-400 p-1"> Fonction </th>
                             <th className="border border-slate-400 p-1"> Nombre d'enfant à charge </th>
-                            <th className="border border-slate-400 p-1"> Salaire Brut(Base +primes) </th>                         
+                            <th className="border border-slate-400 p-1"> Salaire Brut(Base +primes) </th>
                             <th className="border border-slate-400 p-1"> CNSS(3,6%) </th>
                             <th className="border border-slate-400 p-1"> IRPP-TS </th>
                             <th className="border border-slate-400 p-1"> Salaire net </th>
@@ -32,7 +32,7 @@ export default function Fiche(){
                             <th className="border border-slate-400 p-1"> Masse salariale </th>
                             <th className="border border-slate-400 p-1"> Signature et PI </th>
                         </thead>
-        
+
                         <tbody className="text-end">
                             <tr>
                                 <td className="border-2 border-slate-400 p-2">01</td>
@@ -74,4 +74,4 @@ export default function Fiche(){
               </div>
             </section>
         )
-    }    
+    }

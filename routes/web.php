@@ -1,17 +1,17 @@
 <?php
 
-use Inertia\Inertia;
-use Illuminate\Http\Request;
-use App\Mail\VerificationCodeEmail;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EtatController;
 use App\Http\Controllers\FicheController;
-use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TwoFactorController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Mail\VerificationCodeEmail;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,7 +35,6 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'twofactor'])->name('dashboard');
-
 
 Route::middleware('auth')->group(function () {
     Route::resource('/client', ClientController::class);
