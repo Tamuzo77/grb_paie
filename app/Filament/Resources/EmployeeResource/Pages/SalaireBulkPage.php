@@ -4,8 +4,15 @@ namespace App\Filament\Resources\EmployeeResource\Pages;
 
 use App\Filament\Resources\EmployeeResource;
 use App\Models\Employee;
+use App\Models\ModePaiement;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Concerns\HasTabs;
 use Filament\Resources\Pages\Page;
 use Filament\Tables\Actions\Concerns\InteractsWithRecords;
@@ -34,6 +41,25 @@ class SalaireBulkPage extends Page implements HasForms, HasTable
     public function getHeading(): string|Htmlable
     {
         return 'Solde des Employées selectionnées';
+    }
+
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+
+                        Section::make('Détails')
+                            ->description('Détails du paiements des salaires')
+                            ->schema([
+                                Select::make('mode_paiement_id')
+                                    ->searchable()
+                                    ->live(onBlur: true)
+                                    ->options(ModePaiement::query()->pluck('nom', 'id'))
+                            ])
+                            ->columns(1)
+
+            ]);
     }
 
     public function table(Table $table): Table

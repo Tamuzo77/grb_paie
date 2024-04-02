@@ -10,6 +10,7 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'twofactor' => \App\Http\Middleware\TwoFactorMiddleware::class,
     ];
+
     /**
      * The application's global HTTP middleware stack.
      *

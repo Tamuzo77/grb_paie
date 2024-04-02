@@ -5,10 +5,7 @@ use App\Http\Controllers\EtatController;
 use App\Http\Controllers\FicheController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TwoFactorController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use App\Mail\VerificationCodeEmail;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -44,7 +41,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
 
 Route::middleware(['auth', 'twofactor'])->group(function () {
     Route::get('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');

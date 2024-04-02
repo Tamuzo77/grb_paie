@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -113,6 +114,11 @@ class Employee extends Model
         return $this->hasMany('App\Models\DemandeConge');
     }
 
+    public function soldeComptes()
+    {
+        return $this->hasMany('App\Models\SoldeCompte');
+    }
+
     public function sluggable(): array
     {
         return [
@@ -126,4 +132,24 @@ class Employee extends Model
     {
         return 'slug';
     }
+
+    public function tauxIts(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                return $value / 100;
+            },
+        );
+
+    }
+    //    public function tauxCnss(): Attribute
+    //    {
+    //        return Attribute::make(
+    //            get: function ($value) {
+    //                return $value / 100;
+    //            },
+    //        );
+    //
+    //    }
+
 }
