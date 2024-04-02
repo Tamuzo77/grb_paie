@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ClientResource\RelationManagers;
 
+use App\Filament\Resources\EmployeeResource;
 use App\Models\Employee;
 use App\Models\ModePaiement;
 use App\Models\TypePaiement;
@@ -238,10 +239,11 @@ class EmployeesRelationManager extends RelationManager
                                     ->required()
                                     ->numeric()
                                     ->live(onBlur: true)
-                                    ->hidden(fn(Forms\Get $get) => $get('type_paiement_id') == TypePaiement::SALAIRE)
+                                    ->hidden(fn (Forms\Get $get) => $get('type_paiement_id') == TypePaiement::SALAIRE)
                                     ->maxValue(function (Employee $record, Forms\Get $get) {
-                                        if ($get('type_paiement_id') == TypePaiement::AVANCE)
+                                        if ($get('type_paiement_id') == TypePaiement::AVANCE) {
                                             return $record->salaire;
+                                        }
                                     })
                                     ->default(fn (Employee $record) => $record->salaire)
                                     ->suffix('FCFA'),
@@ -250,7 +252,7 @@ class EmployeesRelationManager extends RelationManager
                                     ->searchable()
                                     ->options(ModePaiement::query()->pluck('nom', 'id'))
                                     ->preload()
-                                    ->columnSpan(function (Forms\Get $get){
+                                    ->columnSpan(function (Forms\Get $get) {
                                         return $get('type_paiement_id') == TypePaiement::SALAIRE ? 2 : 1;
                                     })
                                     ->optionsLimit(3)
@@ -279,7 +281,7 @@ class EmployeesRelationManager extends RelationManager
                                     ->label('Date de fin'),
 
                             ])->columns(4),
-//                        $this->getContentSection(),
+                        //                        $this->getContentSection(),
 
                     ])
                     ->action(function (array $data, Employee $record) {
@@ -314,6 +316,16 @@ class EmployeesRelationManager extends RelationManager
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\BulkAction::make('salaire')
+                        ->color('tertiary')
+                        ->icon('heroicon-o-banknotes')
+                        ->action(function ($records) {
+
+                            $this->redirect(EmployeeResource::getUrl('salaires-paiements', ['records' => $records->pluck('id')->implode(',')]));
+                        })
+//                        ->url(fn($records) => EmployeeResource::getUrl('salaires-paiements', ['records' => $records]))
+                        ->requiresConfirmation()
+                        ->label('Payer Salaire'),
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),

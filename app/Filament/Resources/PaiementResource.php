@@ -46,7 +46,7 @@ class PaiementResource extends Resource
                     ->hintIcon('heroicon-o-user-group')
                     ->searchable(['nom', 'prenoms'])
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Forms\Set $set, ?string $state ) => $set('solde', Employee::whereId($state)->first()->salaire ?? 0))
+                    ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('solde', Employee::whereId($state)->first()->salaire ?? 0))
                     ->required()
                     ->optionsLimit(5)
                     ->preload(),
@@ -101,7 +101,7 @@ class PaiementResource extends Resource
                     ->searchable(isIndividual: true, isGlobal: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('employee.nom')
-                    ->description(fn($record) => $record->employee->prenoms, position: 'above')
+                    ->description(fn ($record) => $record->employee->prenoms, position: 'above')
                     ->separator()
                     ->searchable()
                     ->sortable(),
@@ -137,9 +137,9 @@ class PaiementResource extends Resource
                     ->form([
                         DatePicker::make('from'),
                         DatePicker::make('until'),
-                    ])->query(function($query, array $data){
-                        return $query->when($data['from'], fn($query) =>$query->whereDate('date_debut', '>=', $data['from']))
-                            ->when($data['until'], fn($query) => $query->whereDate('date_debut','<=', $data['until']));
+                    ])->query(function ($query, array $data) {
+                        return $query->when($data['from'], fn ($query) => $query->whereDate('date_debut', '>=', $data['from']))
+                            ->when($data['until'], fn ($query) => $query->whereDate('date_debut', '<=', $data['until']));
                     }),
 
             ])

@@ -256,6 +256,7 @@ class EmployeeResource extends Resource
             'index' => Pages\ListEmployees::route('/'),
             'create' => Pages\CreateEmployee::route('/create'),
             'edit' => Pages\EditEmployee::route('/{record}/edit'),
+            'salaires-paiements' => Pages\SalaireBulkPage::route('/{records}/salaires-paiements'),
         ];
     }
 
