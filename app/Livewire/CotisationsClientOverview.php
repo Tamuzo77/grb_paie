@@ -80,7 +80,8 @@ class CotisationsClientOverview extends Component implements HasForms, HasTable
                     ])
                     ->label('Exporter'),
 
-            ]);
+            ])
+            ->emptyStateDescription('Aucune cotisations sociales enregistrées');
     }
 
     public function getTabs(): array
