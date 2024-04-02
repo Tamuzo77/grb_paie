@@ -2,11 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use App\Models\User;
 use Carbon\Carbon;
+use Closure;
+use Illuminate\Http\Request;
 
 class TwoFactorMiddleware
 {
@@ -18,10 +17,11 @@ class TwoFactorMiddleware
             if ($user->two_factor_expires_at < Carbon::now()) {
                 $user->resetTwoFactorCode();
                 auth()->logout();
+
                 return redirect()->route('login')
                     ->withStatus('Your verification code expired. Please re-login.');
             }
-            if (!$request->is('verify*')) {
+            if (! $request->is('verify*')) {
                 return redirect()->route('verify.index');
             }
         }

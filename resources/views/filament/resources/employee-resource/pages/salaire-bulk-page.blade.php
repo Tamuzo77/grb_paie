@@ -1,7 +1,12 @@
 <x-filament-panels::page>
 
-    @foreach($this->records as $record)
-        {{$this->table}}
+    <x-filament::section.heading>
+
+        Mois de: {{ now()->format('F') }}
+    </x-filament::section.heading>
+
+    @foreach($this->records ??[] as $record)
+        <livewire:solde-table :employee="$record"/>
 
     @endforeach
 

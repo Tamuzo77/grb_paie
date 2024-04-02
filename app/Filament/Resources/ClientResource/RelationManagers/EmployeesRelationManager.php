@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\ClientResource\RelationManagers;
 
+use App\Actions\CalculerSalaireMensuel;
 use App\Filament\Resources\EmployeeResource;
 use App\Models\Employee;
 use App\Models\ModePaiement;
+use App\Models\Paiement;
+use App\Models\SoldeCompte;
 use App\Models\TypePaiement;
 use Filament\Forms;
 use Filament\Forms\Components\ToggleButtons;
@@ -223,6 +226,9 @@ class EmployeesRelationManager extends RelationManager
                     ->label('Corbeille')
                     ->placeholder('Employés'),
             ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
             ->actions([
                 Tables\Actions\Action::make('cotisations')
 //                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
@@ -318,13 +324,71 @@ class EmployeesRelationManager extends RelationManager
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\BulkAction::make('salaire')
                         ->color('tertiary')
+                        ->requiresConfirmation()
+                        ->form([
+                                    Forms\Components\Select::make('mode_paiement_id')
+                                        ->searchable()
+                                        ->live(onBlur: true)
+                                        ->options(ModePaiement::query()->pluck('nom', 'id'))
+                                        ->preload(),
+                                    Forms\Components\Select::make('type_paiement_id')
+                                        ->searchable()
+                                        ->live(onBlur: true)
+                                        ->hidden()
+                                        ->preload()
+                                        ->default(TypePaiement::SALAIRE)
+                                        ->options(TypePaiement::query()->where('nom', '!=', 'Salaire')->pluck('nom', 'id'))
+                                        ->createOptionForm([
+                                            Forms\Components\TextInput::make('nom')
+                                                ->required()
+                                                ->maxLength(255),
+                                        ])
+                                        ->optionsLimit(3),
+                        ])
                         ->icon('heroicon-o-banknotes')
-                        ->action(function ($records) {
+                        ->action(function (array $data, $records ) {
+                            $donnes = [SoldeCompte::SALAIRE_MENSUEL, SoldeCompte::TREIZIEME_MOIS, SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU, SoldeCompte::PREAVIS, SoldeCompte::AVANCE_SUR_SALAIRE, SoldeCompte::PRET_ENTREPRISE];
 
+                            foreach ($records as $record) {
+                                Paiement::create([
+                                    'date_paiement' => now(),
+                                    'employee_id' => $record->id,
+                                    'statut' => 'effectue',
+                                    'solde' => (new CalculerSalaireMensuel())->handle($record),
+                                    'mode_paiement_id' => $data['mode_paiement_id'],
+                                    'type_paiement_id' => TypePaiement::SALAIRE
+                                ]);
+                                foreach ($donnes as $donne) {
+                                    $record->soldeComptes()->firstOrCreate([
+                                        'mois' => now()->format('F'),
+                                        'employee_id' => $record->id,
+                                        'donnees' => $donne,
+                                    ],
+                                        [
+                                            'mois' => now()->format('F'),
+                                            'donnees' => $donne,
+                                            'montant' => match ($donne) {
+                                                SoldeCompte::SALAIRE_MENSUEL => (new CalculerSalaireMensuel())->handle($record),
+                                                SoldeCompte::TREIZIEME_MOIS => 0,
+                                                SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU => $record->demandeConges()->where('statut', 'paye')->count() * $record->solde_jours_conges_payes,
+                                                SoldeCompte::PREAVIS => 0,
+                                                SoldeCompte::AVANCE_SUR_SALAIRE => $record->paiements()->where('type_paiement_id', 1)->sum('solde'),
+                                                SoldeCompte::PRET_ENTREPRISE => 0,
+                                            },
+                                        ]);
+                                }
+                            }
+                            Notification::make('salaires payes')
+                                ->title('Paiement des salaires effectué')
+                                ->body('Paiement des salaires effectué. Veuillez vérifier les paiements effectués dans la liste des paiements')
+                                ->color('tertiary')
+                                ->iconColor('tertiary')
+                                ->icon('heroicon-o-banknotes')
+                                ->send();
                             $this->redirect(EmployeeResource::getUrl('salaires-paiements', ['records' => $records->pluck('id')->implode(',')]));
                         })
 //                        ->url(fn($records) => EmployeeResource::getUrl('salaires-paiements', ['records' => $records]))
-                        ->requiresConfirmation()
+//                        ->requiresConfirmation()
                         ->label('Payer Salaire'),
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
