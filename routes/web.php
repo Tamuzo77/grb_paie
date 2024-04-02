@@ -10,6 +10,7 @@ use App\Http\Controllers\EtatController;
 use App\Http\Controllers\FicheController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TwoFactorController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +34,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'twofactor'])->name('dashboard');
 
 
 Route::middleware('auth')->group(function () {
@@ -46,12 +47,8 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/testroute', function() {
-    $name = "Funny Coder";
-
-    // The email sending is done using the to method on the Mail facade
-    Mail::to('esperanceahouissou@gmail.com')->send(new VerificationCodeEmail($name));
-    
+Route::middleware(['auth', 'twofactor'])->group(function () {
+    Route::get('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');
+    Route::resource('verify', TwoFactorController::class)->only(['index', 'store']);
 });
-
 require __DIR__.'/auth.php';
