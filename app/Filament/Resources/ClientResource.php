@@ -34,6 +34,8 @@ class ClientResource extends Resource
                                 Forms\Components\TextInput::make('matricule')
                                     ->required()
                                     ->unique(ignoreRecord: true)
+                                    ->alphaNum(true)
+                                    ->minLength(6)
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('nom')
                                     ->required()
@@ -48,10 +50,13 @@ class ClientResource extends Resource
                                     ->tel()
                                     ->hint('Contact téléphonique')
                                     ->required()
-                                    ->maxLength(255),
+                                    ->unique(ignoreRecord : true)
+                                    ->numeric()
+                                    ->maxLength(8),
                                 Forms\Components\TextInput::make('email')
                                     ->email()
                                     ->required()
+                                    ->unique(ignoreRecord : true)
                                     ->maxLength(255),
                                 Forms\Components\Select::make('bank_id')
                                     ->label('Banque')

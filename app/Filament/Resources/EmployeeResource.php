@@ -76,8 +76,13 @@ class EmployeeResource extends Resource
                             ])
                             ->grouped()
                             ->inline(),
-                        Forms\Components\DatePicker::make('date_embauche'),
-                        Forms\Components\DatePicker::make('date_depart'),
+                        Forms\Components\DatePicker::make('date_embauche')
+                            ->date()
+                            ->required(),
+                        Forms\Components\DatePicker::make('date_depart')
+                        ->date()
+                        ->required()
+                        ->after('date_embauche'),
 
                     ])
                     ->columns(3),
@@ -97,19 +102,27 @@ class EmployeeResource extends Resource
                             ->default(null),
                         Forms\Components\TextInput::make('telephone')
                             ->tel()
+                            ->unique()
                             ->prefix('+229')
                             ->maxLength(8)
                             ->default(null),
                         Forms\Components\TextInput::make('email')
                             ->email()
+                            ->unique()
                             ->maxLength(255)
                             ->default(null),
-                        Forms\Components\DatePicker::make('date_naissance'),
+                        Forms\Components\DatePicker::make('date_naissance')
+                            ->date(),
                         Forms\Components\TextInput::make('lieu_naissance')
                             ->maxLength(20)
                             ->default(null),
-                        Forms\Components\TextInput::make('situation_matrimoniale')
-                            ->maxLength(15)
+                        Forms\Components\Select::make('situation_matrimoniale')
+                            ->options([
+                                'Célibataire' => 'Célibataire',
+                                'Mariée' => 'Mariée',
+                                'Divorcée' => 'Divorcée',
+                                'Veuf' => 'Veuf/Veuve',
+                            ])
                             ->default(null),
                         Forms\Components\Select::make('sexe')
                             ->options([
@@ -139,7 +152,7 @@ class EmployeeResource extends Resource
                             ->optionsLimit(5)
                             ->preload(),
                         Forms\Components\TextInput::make('numero_compte')
-                            ->maxLength(255)
+                            ->maxLength(15)
                             ->numeric()
                             ->default(null),
                         Forms\Components\TextInput::make('salaire')
