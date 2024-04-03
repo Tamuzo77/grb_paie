@@ -326,28 +326,28 @@ class EmployeesRelationManager extends RelationManager
                         ->color('tertiary')
                         ->requiresConfirmation()
                         ->form([
-                                    Forms\Components\Select::make('mode_paiement_id')
-                                        ->searchable()
-                                        ->label('Mode de paiement')
-                                        ->live(onBlur: true)
-                                        ->options(ModePaiement::query()->pluck('nom', 'id'))
-                                        ->preload(),
-                                    Forms\Components\Select::make('type_paiement_id')
-                                        ->searchable()
-                                        ->live(onBlur: true)
-                                        ->hidden()
-                                        ->preload()
-                                        ->default(TypePaiement::SALAIRE)
-                                        ->options(TypePaiement::query()->where('nom', '!=', 'Salaire')->pluck('nom', 'id'))
-                                        ->createOptionForm([
-                                            Forms\Components\TextInput::make('nom')
-                                                ->required()
-                                                ->maxLength(255),
-                                        ])
-                                        ->optionsLimit(3),
+                            Forms\Components\Select::make('mode_paiement_id')
+                                ->searchable()
+                                ->label('Mode de paiement')
+                                ->live(onBlur: true)
+                                ->options(ModePaiement::query()->pluck('nom', 'id'))
+                                ->preload(),
+                            Forms\Components\Select::make('type_paiement_id')
+                                ->searchable()
+                                ->live(onBlur: true)
+                                ->hidden()
+                                ->preload()
+                                ->default(TypePaiement::SALAIRE)
+                                ->options(TypePaiement::query()->where('nom', '!=', 'Salaire')->pluck('nom', 'id'))
+                                ->createOptionForm([
+                                    Forms\Components\TextInput::make('nom')
+                                        ->required()
+                                        ->maxLength(255),
+                                ])
+                                ->optionsLimit(3),
                         ])
                         ->icon('heroicon-o-banknotes')
-                        ->action(function (array $data, $records ) {
+                        ->action(function (array $data, $records) {
                             $donnes = [SoldeCompte::SALAIRE_MENSUEL, SoldeCompte::TREIZIEME_MOIS, SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU, SoldeCompte::PREAVIS, SoldeCompte::AVANCE_SUR_SALAIRE, SoldeCompte::PRET_ENTREPRISE];
 
                             foreach ($records as $record) {
@@ -357,7 +357,7 @@ class EmployeesRelationManager extends RelationManager
                                     'statut' => 'effectue',
                                     'solde' => (new CalculerSalaireMensuel())->handle($record),
                                     'mode_paiement_id' => $data['mode_paiement_id'],
-                                    'type_paiement_id' => TypePaiement::SALAIRE
+                                    'type_paiement_id' => TypePaiement::SALAIRE,
                                 ]);
                                 foreach ($donnes as $donne) {
                                     $record->soldeComptes()->firstOrCreate([

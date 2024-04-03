@@ -11,7 +11,7 @@ class PaiementObserver
      */
     public function creating(Paiement $paiement): void
     {
-//        $paiement->statut = 'en attente';
+        //        $paiement->statut = 'en attente';
         $paiement->date_paiement = now();
     }
 

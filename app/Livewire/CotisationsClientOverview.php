@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Models\Client;
 use App\Models\Employee;
-use App\Models\TypePaiement;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Components\Tab;
@@ -45,6 +44,7 @@ class CotisationsClientOverview extends Component implements HasForms, HasTable
                 ->label('Exporter'),
         ];
     }
+
     public function getTableRecordKey(Model $record): string
     {
         return 'id';
@@ -53,8 +53,9 @@ class CotisationsClientOverview extends Component implements HasForms, HasTable
     public function table(Table $table): Table
     {
         $currentYear = date('Y');
+
         return $table
-            ->query(function () use ($currentYear) {
+            ->query(function () {
                 return Employee::query()
 //                    ->selectRaw('QUARTER(paiements.date_paiement) AS trimestre, MONTHNAME(paiements.date_paiement) AS mois, SUM(employees.salaire) AS total, SUM(employees.salaire * 0.23) AS cotisations')
 //                    ->join('paiements', 'employees.id', '=', 'paiements.employee_id')

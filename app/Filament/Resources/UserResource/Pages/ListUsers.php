@@ -24,17 +24,17 @@ class ListUsers extends ListRecords
         return [
             'all' => Tab::make('Tous les utilisateurs'),
             'directeurs operationnels' => Tab::make('Directeurs Opérationnels')
-            ->modifyQueryUsing(function ($query) {
-                $query->whereHas('roles', function ($query) {
-                    $query->where('name', 'directrice_opérationnelle');
-                });
-            }),
+                ->modifyQueryUsing(function ($query) {
+                    $query->whereHas('roles', function ($query) {
+                        $query->where('name', 'directrice_opérationnelle');
+                    });
+                }),
             'responsables commerciaux' => Tab::make('Responsables Commerciaux')
-            ->modifyQueryUsing(function ($query) {
-                $query->whereHas('roles', function ($query) {
-                    $query->where('name', 'responsable_commercial');
-                });
-            }),
+                ->modifyQueryUsing(function ($query) {
+                    $query->whereHas('roles', function ($query) {
+                        $query->where('name', 'responsable_commercial');
+                    });
+                }),
         ];
     }
 }

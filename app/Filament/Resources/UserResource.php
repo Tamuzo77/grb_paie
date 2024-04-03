@@ -11,8 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
 {
@@ -21,6 +19,7 @@ class UserResource extends Resource
     protected static ?string $navigationGroup = 'Paramètres';
 
     protected static ?string $modelLabel = 'Utilisateur';
+
     protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
@@ -60,7 +59,7 @@ class UserResource extends Resource
                                 ->prefix('+229')
                                 ->maxLength(255)
                                 ->default(null),
-                        ])->columnSpanFull()
+                        ])->columnSpanFull(),
                 ])->columnSpanFull(),
 
             ]);
@@ -72,13 +71,13 @@ class UserResource extends Resource
             ->columns([
                 Tables\Columns\Layout\Split::make([
                     Tables\Columns\ImageColumn::make('avatar')
-                        ->defaultImageUrl(fn(User $record): string => "https://ui-avatars.com/api/?name={$record->name}&background=random")
+                        ->defaultImageUrl(fn (User $record): string => "https://ui-avatars.com/api/?name={$record->name}&background=random")
                         ->circular(),
                     Tables\Columns\TextColumn::make('name')
                         ->label('Nom')
                         ->sortable()
                         ->weight(FontWeight::Bold)
-                        ->description(fn($record) => $record->surname)
+                        ->description(fn ($record) => $record->surname)
                         ->searchable(),
                     Tables\Columns\Layout\Stack::make([
                         Tables\Columns\TextColumn::make('email')
@@ -93,7 +92,7 @@ class UserResource extends Resource
                             ->tooltip('Numéro de téléphone')
                             ->copyable()
                             ->searchable(),
-                    ])->alignEnd()
+                    ])->alignEnd(),
                 ]),
             ])
             ->filters([
@@ -123,7 +122,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\RolesRelationManager::class
+            RelationManagers\RolesRelationManager::class,
         ];
     }
 
