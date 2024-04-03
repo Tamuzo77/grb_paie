@@ -328,6 +328,7 @@ class EmployeesRelationManager extends RelationManager
                         ->form([
                                     Forms\Components\Select::make('mode_paiement_id')
                                         ->searchable()
+                                        ->label('Mode de paiement')
                                         ->live(onBlur: true)
                                         ->options(ModePaiement::query()->pluck('nom', 'id'))
                                         ->preload(),
