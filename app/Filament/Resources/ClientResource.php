@@ -2,12 +2,15 @@
 
 namespace App\Filament\Resources;
 
+use App\Events\EtatsPersonnelEvent;
 use App\Filament\Resources\ClientResource\Pages;
 use App\Filament\Resources\ClientResource\RelationManagers\EmployeesRelationManager;
 use App\Models\Client;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -94,15 +97,45 @@ class ClientResource extends Resource
                     ->placeholder('Clients'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('cotisations')
                     ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
                     ->icon('heroicon-o-currency-dollar')
                     ->color('success')
                     ->label('Cotisations'),
-                Tables\Actions\RestoreAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\Action::make('etats')
+                    ->requiresConfirmation()
+                    ->action(function ($record){
+                        try {
+                            redirect(route('download-etats-personnel', $record->id));
+
+                            Notification::make('Etat personnel téléchargé avec succès')
+                                ->title('Téléchargement réussi')
+                                ->body('Le téléchargement de l\'état personnel a été effectué avec succès.')
+                                ->color('success')
+                                ->iconColor('success')
+                                ->send()
+                                ->sendToDatabase(auth()->user(),true);
+                        }catch (\Exception $e) {
+                            Notification::make('Erreur lors du téléchargement de l\'état personnel')
+                                ->title('Erreur')
+                                ->body("Une erreur s'est produite lors du téléchargement de l'état personnel. Veuillez réessayer.")
+                                ->color('danger')
+                                ->iconColor('danger')
+                                ->send()
+                                ->sendToDatabase(auth()->user(), true);
+                        }
+//                        EtatsPersonnelEvent::dispatch($record);
+                    })
+                    ->icon('heroicon-o-table-cells')
+                    ->color(Color::Sky)
+                    ->label('Etats'),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\RestoreAction::make(),
+                    Tables\Actions\ForceDeleteAction::make(),
+                ]),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -127,6 +160,7 @@ class ClientResource extends Resource
             'create' => Pages\CreateClient::route('/create'),
             'edit' => Pages\EditClient::route('/{record}/edit'),
             'cotisations' => Pages\CotisationsClient::route('/{record}/cotisations'),
+            'etats-personnel' => Pages\EtatsPersonelPage::route('/{record}/etats-personnel'),
         ];
     }
 

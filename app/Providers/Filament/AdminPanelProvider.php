@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Dashboard;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
@@ -25,6 +26,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
+use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use pxlrbt\FilamentSpotlight\SpotlightPlugin;
 
 class AdminPanelProvider extends PanelProvider
@@ -65,7 +67,8 @@ class AdminPanelProvider extends PanelProvider
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
             ->sidebarFullyCollapsibleOnDesktop()
             ->pages([
-                Pages\Dashboard::class,
+//                Pages\Dashboard::class,
+            Dashboard::class
             ])
             ->navigationGroups([
                 NavigationGroup::make(label: 'Etats et Paiements'),
@@ -87,6 +90,7 @@ class AdminPanelProvider extends PanelProvider
                     ),
                 SpotlightPlugin::make(),
                 FilamentShieldPlugin::make(),
+                FilamentApexChartsPlugin::make(),
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([

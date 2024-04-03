@@ -4,10 +4,8 @@ namespace App\Livewire;
 
 use App\Models\Employee;
 use App\Models\SoldeCompte;
-use Filament\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Notifications\Notification;
 use Filament\Resources\Concerns\HasTabs;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -65,5 +63,4 @@ class SoldeTable extends Component implements HasForms, HasTable
             ->paginated(false);
 
     }
-
 }

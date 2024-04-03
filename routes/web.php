@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EtatController;
 use App\Http\Controllers\FicheController;
@@ -47,5 +48,8 @@ Route::middleware(['auth','twofactor'])->group(function () {
     Route::get('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');
     Route::post('verify/store', [TwoFactorController::class, 'store'])->name('verify.store');
 });
+
+
+Route::get('/download-etats-personnel/{id}', [AdminController::class, 'downloadEtatsPersonnel'])->name('download-etats-personnel');
 
 require __DIR__.'/auth.php';
