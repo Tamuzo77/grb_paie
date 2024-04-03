@@ -18,6 +18,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use PHPUnit\Exception;
 
 class EmployeeResource extends Resource
 {
@@ -217,12 +218,93 @@ class EmployeeResource extends Resource
                     ->color('success')
                     ->label('Cotisations'),
                 Tables\Actions\Action::make('payer')
-                    ->requiresConfirmation()
-                    ->modalDescription('Voulez-vous vraiment effectuer un paiement pour cet employé ?')
                     ->icon('heroicon-o-banknotes')
                     ->color('tertiary')
-                    ->action(function () {
+                    ->form([
+                        Forms\Components\Section::make('Paiements')
+                            ->schema([
+                                Forms\Components\TextInput::make('solde')
+                                    ->required()
+                                    ->numeric()
+                                    ->live(onBlur: true)
+                                    ->hidden(fn (Forms\Get $get) => $get('type_paiement_id') == TypePaiement::SALAIRE)
+                                    ->maxValue(function (Employee $record, Forms\Get $get) {
+                                        if ($get('type_paiement_id') == TypePaiement::AVANCE) {
+                                            return $record->salaire / 2;
+                                        }
+                                    })
+                                    ->default(5000)
+                                    ->suffix('FCFA'),
+                                Forms\Components\Select::make('mode_paiement_id')
+                                    ->label('Mode de paiement')
+                                    ->searchable()
+                                    ->options(ModePaiement::query()->pluck('nom', 'id'))
+                                    ->preload()
+                                    ->columnSpan(function (Forms\Get $get) {
+                                        return $get('type_paiement_id') == TypePaiement::SALAIRE ? 2 : 1;
+                                    })
+                                    ->optionsLimit(3)
+                                    ->required(),
+                                Forms\Components\Select::make('type_paiement_id')
+                                    ->label('Type de paiement')
+                                    ->required()
+                                    ->searchable()
+                                    ->live(onBlur: true)
+                                    ->preload()
+                                    ->options(TypePaiement::query()->where('nom', '!=', 'Salaire')->pluck('nom', 'id'))
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('nom')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                                    ->optionsLimit(3),
+                                Forms\Components\DateTimePicker::make('date_debut')
+                                    ->helperText('Intervalle du service payé')
+                                    ->hidden()
+                                    ->columnSpan(2)
+                                    ->label('Date de début'),
+                                Forms\Components\DateTimePicker::make('date_fin')
+                                    ->helperText('Intervalle du service payé')
+                                    ->hidden()
+                                    ->columnSpan(2)
+                                    ->label('Date de fin'),
+                                Forms\Components\TextInput::make('nb_jours_travaille')
+                                    ->numeric()
+                                    ->label('Jours travaillés dans le mois')
+                                    ->default(function (Employee $record) {
+                                        return CalculerSalaireMensuel::nbreJoursTravaille($record);
+                                    } )
+                                    ->required(),
+                                Forms\Components\TextInput::make('pas')
+                                    ->visible(fn (Forms\Get $get) => $get('type_paiement_id') == TypePaiement::PRET)
+                                    ->columnSpan(2)
+                                    ->helperText('Echelonner le paiement')
+                                    ->numeric()
 
+                            ])->columns(2),
+                        //                        $this->getContentSection(),
+
+                    ])
+                    ->action(function (array $data, Employee $record) {
+                        try {
+                            Notification::make('paiement operer')
+                                ->title('Paiement opéré')
+                                ->body('Paiement opéré. Cependant, veuillez vérifier le statut(payé) du paiement')
+                                ->success()
+                                ->iconColor('tertiary')
+                                ->icon('heroicon-o-banknotes')
+                                ->send();
+                        } catch (Exception $e) {
+                            Notification::make('paiement non operer')
+                                ->title('Paiement non opéré')
+                                ->body('Paiement non opéré. Veuillez réessayer')
+                                ->danger()
+                                ->iconColor('tertiary')
+                                ->icon('heroicon-o-banknotes')
+                                ->send();
+
+                        }
+                        $record->paiements()->create($data);
                     })
                     ->label('Effectuer un paiement'),
                 Tables\Actions\ActionGroup::make([
