@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\DemandeConge;
+use App\Models\Paiement;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class DemandeCongePolicy
+class PaiementPolicy
 {
     use HandlesAuthorization;
 
@@ -15,15 +15,15 @@ class DemandeCongePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_demande::conge');
+        return $user->can('view_any_paiement');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, DemandeConge $demandeConge): bool
+    public function view(User $user, Paiement $paiement): bool
     {
-        return $user->can('view_demande::conge');
+        return $user->can('view_paiement');
     }
 
     /**
@@ -31,23 +31,23 @@ class DemandeCongePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_demande::conge');
+        return $user->can('create_paiement');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, DemandeConge $demandeConge): bool
+    public function update(User $user, Paiement $paiement): bool
     {
-        return $user->can('update_demande::conge');
+        return $user->can('update_paiement');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, DemandeConge $demandeConge): bool
+    public function delete(User $user, Paiement $paiement): bool
     {
-        return $user->can('delete_demande::conge');
+        return $user->can('delete_paiement');
     }
 
     /**
@@ -55,15 +55,15 @@ class DemandeCongePolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_demande::conge');
+        return $user->can('delete_any_paiement');
     }
 
     /**
      * Determine whether the user can permanently delete.
      */
-    public function forceDelete(User $user, DemandeConge $demandeConge): bool
+    public function forceDelete(User $user, Paiement $paiement): bool
     {
-        return $user->can('force_delete_demande::conge');
+        return $user->can('force_delete_paiement');
     }
 
     /**
@@ -71,15 +71,15 @@ class DemandeCongePolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_demande::conge');
+        return $user->can('force_delete_any_paiement');
     }
 
     /**
      * Determine whether the user can restore.
      */
-    public function restore(User $user, DemandeConge $demandeConge): bool
+    public function restore(User $user, Paiement $paiement): bool
     {
-        return $user->can('restore_demande::conge');
+        return $user->can('restore_paiement');
     }
 
     /**
@@ -87,15 +87,15 @@ class DemandeCongePolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_demande::conge');
+        return $user->can('restore_any_paiement');
     }
 
     /**
      * Determine whether the user can replicate.
      */
-    public function replicate(User $user, DemandeConge $demandeConge): bool
+    public function replicate(User $user, Paiement $paiement): bool
     {
-        return $user->can('replicate_demande::conge');
+        return $user->can('replicate_paiement');
     }
 
     /**
@@ -103,6 +103,6 @@ class DemandeCongePolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_demande::conge');
+        return $user->can('reorder_paiement');
     }
 }
