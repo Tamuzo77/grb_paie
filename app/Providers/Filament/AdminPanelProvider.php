@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Dashboard;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
@@ -66,7 +67,8 @@ class AdminPanelProvider extends PanelProvider
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
             ->sidebarFullyCollapsibleOnDesktop()
             ->pages([
-                Pages\Dashboard::class,
+//                Pages\Dashboard::class,
+            Dashboard::class
             ])
             ->navigationGroups([
                 NavigationGroup::make(label: 'Etats et Paiements'),
