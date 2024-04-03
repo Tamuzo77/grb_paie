@@ -140,16 +140,13 @@ class UserResource extends Resource
     public static function getGloballySearchableAttributes(): array
     {
         return [
-            'name', 'email', 'surname'
+            'name', 'email', 'surname',
         ];
     }
 
-    /**
-     * @return string|null
-     */
     public static function getRecordTitleAttribute(): ?string
     {
-        return "name";
+        return 'name';
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
