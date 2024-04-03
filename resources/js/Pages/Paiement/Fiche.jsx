@@ -35,8 +35,7 @@ return (
                     <td colSpan={3} ></td>
                     <td colSpan={2}>
                       <h3>Fait le 12 mars 2024</h3>
-                  
-   INFO  Creating a filament user with Super Admin Role...  
+                   
     <h3>Période : 22 février au 24 mars 2024</h3>
                       <h3 className={TdStyle.TitleStyle}>Cotonou Rép.Du Bénin</h3>
                     </td>

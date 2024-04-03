@@ -18,5 +18,8 @@
         "tailwindcss": "^3.2.1",
         "vite": "^4.5.3"
     },
-    "type": "module"
+    "type": "module",
+    "dependencies": {
+        "@inertiajs/inertia-react": "^0.8.1"
+    }
 }

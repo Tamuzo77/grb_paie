@@ -32,7 +32,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'twofactor'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::resource('/client', ClientController::class);
@@ -41,12 +41,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
 });
 
-Route::middleware(['auth', 'twofactor'])->group(function () {
+Route::middleware(['auth','twofactor'])->group(function () {
     Route::get('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');
-    Route::resource('verify', TwoFactorController::class)->only(['index', 'store']);
+    Route::post('verify/store', [TwoFactorController::class, 'store'])->name('verify.store');
 });
+
 
 Route::get('/download-etats-personnel/{id}', [AdminController::class, 'downloadEtatsPersonnel'])->name('download-etats-personnel');
+
 require __DIR__.'/auth.php';
