@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateFonction extends CreateRecord
 {
     protected static string $resource = FonctionResource::class;
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return "Fonction enregistrée avec succès";
+    }
 }

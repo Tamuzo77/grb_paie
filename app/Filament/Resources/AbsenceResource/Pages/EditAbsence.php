@@ -17,4 +17,9 @@ class EditAbsence extends EditRecord
                 ->label('Supprimer'),
         ];
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return "Absence modifié avec succès";
+    }
 }

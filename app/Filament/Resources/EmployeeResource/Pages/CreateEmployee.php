@@ -5,6 +5,7 @@ namespace App\Filament\Resources\EmployeeResource\Pages;
 use App\Filament\Resources\EmployeeResource;
 use App\Models\Annee;
 use App\Services\ItsService;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateEmployee extends CreateRecord
@@ -18,5 +19,10 @@ class CreateEmployee extends CreateRecord
         $data['annee_id'] = $annee[0]['id'] ?? 1;
 
         return $data;
+    }
+
+    protected function getCreatedNotification(): ?Notification
+    {
+        return parent::getCreatedNotification()->title('Employé crée avec succès');
     }
 }

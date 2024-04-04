@@ -21,4 +21,9 @@ class EditAnnee extends EditRecord
     {
         return false;
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Session annuelle modifiée avec succès';
+    }
 }

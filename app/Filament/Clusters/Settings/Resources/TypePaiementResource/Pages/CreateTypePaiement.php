@@ -17,4 +17,9 @@ class CreateTypePaiement extends CreateRecord
 
         return $data;
     }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return "Type de paiement enregistré avec succès";
+    }
 }

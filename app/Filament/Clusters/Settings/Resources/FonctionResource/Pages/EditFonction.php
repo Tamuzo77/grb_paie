@@ -16,4 +16,9 @@ class EditFonction extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Fonction modifiée avec succès';
+    }
 }

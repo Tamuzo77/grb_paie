@@ -15,4 +15,8 @@ class CreateAnnee extends CreateRecord
 
         return $data;
     }
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return "Session annuelle enregistrée avec succès";
+    }
 }

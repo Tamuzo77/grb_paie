@@ -16,4 +16,8 @@ class EditTypePaiement extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Type de paiement modifié avec succès';
+    }
 }

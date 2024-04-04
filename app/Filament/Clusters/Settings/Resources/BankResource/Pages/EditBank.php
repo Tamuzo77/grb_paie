@@ -21,4 +21,9 @@ class EditBank extends EditRecord
     {
         return false;
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Banque modifiée avec succès';
+    }
 }

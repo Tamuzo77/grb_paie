@@ -16,4 +16,9 @@ class EditDemandeConge extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return "Demande de congés modifié avec succès";
+    }
 }

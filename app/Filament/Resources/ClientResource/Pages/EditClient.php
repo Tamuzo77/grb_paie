@@ -21,4 +21,9 @@ class EditClient extends EditRecord
     {
         return false;
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return "Client modifié avec succès";
+    }
 }

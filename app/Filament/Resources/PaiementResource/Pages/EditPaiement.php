@@ -16,4 +16,9 @@ class EditPaiement extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return "Paiement modifié avec succès";
+    }
 }

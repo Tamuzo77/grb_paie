@@ -21,4 +21,9 @@ class EditEmployee extends EditRecord
     {
         return false;
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return "Employé modifié avec succès";
+    }
 }
