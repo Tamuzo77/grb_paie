@@ -1,70 +1,66 @@
 import React from "react";
-
-const TdStyle = {
-  ThStyle: `w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-medium text-white lg:py-7 lg:px-4`,
-  TdStyle: `text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] dark:bg-dark-3 dark:border-dark dark:text-dark-7 py-5 px-2 text-center text-base font-medium`,
-  TdStyle2: `text-dark border-b border-[#E8E8E8] bg-white dark:border-dark dark:bg-dark-2 dark:text-dark-7 py-5 px-2 text-center text-base font-medium`,
-  TdButton: `inline-block px-6 py-2.5 border rounded-md border-primary text-primary hover:bg-primary hover:text-white font-medium`,
-}
-
-
-
+import '/home/esperance/Documents/GRB_paie/grb_paie/resources/css/style.css';
 export default function Fiche(){
     return (
-            <section className='bg-white dark:bg-dark py-20 lg:py-[120px]'>
+            <section className=''>
               <div className='container m-auto'>
                 <div className='flex flex-wrap'>
                   <div className='w-full '>
-                    <h3 className="text-center py-8 font-bold">ETAT DES SALAIRES ET ACCESOIRES DU PERSONNEL DU CABINET CMFD</h3>
+                    <h3 className="text-center py-8 font-bold"></h3>
                     <div className='max-w-full '>
-               <table className='w-full table-auto border-collapse border border-slate-600 '>
+               <table className='table'>
                         <thead className='text-center bg-primary'>
-
-                            <th className="border border-slate-400 p-1"> N°  </th>
-                            <th className="border border-slate-400 p-1"> Nom et Prénoms </th>
-                            <th className="border border-slate-400 p-1"> Fonction </th>
-                            <th className="border border-slate-400 p-1"> Nombre d'enfant à charge </th>
-                            <th className="border border-slate-400 p-1"> Salaire Brut(Base +primes) </th>
-                            <th className="border border-slate-400 p-1"> CNSS(3,6%) </th>
-                            <th className="border border-slate-400 p-1"> IRPP-TS </th>
-                            <th className="border border-slate-400 p-1"> Salaire net </th>
-                            <th className="border border-slate-400 p-1"> Veserment patronale (VPS) </th>
-                            <th className="border border-slate-400 p-1"> Masse salariale </th>
-                            <th className="border border-slate-400 p-1"> Signature et PI </th>
+                        <th colSpan={11}>
+                        ETAT DES SALAIRES ET ACCESOIRES DU PERSONNEL DU CABINET CMFD
+                        </th>
                         </thead>
 
                         <tbody className="text-end">
+                          <tr className="title">
+
+                          <td > N°  </td>
+                            <td > Nom et Prénoms </td>
+                            <td > Fonction </td>
+                            <td > Nombre d'enfant à charge </td>
+                            <td > Salaire Brut(Base +primes) </td>
+                            <td > CNSS(3,6%) </td>
+                            <td > IRPP-TS </td>
+                            <td > Salaire net </td>
+                            <td > Veserment patronale (VPS) </td>
+                            <td > Masse salariale </td>
+                            <td > Signature et PI </td>
+                          </tr>
                             <tr>
-                                <td className="border-2 border-slate-400 p-2">01</td>
-                                <td className="border-2 border-slate-400 p-2">xxxxx</td>
-                                <td className="border-2 border-slate-400 p-2">xxxxx</td>
-                                <td className="border-2 border-slate-400 p-2">xxxxx</td>
-                                <td className="border-2 border-slate-400 p-2">xxxxx</td>
-                                <td className="border-2 border-slate-400 p-2">xxxxx</td>
-                                <td className="border-2 border-slate-400 p-2">xxxxx</td>
-                                <td className="border-2 border-slate-400 p-2">xxxxx</td>
-                                <td className="border-2 border-slate-400 p-2">xxxxx</td>
-                                <td className="border-2 border-slate-400 p-2">xxxxx</td>
-                                <td className="border-2 border-slate-400 p-2">xxxxx</td>
+                                <td >01</td>
+                                <td >xxxxx</td>
+                                <td >xxxxx</td>
+                                <td >xxxxx</td>
+                                <td >xxxxx</td>
+                                <td >xxxxx</td>
+                                <td >xxxxx</td>
+                                <td >xxxxx</td>
+                                <td >xxxxx</td>
+                                <td >xxxxx</td>
+                                <td >xxxxx</td>
                             </tr>
                           <tr>
-                            <td colSpan={4} className="p-2 text-center border border-slate-400">Total</td>
-                            <td className="p-2 border-2 border-slate-400">xxxxx</td>
-                            <td className="p-2 border-2 border-slate-400">xxxxx</td>
-                            <td className="p-2 border-2 border-slate-400">xxxxx</td>
-                            <td className="p-2 border-2 border-slate-400">xxxxx</td>
-                            <td className="p-2 border-2 border-slate-400">xxxxx</td>
-                            <td className="p-2 border-2 border-slate-400">xxxxx</td>
-                            <td className="p-2 border-2 border-slate-400">xxxxx</td>
+                            <td colSpan={4}>Total</td>
+                            <td >xxxxx</td>
+                            <td >xxxxx</td>
+                            <td >xxxxx</td>
+                            <td >xxxxx</td>
+                            <td >xxxxx</td>
+                            <td >xxxxx</td>
+                            <td >xxxxx</td>
                         </tr>
-                        <tr>
+                        <tr className="title">
                           <td colSpan={5}>xxxxxxxx</td>
 
-                          <td colSpan={5}>La Directrice</td>
+                          <td  colSpan={6}>La Directrice</td>
                         </tr>
                         <tr>
                           <td colSpan={5}>xxxxxxxx</td>
-                          <td colSpan={5}>xxxxxxxxx</td>
+                          <td colSpan={6}>xxxxxxxxx</td>
                         </tr>
                         </tbody>
                       </table>
