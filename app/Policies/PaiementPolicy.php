@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Paiement;
 use App\Models\User;
+use App\Models\Paiement;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PaiementPolicy

@@ -26,6 +26,7 @@ class ClientFactory extends Factory
             'telephone' => fake()->phoneNumber,
             'nom_donneur_ordre' => fake()->lastName,
             'prenom_donneur_ordre' => fake()->firstName,
+            'annee_id' => 1,
 
         ];
     }
