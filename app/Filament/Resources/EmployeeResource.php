@@ -47,9 +47,12 @@ class EmployeeResource extends Resource
                             ->columnSpanFull()
                             ->optionsLimit(5)
                             ->preload(),
-                        Forms\Components\TextInput::make('categorie')
+                        Forms\Components\Select::make('category_id')
                             ->label('Catégorie')
-                            ->maxLength(10)
+                            ->preload()
+                            ->searchable()
+                            ->optionsLimit(5)
+                            ->relationship('category', 'nom')
                             ->default(null),
                         Forms\Components\Select::make('fonctions')
                             ->label('Fonctions')
@@ -77,11 +80,9 @@ class EmployeeResource extends Resource
                             ->grouped()
                             ->inline(),
                         Forms\Components\DatePicker::make('date_embauche')
-                            ->date()
-                            ->required(),
+                            ->date(),
                         Forms\Components\DatePicker::make('date_depart')
                         ->date()
-                        ->required()
                         ->after('date_embauche'),
 
                     ])
@@ -90,7 +91,7 @@ class EmployeeResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('npi')
                             ->label('Numero d\' idendentification personnelle (NPI)')
-                            ->maxLength(16)
+                            ->maxLength(10)
                             ->numeric()
                             ->default(null),
                         Forms\Components\TextInput::make('nom')
@@ -98,23 +99,28 @@ class EmployeeResource extends Resource
                             ->maxLength(8),
                         Forms\Components\TextInput::make('prenoms')
                             ->label('Prénoms')
+                            ->required()
                             ->maxLength(15)
                             ->default(null),
                         Forms\Components\TextInput::make('telephone')
                             ->tel()
                             ->unique()
+                            ->required()
                             ->prefix('+229')
                             ->maxLength(8)
                             ->default(null),
                         Forms\Components\TextInput::make('email')
                             ->email()
                             ->unique()
+                            ->required()
                             ->maxLength(255)
                             ->default(null),
                         Forms\Components\DatePicker::make('date_naissance')
-                            ->date(),
+                            ->date()
+                            ->required(),
                         Forms\Components\TextInput::make('lieu_naissance')
                             ->maxLength(20)
+                            ->required()
                             ->default(null),
                         Forms\Components\Select::make('situation_matrimoniale')
                             ->options([
@@ -133,7 +139,6 @@ class EmployeeResource extends Resource
                             ->default(null),
                         Forms\Components\TextInput::make('nb_enfants')
                             ->label("Nombre d'enfants")
-                            ->required()
                             ->numeric()
                             ->integer()
                             ->default(0),
@@ -170,11 +175,9 @@ class EmployeeResource extends Resource
                 Forms\Components\Fieldset::make(label: 'Informations complémentaires')
                     ->schema([
                         Forms\Components\TextInput::make('nb_jours_conges_acquis')
-                            ->required()
                             ->numeric()
                             ->default(0),
                         Forms\Components\TextInput::make('solde_jours_conges_payes')
-                            ->required()
                             ->numeric()
                             ->default(0),
                     ]),
