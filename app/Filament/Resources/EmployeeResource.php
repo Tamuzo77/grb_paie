@@ -6,6 +6,7 @@ use App\Actions\CalculerSalaireMensuel;
 use App\Filament\Resources\EmployeeResource\Pages;
 use App\Filament\Resources\EmployeeResource\RelationManagers\AbsencesRelationManager;
 use App\Filament\Resources\EmployeeResource\RelationManagers\DemandeCongesRelationManager;
+use App\Models\Annee;
 use App\Models\Employee;
 use App\Models\ModePaiement;
 use App\Models\Paiement;
@@ -29,7 +30,14 @@ class EmployeeResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $recordTitleAttribute = 'nom';
+    protected static ?Annee $annee = null;
 
+    public function __construct()
+    {
+        $annee = Annee::whereSlug($filters['annee_id'] ?? now()->year)->firstOrFail();
+        self::$annee = $annee;
+
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -185,6 +193,9 @@ class EmployeeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function ($query) {
+                $query->where('annee_id', self::$annee->id);
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('client.nom')
                     ->searchable(isIndividual: true)
@@ -424,7 +435,7 @@ class EmployeeResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Employee::count();
+        return Employee::where('annee_id', self::$annee->id)->count();
     }
 
     public static function getGloballySearchableAttributes(): array

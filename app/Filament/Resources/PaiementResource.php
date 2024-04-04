@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PaiementResource\Pages;
+use App\Models\Annee;
 use App\Models\Client;
 use App\Models\Employee;
 use App\Models\Paiement;
@@ -24,6 +25,14 @@ class PaiementResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
+    protected static ?Annee $annee = null;
+
+    public function __construct()
+    {
+        $annee = Annee::whereSlug($filters['annee_id'] ?? now()->year)->firstOrFail();
+        self::$annee = $annee;
+
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -96,6 +105,9 @@ class PaiementResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(function ($query) {
+                return $query->where('annee_id', self::$annee->id);
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('employee.client.nom')
                     ->searchable(isIndividual: true, isGlobal: true)

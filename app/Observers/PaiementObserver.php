@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Annee;
 use App\Models\Paiement;
 
 class PaiementObserver
@@ -17,7 +18,8 @@ class PaiementObserver
 
     public function created(Paiement $paiement): void
     {
-        //
+        $annee = Annee::latest()->first();
+        $paiement->annee_id = $annee->id;
     }
 
     /**

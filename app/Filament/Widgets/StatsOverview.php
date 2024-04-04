@@ -2,15 +2,18 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Annee;
 use App\Models\Client;
 use App\Models\Employee;
 use App\Models\Paiement;
 use App\Models\TypePaiement;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverview extends BaseWidget
 {
+    use InteractsWithPageFilters;
     protected static ?int $sort = 1;
     protected int | string | array $columnSpan = [
         'md' => 2,
@@ -18,12 +21,13 @@ class StatsOverview extends BaseWidget
     ];
     protected function getStats(): array
     {
-        $clients = Client::count();
-        $employees = Employee::count();
-        $paiements = Paiement::count();
-        $paiementSalaire = Paiement::where('type_paiement_id', TypePaiement::SALAIRE)->count();
-        $paiementAvance = Paiement::where('type_paiement_id', TypePaiement::AVANCE)->count();
-        $paiementPret = Paiement::where('type_paiement_id', TypePaiement::PRET)->count();
+        $annee = Annee::whereSlug($this->filters['annee_id'] ?? now()->year)->firstOrFail();
+        $clients = Client::where('annee_id', $annee->id)->count();
+        $employees = Employee::where('annee_id', $annee->id)->count();
+        $paiements = Paiement::where('annee_id', $annee->id)->count();
+        $paiementSalaire = Paiement::where('annee_id', $annee->id)->where('type_paiement_id', TypePaiement::SALAIRE)->count();
+        $paiementAvance = Paiement::where('annee_id', $annee->id)->where('type_paiement_id', TypePaiement::AVANCE)->count();
+        $paiementPret = Paiement::where('annee_id', $annee->id)->where('type_paiement_id', TypePaiement::PRET)->count();
         return [
             Stat::make(label: 'Clients', value: $clients)
                 ->description("+ $clients croissant")

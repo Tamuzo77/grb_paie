@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Events\EtatsPersonnelEvent;
 use App\Filament\Resources\ClientResource\Pages;
 use App\Filament\Resources\ClientResource\RelationManagers\EmployeesRelationManager;
+use App\Models\Annee;
 use App\Models\Client;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -13,15 +14,24 @@ use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
 class ClientResource extends Resource
 {
+    use InteractsWithPageFilters;
     protected static ?string $model = Client::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
 
     protected static ?string $recordTitleAttribute = 'nom';
+    protected static ?Annee $annee = null;
 
+    public function __construct()
+    {
+        $annee = Annee::whereSlug($filters['annee_id'] ?? now()->year)->firstOrFail();
+        self::$annee = $annee;
+
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -83,6 +93,10 @@ class ClientResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(function (){
+                return Client::query()
+                    ->where('annee_id', self::$annee->id);
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('matricule')
                     ->sortable()
@@ -178,6 +192,8 @@ class ClientResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Client::count();
+        return Client::where('annee_id', self::$annee?->id)->count();
     }
+
+
 }
