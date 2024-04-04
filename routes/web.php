@@ -22,19 +22,27 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->middleware('auth');
 
 Route::get('/dashboard', function () {
+    if (auth()->user()->login_count == 1) {
+        return redirect()->route('first');
+    }
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'twofactor'])->name('dashboard');
-
+})->middleware(['auth', 'twofactor',])->name('dashboard');
+Route::get('/first', function () {
+    $user = auth()->user();
+    return Inertia::render('Auth/FirstLogin', [
+        'user' => $user
+    ]);
+})->middleware(['auth', 'twofactor',])->name('first');
 Route::middleware('auth')->group(function () {
     Route::resource('/client', ClientController::class);
     Route::get('fichepaie', [FicheController::class, 'index']);
@@ -42,14 +50,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
 });
 
-Route::middleware(['auth','twofactor'])->group(function () {
+Route::middleware(['auth', 'twofactor'])->group(function () {
     Route::get('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');
     Route::resource('verify', TwoFactorController::class)->only(['index', 'store']);
 });
 
 Route::get('/download-etats-personnel/{id}', [AdminController::class, 'downloadEtatsPersonnel'])->name('download-etats-personnel');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
