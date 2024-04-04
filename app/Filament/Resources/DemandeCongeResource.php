@@ -54,12 +54,13 @@ class DemandeCongeResource extends Resource
                             ->optionsLimit(5)
                             ->preload(),
                         Forms\Components\DateTimePicker::make('date_debut')
-                        ->required()
-                        ->date(),
+                            ->required()
+                            ->date(),
                         Forms\Components\DateTimePicker::make('date_fin')
-                        ->required()
-                        ->date()
-                        ->after('date_debut'),
+                            ->required()
+                            ->date()
+                            ->after('date_debut'),
+                            // ->beforeOrEqual($date_debut>addDays(11)),
                         ToggleButtons::make('statut')
                             ->label('Statut')
                             ->options([

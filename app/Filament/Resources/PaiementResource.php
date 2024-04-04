@@ -62,8 +62,11 @@ class PaiementResource extends Resource
                     ->required()
                     ->optionsLimit(5)
                     ->preload(),
-                Forms\Components\DateTimePicker::make('date_debut'),
-                Forms\Components\DateTimePicker::make('date_fin'),
+                Forms\Components\DateTimePicker::make('date_debut')
+                    ->date(),
+                Forms\Components\DateTimePicker::make('date_fin')
+                    ->date()
+                    ->after('date_debut'),
                 Forms\Components\TextInput::make('solde')
                     ->label('Solde (defaut: salaire)')
                     ->numeric(),
