@@ -11,11 +11,14 @@ class TwoFactorController extends Controller
 {
     public function index()
     {
-        return inertia('Auth/twofactor');
+        return inertia('Auth/twofactor', [
+            'status' => session('status'),
+        
+        ]);
     }
 
     public function store(Request $request)
-    {
+    {   
         $request->validate([
             'two_factor_code' => ['integer', 'required'],
         ]);
@@ -23,10 +26,7 @@ class TwoFactorController extends Controller
         $user = auth()->user();
 
         if ($request->input('two_factor_code') !== $user->two_factor_code) {
-            throw ValidationException::withMessages([
-                'two_factor_code' => __('The code you entered doesn\'t match our records'),
-            ]);
-        }
+            return \redirect()->back()->with('status', 'Code non valide');       }
 
         $user->resetTwoFactorCode();
 

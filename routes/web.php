@@ -22,6 +22,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
+    
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -32,7 +33,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'twofactor'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::resource('/client', ClientController::class);
@@ -46,9 +47,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth','twofactor'])->group(function () {
     Route::get('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');
-    Route::post('verify/store', [TwoFactorController::class, 'store'])->name('verify.store');
+    Route::resource('verify', TwoFactorController::class)->only(['index', 'store']);
 });
-
 
 Route::get('/download-etats-personnel/{id}', [AdminController::class, 'downloadEtatsPersonnel'])->name('download-etats-personnel');
 
