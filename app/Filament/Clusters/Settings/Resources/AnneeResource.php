@@ -36,6 +36,7 @@ class AnneeResource extends Resource
             ->columns([
 
                 Tables\Columns\TextColumn::make('nom')
+                    ->label('Année')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('debut')
                     ->date()
@@ -53,15 +54,15 @@ class AnneeResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+//                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
+//                Tables\Actions\ForceDeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
+//                    Tables\Actions\DeleteBulkAction::make(),
+//                    Tables\Actions\RestoreBulkAction::make(),
+//                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }
