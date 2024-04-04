@@ -105,7 +105,7 @@ class PaiementResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(function ($query) {
+            ->modifyQueryUsing(function ($query) {
                 return $query->where('annee_id', self::$annee->id);
             })
             ->columns([
