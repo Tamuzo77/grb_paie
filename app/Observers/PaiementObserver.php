@@ -18,8 +18,9 @@ class PaiementObserver
 
     public function created(Paiement $paiement): void
     {
-        $annee = Annee::latest()->first();
-        $paiement->annee_id = $annee->id;
+        $annee = Annee::latest()->first()->get();
+        $paiement->annee_id = $annee[0]['id'] ?? 1;
+        $paiement->save();
     }
 
     /**

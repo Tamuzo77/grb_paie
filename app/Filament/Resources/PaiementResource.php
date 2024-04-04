@@ -12,6 +12,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
@@ -157,6 +158,15 @@ class PaiementResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('voir solde')
+                    ->color(Color::Teal)
+                    ->label('Voir Solde')
+                    ->url(function (Paiement $paiement){
+                        $employee = Employee::where('id', $paiement->employee_id)->firstOrFail();
+                        return EmployeeResource::getUrl('solde', ['record' => $employee]);
+                    })
+                    ->icon('heroicon-o-currency-dollar')
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

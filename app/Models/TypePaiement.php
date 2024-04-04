@@ -26,9 +26,9 @@ class TypePaiement extends Model
 
     public const AVANCE = 1;
 
-    public const PRET = 3;
+    public const PRET = 2;
 
-    public const SALAIRE = 4;
+    public const SALAIRE = 3;
 
     /**
      * @var array

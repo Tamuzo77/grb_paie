@@ -433,6 +433,7 @@ class EmployeeResource extends Resource
             'create' => Pages\CreateEmployee::route('/create'),
             'edit' => Pages\EditEmployee::route('/{record}/edit'),
             'salaires-paiements' => Pages\SalaireBulkPage::route('/{records}/salaires-paiements'),
+            'solde' => Pages\SoldePage::route('/{record}/solde'),
         ];
     }
 
