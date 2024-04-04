@@ -34,6 +34,7 @@ class DemandeCongeResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('client_id')
                             ->live()
+                            ->required()
                             ->searchable()
                             ->label('Client')
                             ->dehydrated(false)
@@ -52,8 +53,13 @@ class DemandeCongeResource extends Resource
                             ->required()
                             ->optionsLimit(5)
                             ->preload(),
-                        Forms\Components\DateTimePicker::make('date_debut'),
-                        Forms\Components\DateTimePicker::make('date_fin'),
+                        Forms\Components\DateTimePicker::make('date_debut')
+                        ->required()
+                        ->date(),
+                        Forms\Components\DateTimePicker::make('date_fin')
+                        ->required()
+                        ->date()
+                        ->after('date_debut'),
                         ToggleButtons::make('statut')
                             ->label('Statut')
                             ->options([
@@ -65,6 +71,7 @@ class DemandeCongeResource extends Resource
                                 'non paye' => 'error',
                             ])
                             ->grouped()
+                            ->required()
                             ->inline(),
                     ]),
 
