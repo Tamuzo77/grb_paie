@@ -59,5 +59,5 @@ Route::middleware(['auth', 'twofactor'])->group(function () {
 });
 
 Route::get('/download-etats-personnel/{id}', [AdminController::class, 'downloadEtatsPersonnel'])->name('download-etats-personnel');
-
+Route::get('/download-fiche-de-paie/{id}', [AdminController::class, 'downloadFicheDePaie'])->name('download-fiche-de-paie');
 require __DIR__ . '/auth.php';
