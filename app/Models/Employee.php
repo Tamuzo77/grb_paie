@@ -6,6 +6,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
@@ -56,7 +57,7 @@ class Employee extends Model
     /**
      * @var array
      */
-    protected $fillable = ['annee_id', 'client_id', 'bank_id', 'slug', 'npi', 'nom', 'prenoms', 'telephone', 'email', 'date_naissance', 'lieu_naissance', 'situation_matrimoniale', 'sexe', 'nb_enfants', 'date_embauche', 'date_depart', 'categorie', 'cadre', 'salaire', 'numero_compte', 'tauxIts', 'tauxCnss', 'nb_jours_conges_acquis', 'solde_jours_conges_payes', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
+    protected $fillable = ['annee_id', 'client_id', 'bank_id', 'slug', 'npi', 'nom', 'prenoms', 'telephone', 'email', 'date_naissance', 'lieu_naissance', 'situation_matrimoniale', 'sexe', 'nb_enfants', 'date_embauche', 'date_depart', 'categorie', 'category_id' ,'cadre', 'salaire', 'numero_compte', 'tauxIts', 'tauxCnss', 'nb_jours_conges_acquis', 'solde_jours_conges_payes', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -117,6 +118,11 @@ class Employee extends Model
     public function soldeComptes()
     {
         return $this->hasMany('App\Models\SoldeCompte');
+    }
+
+    public function category() : BelongsTo
+    {
+        return $this->belongsTo('App\Models\Category');
     }
 
     public function sluggable(): array

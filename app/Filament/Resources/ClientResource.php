@@ -50,7 +50,8 @@ class ClientResource extends Resource
                                 Forms\Components\TextInput::make('nom')
                                     ->required()
                                     ->helperText('Nom complet')
-                                    ->maxLength(255),
+                                    ->maxLength(255)
+                                    ->label('Nom de la structure'),
                                 Forms\Components\TextInput::make('adresse')
                                     ->required()
                                     ->helperText('Adresse de l\'entreprise')

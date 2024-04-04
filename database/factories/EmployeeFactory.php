@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Bank;
+use App\Models\Category;
 use App\Models\Client;
 use App\Services\ItsService;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -31,13 +32,14 @@ class EmployeeFactory extends Factory
             'salaire' => $salaire,
             'email' => fake()->email,
             'categorie' => fake()->jobTitle,
+            'category_id' => Category::inRandomOrder()->first()->id,
             'date_naissance' => fake()->date(),
             'lieu_naissance' => fake()->city,
             'nb_enfants' => rand(0, 8),
             'sexe' => 'M',
             'tauxIts' => ItsService::getIts($salaire),
             'situation_matrimoniale' => fake()->word(),
-            'npi' => rand(1000000000000000, 9999999999999999),
+            'npi' => rand(1000000000, 9999999999),
             'numero_compte' => fake()->creditCardNumber,
         ];
     }

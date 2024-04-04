@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    protected $toTruncate = ['banks', 'clients', 'annees', 'employees'];
+    protected $toTruncate = ['banks', 'clients', 'annees', 'employees', 'categories'];
 
     /**
      * Seed the application's database.
@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AnneeSeeder::class);
         $this->call(BankSeeder::class);
         $this->call(ClientSeeder::class);
+        $this->call(CategorySeeder::class);
         $this->call(EmployeeSeeder::class);
     }
 }
