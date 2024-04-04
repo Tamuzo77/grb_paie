@@ -32,7 +32,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'twofactor'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::resource('/client', ClientController::class);
@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth','twofactor'])->group(function () {
     Route::get('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');
-    Route::post('verify/store', [TwoFactorController::class, 'store'])->name('verify.store');
+    Route::resource('verify', TwoFactorController::class)->only(['index', 'store']);
 });
 
 
