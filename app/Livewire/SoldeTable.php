@@ -7,6 +7,7 @@ use App\Models\SoldeCompte;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Concerns\HasTabs;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
@@ -41,8 +42,12 @@ class SoldeTable extends Component implements HasForms, HasTable
         return $table
             ->query(SoldeCompte::query()->where('employee_id', $this->employee->id))
             ->columns([
-                TextColumn::make('donnees'),
+                TextColumn::make('donnees')
+                    ->weight(fn($record) => $record->donnees == SoldeCompte::TOTAL ? FontWeight::Bold : null)
+                    ->size(fn($record) => $record->donnees == SoldeCompte::TOTAL ? TextColumn\TextColumnSize::Large : null),
                 TextInputColumn::make('montant')
+                    ->weight(fn($record) => $record->donnees == SoldeCompte::TOTAL ? FontWeight::Bold : null)
+                    ->size(fn($record) => $record->donnees == SoldeCompte::TOTAL ? TextColumn\TextColumnSize::Large : null)
                     ->disabled(fn ($record) => $record->donnees == SoldeCompte::SALAIRE_MENSUEL || $record->donnees == SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU|| $record->donnees == SoldeCompte::TOTAL),
             ])
             ->filters([

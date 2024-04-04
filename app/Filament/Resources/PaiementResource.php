@@ -162,7 +162,7 @@ class PaiementResource extends Resource
 
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+//                Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('voir solde')
                     ->color(Color::Teal)
                     ->label('Voir Solde')

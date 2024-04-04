@@ -33,7 +33,7 @@ export default function FirstLogin({ status, canResetPassword, user }) {
             {/*<Head title="Log in" />*/}
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
-            <div className="mb-4 font-medium text-center text-sm text-amber-400">Première connexion: Changez votre mot de passe</div>
+            <div className="mb-4 font-medium text-center text-sm text-blue-950">Première connexion: Changez votre mot de passe</div>
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="email" value="Email"/>
@@ -52,7 +52,7 @@ export default function FirstLogin({ status, canResetPassword, user }) {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password"/>
+                    <InputLabel htmlFor="password" value="Nouveau mot de passe"/>
 
                     <TextInput
                         id="password"
@@ -67,7 +67,7 @@ export default function FirstLogin({ status, canResetPassword, user }) {
                     <InputError message={errors.password} className="mt-2"/>
                 </div>
                 <div className="mt-4">
-                    <InputLabel htmlFor="password_confirmation" value="Confirm Password"/>
+                    <InputLabel htmlFor="password_confirmation" value="Confirmez le mot de passe"/>
 
                     <TextInput
                         id="password_confirmation"
@@ -87,7 +87,7 @@ export default function FirstLogin({ status, canResetPassword, user }) {
                 <div className="flex items-center justify-end mt-4">
 
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        Sumbit
+                        Soumettre
                     </PrimaryButton>
                 </div>
             </form>

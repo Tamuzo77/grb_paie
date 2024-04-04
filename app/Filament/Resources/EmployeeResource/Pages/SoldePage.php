@@ -10,6 +10,7 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -20,9 +21,11 @@ use pxlrbt\FilamentExcel\Exports\ExcelExport;
 class SoldePage extends ListRecords
 {
     use InteractsWithRecord;
+
     protected static string $resource = EmployeeResource::class;
 
     protected ?string $heading = "Solde de Compte";
+
     public function mount(): void
     {
         $this->record = Employee::whereSlug(request('record'))->first();
@@ -43,16 +46,19 @@ class SoldePage extends ListRecords
         return $table
             ->query(SoldeCompte::query()->where('employee_id', $this->record->id))
             ->columns([
-                TextColumn::make('donnees'),
+                TextColumn::make('donnees')
+                    ->weight(fn($record) => $record->donnees == SoldeCompte::TOTAL ? FontWeight::Bold : null)
+                    ->size(fn($record) => $record->donnees == SoldeCompte::TOTAL ? TextColumn\TextColumnSize::Large : null),
                 TextColumn::make('montant')
+                    ->weight(fn($record) => $record->donnees == SoldeCompte::TOTAL ? FontWeight::Bold : null)
+                    ->size(fn($record) => $record->donnees == SoldeCompte::TOTAL ? TextColumn\TextColumnSize::Large : null)
                     ->prefix(function ($record) {
-                        if ($record->donnees == SoldeCompte::TOTAL)
-                        {
-                          return ' ';
+                        if ($record->donnees == SoldeCompte::TOTAL) {
+                            return ' ';
                         }
                         return $record->donnees == SoldeCompte::SALAIRE_MENSUEL || $record->donnees == SoldeCompte::TREIZIEME_MOIS || $record->donnees == SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU || $record->donnees == SoldeCompte::PREAVIS ? '+ ' : '- ';
                     })
-                    ->disabled(fn ($record) => $record->donnees == SoldeCompte::SALAIRE_MENSUEL || $record->donnees == SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU|| $record->donnees == SoldeCompte::TOTAL),
+                    ->disabled(fn($record) => $record->donnees == SoldeCompte::SALAIRE_MENSUEL || $record->donnees == SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU || $record->donnees == SoldeCompte::TOTAL),
 
             ])
             ->paginated(false)
@@ -79,7 +85,7 @@ class SoldePage extends ListRecords
                     ->exports([
                         ExcelExport::make()
                             ->fromTable()
-                            ->withFilename($this->record->nom.' '.$this->record->prenoms.' - Solde Compte'),
+                            ->withFilename($this->record->nom . ' ' . $this->record->prenoms . ' - Solde Compte'),
                     ]),
             ]);
     }
