@@ -1,0 +1,37 @@
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    text-wrap: nowrap;
+    margin: auto;
+
+}
+
+.table th,
+.table td {
+    border: 1.5px solid #e8e8e8;
+    padding: 8px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.table th {
+    background-color: #f3f6ff;
+    color: #333;
+    font-weight: bold;
+}
+.table tbody .title{
+    font-weight: bold;
+}
+.table tr:nth-child(even) {
+    background-color: #fff;
+}
+
+.table tr:nth-child(odd) {
+    background-color: #f3f6ff;
+}
+
+.table tr:last-child  {
+    font-weight: bold;
+
+}
