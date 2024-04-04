@@ -56,4 +56,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+    Route::get('first-login', [AuthenticatedSessionController::class, 'firstLogin'])
+        ->name('auth.first-login');
+    Route::post('first-login', [AuthenticatedSessionController::class, 'firstLoginUpdatePassword'])
+        ->name('auth.first-login');
 });
