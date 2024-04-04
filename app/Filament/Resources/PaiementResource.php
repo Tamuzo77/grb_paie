@@ -11,6 +11,7 @@ use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
@@ -34,6 +35,7 @@ class PaiementResource extends Resource
         self::$annee = $annee;
 
     }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -46,17 +48,17 @@ class PaiementResource extends Resource
                     ->options(Client::all()->pluck('nom', 'id')),
                 Forms\Components\Select::make('employee_id')
                     ->label('Employé')
-                    ->placeholder(fn (Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
+                    ->placeholder(fn(Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
                     ->hintColor('accent')
                     ->options(function (Forms\Get $get) {
                         return Employee::where('client_id', $get('client_id'))->get()->pluck('nom', 'id');
                     })
 //                            ->relationship('employee', modifyQueryUsing: fn(Builder $query) => $query->orderBy('nom')->orderBy('prenoms'))
-                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom} {$record->prenoms}")
+                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->nom} {$record->prenoms}")
                     ->hintIcon('heroicon-o-user-group')
                     ->searchable(['nom', 'prenoms'])
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('solde', Employee::whereId($state)->first()->salaire ?? 0))
+                    ->afterStateUpdated(fn(Forms\Set $set, ?string $state) => $set('solde', Employee::whereId($state)->first()->salaire ?? 0))
                     ->required()
                     ->optionsLimit(5)
                     ->preload(),
@@ -114,7 +116,7 @@ class PaiementResource extends Resource
                     ->searchable(isIndividual: true, isGlobal: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('employee.nom')
-                    ->description(fn ($record) => $record->employee->prenoms, position: 'above')
+                    ->description(fn($record) => $record->employee->prenoms, position: 'above')
                     ->separator()
                     ->searchable()
                     ->sortable(),
@@ -151,8 +153,8 @@ class PaiementResource extends Resource
                         DatePicker::make('from'),
                         DatePicker::make('until'),
                     ])->query(function ($query, array $data) {
-                        return $query->when($data['from'], fn ($query) => $query->whereDate('date_debut', '>=', $data['from']))
-                            ->when($data['until'], fn ($query) => $query->whereDate('date_debut', '<=', $data['until']));
+                        return $query->when($data['from'], fn($query) => $query->whereDate('date_debut', '>=', $data['from']))
+                            ->when($data['until'], fn($query) => $query->whereDate('date_debut', '<=', $data['until']));
                     }),
 
             ])
@@ -161,11 +163,37 @@ class PaiementResource extends Resource
                 Tables\Actions\Action::make('voir solde')
                     ->color(Color::Teal)
                     ->label('Voir Solde')
-                    ->url(function (Paiement $paiement){
+                    ->url(function (Paiement $paiement) {
                         $employee = Employee::where('id', $paiement->employee_id)->firstOrFail();
                         return EmployeeResource::getUrl('solde', ['record' => $employee]);
                     })
-                    ->icon('heroicon-o-currency-dollar')
+                    ->icon('heroicon-o-currency-dollar'),
+                Tables\Actions\Action::make('fiche_de_paie')
+                    ->color(Color::Fuchsia)
+                    ->label('Fiche de paie')
+                    ->requiresConfirmation()
+                    ->action(function (Paiement $record) {
+                        try {
+                            redirect(route('download-fiche-de-paie', $record->id));
+
+                            Notification::make('Fiche de paie téléchargé avec succès')
+                                ->title('Téléchargement réussi')
+                                ->body('Le téléchargement de la fiche de paie a été effectué avec succès.')
+                                ->color('success')
+                                ->iconColor('success')
+                                ->send()
+                                ->sendToDatabase(auth()->user(),true);
+                        }catch (\Exception $e) {
+                            Notification::make('Erreur lors du téléchargement de la fiche de paie')
+                                ->title('Erreur')
+                                ->body("Une erreur s'est produite lors du téléchargement de l'état personnel. Veuillez réessayer.")
+                                ->color('danger')
+                                ->iconColor('danger')
+                                ->send()
+                                ->sendToDatabase(auth()->user(), true);
+                        }
+                    })
+                    ->icon('heroicon-o-document-text'),
 
             ])
             ->bulkActions([

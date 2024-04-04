@@ -12,6 +12,7 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
@@ -55,6 +56,24 @@ class SoldePage extends ListRecords
 
             ])
             ->paginated(false)
+            ->filters([
+                SelectFilter::make('mois')
+                    ->default(now()->format('F'))
+                    ->options([
+                        'January' => 'Janvier',
+                        'Februray' => 'Février',
+                        'March' => 'Mars',
+                        'April' => 'Avril',
+                        'May' => 'Mai',
+                        'June' => 'Juin',
+                        'July' => 'Juillet',
+                        'August' => 'Août',
+                        'September' => 'Septembre',
+                        'October' => 'Octobre',
+                        'November' => 'Novembre',
+                        'December' => 'Décembre',
+                    ]),
+            ])
             ->bulkActions([
                 ExportBulkAction::make()
                     ->exports([
