@@ -11,9 +11,9 @@ export default function Guest({ children }) {
             </div> */}
 
             <div className="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
-            <div className='flex justify-center items-center'>
+            <div className='flex justify-center items-center mb-5'>
                 <Link href="/" className='text-center m-auto'>
-                    <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
+                    <ApplicationLogo className="w-20 h-20 fill-current text-gray-500 " />
                 </Link>
             </div>
             
