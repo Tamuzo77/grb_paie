@@ -6,6 +6,8 @@ use App\Filament\Resources\DemandeCongeResource\Pages;
 use App\Models\Client;
 use App\Models\DemandeConge;
 use App\Models\Employee;
+use Closure;
+use DateTime;
 use Filament\Forms;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
@@ -54,12 +56,24 @@ class DemandeCongeResource extends Resource
                             ->optionsLimit(5)
                             ->preload(),
                         Forms\Components\DateTimePicker::make('date_debut')
-                        ->required()
-                        ->date(),
+                            ->required()
+                            ->date(),
                         Forms\Components\DateTimePicker::make('date_fin')
-                        ->required()
-                        ->date()
-                        ->after('date_debut'),
+                            ->required()
+                            ->rules([
+                                fn (Forms\Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get){
+                                    $startDate = new DateTime($get('date_debut'));
+                                    $endDate = new DateTime($value);
+                                $nbre_jours = date_diff($startDate, $endDate)->days;
+                                $nbre_jours_acquis = Employee::find($get('employee_id'))->nb_jours_conges_acquis;
+                                    if ($nbre_jours > $nbre_jours_acquis) {
+                                        $fail(' Le nombre de jours de congés demandés est supérieur au nombre de jours de congés acquis');
+                                    }
+                                },
+                            ])
+                            ->date()
+                            ->after('date_debut'),
+                            // ->beforeOrEqual($date_debut>addDays(11)),
                         ToggleButtons::make('statut')
                             ->label('Statut')
                             ->options([

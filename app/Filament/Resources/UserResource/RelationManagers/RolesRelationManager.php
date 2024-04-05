@@ -34,6 +34,7 @@ class RolesRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make()
+                    ->successNotificationTitle('Rôle lié avec succès')
                     ->preloadRecordSelect(),
             ])
             ->actions([

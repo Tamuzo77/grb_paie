@@ -59,6 +59,10 @@ const TwoFactor = ({ status }) => {
             <div>
                 {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
             </div>
+            <div className="mb-4 font-medium text-center text-sm text-blue-950 dark:text-gray-200">Veuillez consulter votre mail pour
+                récupérer votre code de connexion.
+            </div>
+
 
             <form onSubmit={handleSubmit}>
                 <div className='m-auto mb-3 w-full flex justify-center'>
@@ -78,11 +82,11 @@ const TwoFactor = ({ status }) => {
                         />
                     ))}
                 </div>
-                <InputError message={errors.two_factor_code} />
+                <InputError message={errors.two_factor_code}/>
 
                 <div className='flex items-center justify-center mt-4'>
                     <PrimaryButton type="submit" disabled={processing}>
-                        Submit
+                        Soumettre
                     </PrimaryButton>
                 </div>
             </form>

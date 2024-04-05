@@ -22,7 +22,7 @@ class Dashboard extends BaseDashboard
                 Section::make()
                     ->schema([
                         Select::make('annee_id')
-                            ->label('Année')
+                            ->label('Année d\'exercice')
                             ->preload()
                             ->searchable()
                             ->optionsLimit(3)

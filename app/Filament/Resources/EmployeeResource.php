@@ -125,6 +125,7 @@ class EmployeeResource extends Resource
                             ->default(null),
                         Forms\Components\DatePicker::make('date_naissance')
                             ->date()
+                            ->maxDate(now()->subYears(18))
                             ->required(),
                         Forms\Components\TextInput::make('lieu_naissance')
                             ->maxLength(20)
@@ -349,6 +350,7 @@ class EmployeeResource extends Resource
                         ->form([
                             Forms\Components\Select::make('mode_paiement_id')
                                 ->searchable()
+                                ->label('Mode de paiement')
                                 ->live(onBlur: true)
                                 ->options(ModePaiement::query()->pluck('nom', 'id'))
                                 ->preload(),
@@ -368,14 +370,17 @@ class EmployeeResource extends Resource
                         ])
                         ->icon('heroicon-o-banknotes')
                         ->action(function (array $data, $records) {
-                            $donnes = [SoldeCompte::SALAIRE_MENSUEL, SoldeCompte::TREIZIEME_MOIS, SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU, SoldeCompte::PREAVIS, SoldeCompte::AVANCE_SUR_SALAIRE, SoldeCompte::PRET_ENTREPRISE];
+                            $donnes = [SoldeCompte::SALAIRE_MENSUEL, SoldeCompte::TREIZIEME_MOIS, SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU, SoldeCompte::PREAVIS, SoldeCompte::AVANCE_SUR_SALAIRE, SoldeCompte::PRET_ENTREPRISE, SoldeCompte::TOTAL];
 
                             foreach ($records as $record) {
+                                $salaire_mensuel = (new CalculerSalaireMensuel())->handle($record);
+                                $montantJoursCongesPaye = $record->demandeConges()->where('statut', 'paye')->count() * $record->solde_jours_conges_payes;
+                                $montantAvanceSalaire = $record->paiements()->where('type_paiement_id', 1)->sum('solde');
                                 Paiement::create([
                                     'date_paiement' => now(),
                                     'employee_id' => $record->id,
                                     'statut' => 'effectue',
-                                    'solde' => (new CalculerSalaireMensuel())->handle($record),
+                                    'solde' => $salaire_mensuel ,
                                     'mode_paiement_id' => $data['mode_paiement_id'],
                                     'type_paiement_id' => TypePaiement::SALAIRE,
                                 ]);
@@ -389,12 +394,13 @@ class EmployeeResource extends Resource
                                             'mois' => now()->format('F'),
                                             'donnees' => $donne,
                                             'montant' => match ($donne) {
-                                                SoldeCompte::SALAIRE_MENSUEL => (new CalculerSalaireMensuel())->handle($record),
+                                                SoldeCompte::SALAIRE_MENSUEL => $salaire_mensuel,
                                                 SoldeCompte::TREIZIEME_MOIS => 0,
-                                                SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU => $record->demandeConges()->where('statut', 'paye')->count() * $record->solde_jours_conges_payes,
+                                                SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU => $montantJoursCongesPaye ,
                                                 SoldeCompte::PREAVIS => 0,
-                                                SoldeCompte::AVANCE_SUR_SALAIRE => $record->paiements()->where('type_paiement_id', 1)->sum('solde'),
+                                                SoldeCompte::AVANCE_SUR_SALAIRE => $montantAvanceSalaire,
                                                 SoldeCompte::PRET_ENTREPRISE => 0,
+                                                SoldeCompte::TOTAL => $salaire_mensuel + $montantJoursCongesPaye - $montantAvanceSalaire,
                                             },
                                         ]);
                                 }
@@ -433,6 +439,7 @@ class EmployeeResource extends Resource
             'create' => Pages\CreateEmployee::route('/create'),
             'edit' => Pages\EditEmployee::route('/{record}/edit'),
             'salaires-paiements' => Pages\SalaireBulkPage::route('/{records}/salaires-paiements'),
+            'solde' => Pages\SoldePage::route('/{record}/solde'),
         ];
     }
 

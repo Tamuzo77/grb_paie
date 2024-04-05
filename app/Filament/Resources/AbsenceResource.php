@@ -36,6 +36,7 @@ class AbsenceResource extends Resource
                             ->live()
                             ->searchable()
                             ->label('Client')
+                            ->required()
                             ->dehydrated(false)
                             ->options(Client::all()->pluck('nom', 'id')),
                         Forms\Components\Select::make('employee_id')
@@ -52,8 +53,13 @@ class AbsenceResource extends Resource
                             ->required()
                             ->optionsLimit(5)
                             ->preload(),
-                        Forms\Components\DateTimePicker::make('date_debut'),
-                        Forms\Components\DateTimePicker::make('date_fin'),
+                        Forms\Components\DateTimePicker::make('date_debut')
+                            ->required()
+                            ->date(),
+                        Forms\Components\DateTimePicker::make('date_fin')
+                            ->required()
+                            ->date()
+                            ->after('date_debut'),
                         ToggleButtons::make('deductible')
                             ->label('Est elle déductible ?')
                             ->options([

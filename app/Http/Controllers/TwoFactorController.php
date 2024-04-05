@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use App\Providers\RouteServiceProvider;
 use App\Notifications\SendTwoFactorCode;
 use Illuminate\Validation\ValidationException;
 
@@ -13,12 +13,12 @@ class TwoFactorController extends Controller
     {
         return inertia('Auth/twofactor', [
             'status' => session('status'),
-        
+
         ]);
     }
 
     public function store(Request $request)
-    {   
+    {
         $request->validate([
             'two_factor_code' => ['integer', 'required'],
         ]);
@@ -30,7 +30,8 @@ class TwoFactorController extends Controller
 
         $user->resetTwoFactorCode();
 
-        return redirect()->route('dashboard');
+
+        return redirect(RouteServiceProvider::ADMIN);
     }
 
     public function resend()

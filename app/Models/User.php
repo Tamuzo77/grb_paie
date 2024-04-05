@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
@@ -19,7 +20,7 @@ use Wildside\Userstamps\Userstamps;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable, Sluggable, SoftDeletes, TwoFactorAuthenticatable, Userstamps;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, Sluggable, SoftDeletes, TwoFactorAuthenticatable, Userstamps, HasPanelShield;
 
     /**
      * The attributes that are mass assignable.
@@ -36,6 +37,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'phone',
         'name', 'email', 'password',
         'two_factor_code', 'two_factor_expires_at',
+        'login_count', 'last_login_at', 'first_login_at',
     ];
 
     /**
