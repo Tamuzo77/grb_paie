@@ -33,7 +33,7 @@ export default function FirstLogin({ status, canResetPassword, user }) {
             {/*<Head title="Log in" />*/}
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
-            <div className="mb-4 font-medium text-center text-sm text-blue-950">Première connexion: Changez votre mot de passe</div>
+            <div className="mb-4 font-medium text-center text-sm text-blue-950 dark:text-gray-200">Première connexion: Changez votre mot de passe</div>
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="email" value="Email"/>
