@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Providers\RouteServiceProvider;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use App\Providers\RouteServiceProvider;
 use App\Notifications\SendTwoFactorCode;
 use Illuminate\Validation\ValidationException;
 
@@ -30,6 +32,7 @@ class TwoFactorController extends Controller
             return \redirect()->back()->with('status', 'Code non valide');       }
 
         $user->resetTwoFactorCode();
+
 
         return redirect(RouteServiceProvider::ADMIN);
     }
