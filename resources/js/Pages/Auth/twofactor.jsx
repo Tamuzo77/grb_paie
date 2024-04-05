@@ -59,7 +59,7 @@ const TwoFactor = ({ status }) => {
             <div>
                 {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
             </div>
-            <div className="mb-4 font-medium text-center text-sm text-blue-950">Veuillez consulter votre mail pour
+            <div className="mb-4 font-medium text-center text-sm text-blue-950 dark:text-gray-200">Veuillez consulter votre mail pour
                 récupérer votre code de connexion.
             </div>
 
