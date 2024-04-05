@@ -16,4 +16,14 @@ class EditCategory extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    public static function shouldRegisterSpotlight(): bool
+    {
+        return false;
+    }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Catégorie modifiée avec succès';
+    }
 }
