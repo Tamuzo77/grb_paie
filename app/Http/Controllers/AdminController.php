@@ -29,7 +29,7 @@ class AdminController extends Controller
     {
         $paiement = Paiement::find($id);
         $export = new FichePaieExport($paiement);
-        return Excel::download($export, "fiche-de-paie-{$paiement->employee->nom}.xlsx");
-
+        $excel = Excel::download($export, "fiche-de-paie-{$paiement->employee->nom}.xlsx");
+        return $excel;
     }
 }
