@@ -29,7 +29,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-})->middleware('auth');
+})->middleware(['auth', 'twofactor',]);
 
 Route::get('/dashboard', function () {
     if (auth()->user()->login_count == 1) {

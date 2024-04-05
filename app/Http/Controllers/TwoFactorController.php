@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
@@ -14,12 +16,12 @@ class TwoFactorController extends Controller
     {
         return inertia('Auth/twofactor', [
             'status' => session('status'),
-        
+
         ]);
     }
 
     public function store(Request $request)
-    {   
+    {
         $request->validate([
             'two_factor_code' => ['integer', 'required'],
         ]);
@@ -31,7 +33,8 @@ class TwoFactorController extends Controller
 
         $user->resetTwoFactorCode();
 
-        return redirect()->intended(RouteServiceProvider::ADMIN);
+
+        return redirect(RouteServiceProvider::ADMIN);
     }
 
     public function resend()

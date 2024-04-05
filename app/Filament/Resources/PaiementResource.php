@@ -43,6 +43,7 @@ class PaiementResource extends Resource
                 Forms\Components\Select::make('client_id')
                     ->live()
                     ->searchable()
+                    ->required()
                     ->label('Client')
                     ->dehydrated(false)
                     ->options(Client::all()->pluck('nom', 'id')),
@@ -63,9 +64,11 @@ class PaiementResource extends Resource
                     ->optionsLimit(5)
                     ->preload(),
                 Forms\Components\DateTimePicker::make('date_debut')
-                    ->date(),
+                    ->date()
+                    ->required(),
                 Forms\Components\DateTimePicker::make('date_fin')
                     ->date()
+                    ->required()
                     ->after('date_debut'),
                 Forms\Components\TextInput::make('solde')
                     ->label('Solde (defaut: salaire)')
