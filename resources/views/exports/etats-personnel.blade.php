@@ -26,10 +26,10 @@
 
                         </thead>
 
-                        <tbody style="border: 1px">
+                        <tbody >
                         @forelse($employees as $employee)
                             <tr>
-                                <td colspan="3">{{ $loop->iteration }}</td>
+                                <td colspan="3" style="border:2px solid  #000000;">{{ $loop->iteration }}</td>
                                 <td colspan="3">{{ $employee->nom }}</td>
                                 <td colspan="3">{{ $employee->fonctions()->first()?->nom }}</td>
                                 <td colspan="3">{{ $employee->nb_enfants }}</td>
@@ -71,11 +71,11 @@
                             <td colspan="16 
                             ">xxxxxxxx</td>
 
-                            <td style="text-align: end" colspan="17">La Directrice</td>
+                            <td style="text-align: end;" colspan="17">La Directrice</td>
                         </tr>
                         <tr>
                             <td colspan="16">xxxxxxxx</td>
-                            <td style="text-align: end" colspan="17">xxxxxxxxx</td>
+                            <td style="text-align:end;" colspan="17">xxxxxxxxx</td>
                         </tr>
                         </tbody>
                     </table>

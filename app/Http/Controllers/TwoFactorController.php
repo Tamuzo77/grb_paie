@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use App\Providers\RouteServiceProvider;
 use App\Notifications\SendTwoFactorCode;
 use Illuminate\Validation\ValidationException;
 
@@ -30,7 +31,7 @@ class TwoFactorController extends Controller
 
         $user->resetTwoFactorCode();
 
-        return redirect()->route('dashboard');
+        return redirect()->intended(RouteServiceProvider::ADMIN);
     }
 
     public function resend()
