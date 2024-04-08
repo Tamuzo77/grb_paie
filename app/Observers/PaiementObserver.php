@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Annee;
 use App\Models\Paiement;
+use App\Models\TypePaiement;
 
 class PaiementObserver
 {
@@ -20,6 +21,9 @@ class PaiementObserver
     {
         $annee = Annee::latest()->first()->get();
         $paiement->annee_id = $annee[0]['id'] ?? 1;
+        if ($paiement->type_paiement_id == TypePaiement::PRET) {
+            $paiement->reste = $paiement->solde;
+        }
         $paiement->save();
     }
 
