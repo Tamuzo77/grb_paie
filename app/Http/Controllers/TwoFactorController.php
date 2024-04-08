@@ -30,8 +30,14 @@ class TwoFactorController extends Controller
 
         $user->resetTwoFactorCode();
 
+        if (auth()->user()->login_count == 1)
+        {
+            return redirect(RouteServiceProvider::HOME);
+        }
+        else{
+            return redirect(RouteServiceProvider::ADMIN);
+        }
 
-        return redirect(RouteServiceProvider::HOME);
     }
 
     public function resend()

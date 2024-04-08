@@ -230,11 +230,11 @@ class EmployeesRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\Action::make('cotisations')
-//                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
-                    ->icon('heroicon-o-currency-dollar')
-                    ->color('success')
-                    ->label('Cotisations'),
+//                Tables\Actions\Action::make('cotisations')
+////                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
+//                    ->icon('heroicon-o-currency-dollar')
+//                    ->color('success')
+//                    ->label('Cotisations'),
                 Tables\Actions\Action::make('payer')
                     ->icon('heroicon-o-banknotes')
                     ->color('tertiary')
@@ -367,6 +367,7 @@ class EmployeesRelationManager extends RelationManager
                                 $salaire_mensuel = (new CalculerSalaireMensuel())->handle($record);
                                 $montantJoursCongesPaye = $record->demandeConges()->where('statut', 'paye')->count() * $record->solde_jours_conges_payes;
                                 $montantAvanceSalaire = $record->paiements()->where('type_paiement_id', 1)->sum('solde');
+                                $prets = CalculerSalaireMensuel::sommePrets($record);
                                     Paiement::create([
                                     'date_paiement' => now(),
                                     'employee_id' => $record->id,
@@ -390,8 +391,8 @@ class EmployeesRelationManager extends RelationManager
                                                 SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU => $montantJoursCongesPaye ,
                                                 SoldeCompte::PREAVIS => 0,
                                                 SoldeCompte::AVANCE_SUR_SALAIRE => $montantAvanceSalaire,
-                                                SoldeCompte::PRET_ENTREPRISE => 0,
-                                                SoldeCompte::TOTAL => $salaire_mensuel + $montantJoursCongesPaye - $montantAvanceSalaire,
+                                                SoldeCompte::PRET_ENTREPRISE => $prets,
+                                                SoldeCompte::TOTAL => $salaire_mensuel + $montantJoursCongesPaye - $montantAvanceSalaire - $prets,
                                             },
                                         ]);
                                 }

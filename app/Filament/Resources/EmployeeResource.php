@@ -212,11 +212,12 @@ class EmployeeResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('categorie')
+                Tables\Columns\TextColumn::make('category.nom')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('cadre')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('salaire')
+                    ->label('Salaire brute')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -240,11 +241,11 @@ class EmployeeResource extends Resource
                     ->placeholder('Employés'),
             ])
             ->actions([
-                Tables\Actions\Action::make('cotisations')
-//                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
-                    ->icon('heroicon-o-currency-dollar')
-                    ->color('success')
-                    ->label('Cotisations'),
+//                Tables\Actions\Action::make('cotisations')
+////                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
+//                    ->icon('heroicon-o-currency-dollar')
+//                    ->color('success')
+//                    ->label('Cotisations'),
                 Tables\Actions\Action::make('payer')
                     ->icon('heroicon-o-banknotes')
                     ->color('tertiary')
@@ -277,7 +278,7 @@ class EmployeeResource extends Resource
                                     ->label('Type de paiement')
                                     ->required()
                                     ->searchable()
-                                    ->live(onBlur: true)
+                                    ->live()
                                     ->preload()
                                     ->options(TypePaiement::query()->where('nom', '!=', 'Salaire')->pluck('nom', 'id'))
                                     ->createOptionForm([

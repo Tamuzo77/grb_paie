@@ -36,7 +36,7 @@ class Paiement extends Model
     /**
      * @var array
      */
-    protected $fillable = ['employee_id', 'type_paiement_id', 'mode_paiement_id', 'slug', 'date_debut', 'date_fin', 'solde', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at', 'statut', 'annee_id', 'date_paiement'];
+    protected $fillable = ['employee_id', 'type_paiement_id', 'mode_paiement_id', 'slug', 'date_debut', 'date_fin', 'solde', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at', 'statut', 'annee_id', 'date_paiement', 'pas', 'reste'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
