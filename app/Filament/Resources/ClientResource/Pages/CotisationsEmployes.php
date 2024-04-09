@@ -47,10 +47,13 @@ class CotisationsEmployes extends ListRecords
                 TextColumn::make('agent')
                     ->label('Agent'),
                 TextColumn::make('cnss')
+                    ->money('XOF', locale: 'fr', )
                     ->label('CNSS'),
                 TextColumn::make('its')
+                    ->money('XOF', locale: 'fr', )
                     ->label('ITS'),
                 TextColumn::make('total')
+                    ->money('XOF', locale: 'fr', )
                     ->default(function ($record) {
                         return $record->cnss + $record->its;
                     })
