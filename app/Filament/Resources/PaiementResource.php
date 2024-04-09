@@ -7,6 +7,7 @@ use App\Models\Annee;
 use App\Models\Client;
 use App\Models\Employee;
 use App\Models\Paiement;
+use App\Models\TypePaiement;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\ToggleButtons;
@@ -184,6 +185,7 @@ class PaiementResource extends Resource
                 Tables\Actions\Action::make('fiche_de_paie')
                     ->color(Color::Fuchsia)
                     ->label('Fiche de paie')
+                    ->visible(fn(Paiement $record) => $record->type_paiement_id == TypePaiement::SALAIRE)
                     ->requiresConfirmation()
                     ->action(function (Paiement $record) {
                         try {

@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Clusters\Settings\Resources\CustomActivityResource;
 use App\Filament\Pages\Dashboard;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Forms\Components\FileUpload;
@@ -44,6 +45,9 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->emailVerification()
             ->profile()
+            ->resources([
+                config('filament-logger.activity_resource')
+            ])
 //            ->userMenuItems([
 //                'profile' => MenuItem::make()
 //                    ->label('Profile')

@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 class AnneeResource extends Resource
 {
     protected static ?string $model = Annee::class;
+    protected static ?string $modelLabel = 'Année d\'exercice';
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
@@ -46,11 +47,11 @@ class AnneeResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('debut')
                     ->label('Début')
-                    ->date()
+                    ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('fin')
                     ->label('Fin')
-                    ->date()
+                    ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('statut')
                     ->icon(fn (string $state): string => match ($state) {
