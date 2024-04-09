@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
-use App\Notifications\SendTwoFactorCode;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Session;
 
 class TwoFactorController extends Controller
 {
@@ -13,7 +14,6 @@ class TwoFactorController extends Controller
     {
         return inertia('Auth/twofactor', [
             'status' => session('status'),
-
         ]);
     }
 
@@ -26,9 +26,29 @@ class TwoFactorController extends Controller
         $user = auth()->user();
 
         if ($request->input('two_factor_code') !== $user->two_factor_code) {
-            return \redirect()->back()->with('status', 'Code non valide');       }
+            // Incrémenter le nombre de tentatives dans la session
+            $attempts = Session::get('verification_attempts', 0);
+            Session::put('verification_attempts', $attempts + 1);
+
+            // Vérifier si le nombre de tentatives atteint 3
+            if ($attempts >= 2) {
+                // Bloquer l'utilisateur
+                $user->blocked = true;
+                $user->save();
+                // Déconnecter l'utilisateur
+                auth()->logout();
+
+                // Rediriger vers la page de connexion avec un message d'erreur
+                return redirect()->route('login')->with('status', 'Trop de tentatives. Votre compte a été bloqué. Veuillez contacter l\'administrateur.');
+            }
+
+            return redirect()->back()->with('status', 'Code non valide');
+        }
 
         $user->resetTwoFactorCode();
+
+        // Réinitialiser le nombre de tentatives après une connexion réussie
+        Session::forget('verification_attempts');
 
         if (auth()->user()->login_count == 1)
         {
@@ -38,6 +58,7 @@ class TwoFactorController extends Controller
             return redirect(RouteServiceProvider::ADMIN);
         }
 
+
     }
 
     public function resend()
@@ -45,6 +66,6 @@ class TwoFactorController extends Controller
         $user = auth()->user();
         $user->generateTwoFactorCode();
         $user->notify(new SendTwoFactorCode());
-        return back()->withStatus(__('Code has been sent again'));
+        return back()->withStatus(__('Le code a été renvoyé.'));
     }
 }

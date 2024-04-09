@@ -1,21 +1,33 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head } from "@inertiajs/react";
+import { Link } from "@inertiajs/inertia-react";
+import ApplicationLogo from "@/Components/ApplicationLogo";
 
 export default function Dashboard({ auth }) {
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>}
-        >
-            <Head title="Dashboard" />
-
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">You're logged in!</div>
-                    </div>
+        <>
+            <div className="hidden dark:block bg-gray-900 h-screen">
+                <div className="flex items-center justify-center h-96">
+                <ApplicationLogo className="" />
                 </div>
+                <a
+                    href="/admin"
+                    className="font-semibold text-gray-500 hover:text-gray-200 flex text-center items-center justify-center"
+                >
+                    Admin
+                </a>
             </div>
-        </AuthenticatedLayout>
+            <div className="dark:hidden bg-slate-50 h-screen">
+                <div>
+                <ApplicationLogo className="flex justify-center items-center h-96" />
+                </div>
+                <a
+                    href="/admin"
+                    className="font-semibold text-gray-600 hover:text-gray-800  flex text-center items-center justify-center"
+                >
+                    Admin
+                </a>
+            </div>
+        </>
     );
 }

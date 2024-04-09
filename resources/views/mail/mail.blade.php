@@ -1,4 +1,3 @@
 
-Hey {{$name}}, 
-Can your Laravel app send emails yet? 😉 
-Mailtrap
+Salut {{$name}}, 
+Votre application Laravel peut-elle déjà envoyer des e-mails ? 😉 Mailtrap
