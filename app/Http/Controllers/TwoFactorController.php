@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\SendTwoFactorCode;
 use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Validation\ValidationException;
@@ -42,6 +43,7 @@ class TwoFactorController extends Controller
                 return redirect()->route('login')->with('status', 'Trop de tentatives. Votre compte a été bloqué. Veuillez contacter l\'administrateur.');
             }
 
+
             return redirect()->back()->with('status', 'Code non valide');
         }
 
@@ -50,13 +52,13 @@ class TwoFactorController extends Controller
         // Réinitialiser le nombre de tentatives après une connexion réussie
         Session::forget('verification_attempts');
 
-        if (auth()->user()->login_count == 1)
-        {
+//        if (auth()->user()->login_count == 1)
+//        {
             return redirect(RouteServiceProvider::HOME);
-        }
-        else{
-            return redirect(RouteServiceProvider::ADMIN);
-        }
+//        }
+//        else{
+//            return redirect(RouteServiceProvider::ADMIN);
+//        }
 
 
     }
