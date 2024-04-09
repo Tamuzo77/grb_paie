@@ -15,6 +15,7 @@ use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use pxlrbt\FilamentExcel\Actions\Pages\ExportAction;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
@@ -79,6 +80,14 @@ class SoldePage extends ListRecords
                         'October' => 'Octobre',
                         'November' => 'Novembre',
                         'December' => 'Décembre',
+                    ]),
+            ])
+            ->headerActions([
+                ExportAction::make()
+                    ->exports([
+                        ExcelExport::make()
+                            ->fromTable()
+                            ->withFilename($this->record->nom . ' ' . $this->record->prenoms . ' - Solde Compte'),
                     ]),
             ])
             ->bulkActions([
