@@ -83,7 +83,7 @@ class SoldePage extends ListRecords
                     ]),
             ])
             ->headerActions([
-                ExportAction::make()
+                \pxlrbt\FilamentExcel\Actions\Tables\ExportAction::make()
                     ->exports([
                         ExcelExport::make()
                             ->fromTable()
