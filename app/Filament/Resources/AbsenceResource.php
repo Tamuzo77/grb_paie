@@ -92,10 +92,10 @@ class AbsenceResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_debut')
-                    ->dateTime()
+                    ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_fin')
-                    ->dateTime()
+                    ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('deductible')
                     ->icon(fn (string $state): string => match ($state) {
@@ -109,15 +109,18 @@ class AbsenceResource extends Resource
                         default => 'accent',
                     }),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Crée le')
+                    ->dateTime(format: 'd F Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Modifié le')
+                    ->dateTime(format: 'd F Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->label('Supprimé le')
+                    ->dateTime(format: 'd F Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

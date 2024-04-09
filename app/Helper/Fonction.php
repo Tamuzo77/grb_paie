@@ -9,3 +9,7 @@ function nbreJoursTravaille(\App\Models\Employee $employee)
     return 20 - $nb_jours_absences;
 
 }
+function convertir_en_lettres($nombre) {
+    $f = new NumberFormatter("fr", NumberFormatter::SPELLOUT);
+    return $f->format($nombre);
+}

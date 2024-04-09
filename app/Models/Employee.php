@@ -148,14 +148,14 @@ class Employee extends Model
         );
 
     }
-    //    public function tauxCnss(): Attribute
-    //    {
-    //        return Attribute::make(
-    //            get: function ($value) {
-    //                return $value / 100;
-    //            },
-    //        );
-    //
-    //    }
+        public function tauxCnss(): Attribute
+        {
+            return Attribute::make(
+                get: function ($value) {
+                    return $value / 100;
+                },
+            );
+
+        }
 
 }

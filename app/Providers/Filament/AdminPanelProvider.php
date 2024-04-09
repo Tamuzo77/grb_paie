@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Clusters\Settings\Resources\CustomActivityResource;
 use App\Filament\Pages\Dashboard;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Forms\Components\FileUpload;
@@ -44,6 +45,9 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->emailVerification()
             ->profile()
+            ->resources([
+                config('filament-logger.activity_resource')
+            ])
 //            ->userMenuItems([
 //                'profile' => MenuItem::make()
 //                    ->label('Profile')
@@ -87,7 +91,16 @@ class AdminPanelProvider extends PanelProvider
                     )
                     ->avatarUploadComponent(fn () => FileUpload::make('avatar')->imageEditor()->storeFiles(condition: true)->directory('usersAvatars')->avatar())
                     ->passwordUpdateRules(
-                        rules: [Password::default()->mixedCase()->uncompromised(3)],
+                        rules: [
+                            'string',
+                            'min:8', // must be at least 8 characters
+                            'confirmed',
+                            'regex:/[a-z]/', // must contain at least one lowercase letter
+                            'regex:/[A-Z]/', // must contain at least one uppercase letter
+                            'regex:/[0-9]/', // must contain at least one digit
+                            'regex:/[@$!%*#?&]/', // must contain a special character
+                        ],
+
                     )
                     ->enableTwoFactorAuthentication(
                     ),

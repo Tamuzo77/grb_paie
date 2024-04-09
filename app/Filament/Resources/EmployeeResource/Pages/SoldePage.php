@@ -52,6 +52,7 @@ class SoldePage extends ListRecords
                 TextColumn::make('montant')
                     ->weight(fn($record) => $record->donnees == SoldeCompte::TOTAL ? FontWeight::Bold : null)
                     ->size(fn($record) => $record->donnees == SoldeCompte::TOTAL ? TextColumn\TextColumnSize::Large : null)
+                    ->money('XOF', locale: 'fr', )
                     ->prefix(function ($record) {
                         if ($record->donnees == SoldeCompte::TOTAL) {
                             return ' ';
@@ -81,12 +82,12 @@ class SoldePage extends ListRecords
                     ]),
             ])
             ->bulkActions([
-                ExportBulkAction::make()
-                    ->exports([
-                        ExcelExport::make()
-                            ->fromTable()
-                            ->withFilename($this->record->nom . ' ' . $this->record->prenoms . ' - Solde Compte'),
-                    ]),
+//                ExportBulkAction::make()
+//                    ->exports([
+//                        ExcelExport::make()
+//                            ->fromTable()
+//                            ->withFilename($this->record->nom . ' ' . $this->record->prenoms . ' - Solde Compte'),
+//                    ]),
             ]);
     }
 

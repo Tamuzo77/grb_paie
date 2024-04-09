@@ -50,7 +50,15 @@ class TwoFactorController extends Controller
         // Réinitialiser le nombre de tentatives après une connexion réussie
         Session::forget('verification_attempts');
 
-        return redirect(RouteServiceProvider::HOME);
+        if (auth()->user()->login_count == 1)
+        {
+            return redirect(RouteServiceProvider::HOME);
+        }
+        else{
+            return redirect(RouteServiceProvider::ADMIN);
+        }
+
+
     }
 
     public function resend()

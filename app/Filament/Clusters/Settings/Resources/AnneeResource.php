@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 class AnneeResource extends Resource
 {
     protected static ?string $model = Annee::class;
+    protected static ?string $modelLabel = 'Année d\'exercice';
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
@@ -27,6 +28,12 @@ class AnneeResource extends Resource
                     ->required(),
                 Forms\Components\DatePicker::make('fin')
                     ->required(),
+                Forms\Components\Select::make('statut')
+                    ->options([
+                        'en_cours' => 'En cours',
+                        'cloture' => 'Clôturée',
+                    ])
+                    ->required(),
             ]);
     }
 
@@ -39,10 +46,24 @@ class AnneeResource extends Resource
                     ->label('Année')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('debut')
-                    ->date()
+                    ->label('Début')
+                    ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('fin')
-                    ->date()
+                    ->label('Fin')
+                    ->dateTime(format: 'd F Y')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('statut')
+                    ->icon(fn (string $state): string => match ($state) {
+                        'en_cours' => 'heroicon-o-lock-open',
+                        'cloture' => 'heroicon-o-lock-closed',
+                        default => 'heroicon-o-information-circle',
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        'cloture' => 'gray',
+                        'en_cours' => 'success',
+                        default => 'accent',
+                    })
                     ->sortable(),
             ])
             ->filters([
