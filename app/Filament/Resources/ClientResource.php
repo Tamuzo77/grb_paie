@@ -7,6 +7,7 @@ use App\Filament\Resources\ClientResource\Pages;
 use App\Filament\Resources\ClientResource\RelationManagers\EmployeesRelationManager;
 use App\Models\Annee;
 use App\Models\Client;
+use App\Models\CotisationEmploye;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -152,6 +153,32 @@ class ClientResource extends Resource
                     ->color(Color::Sky)
                     ->label('Etats'),
                 Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('cotisations-employes')
+                        ->action(function ($record){
+                            foreach ($record->employees as $employee) {
+                                $cnss = $employee->tauxCnss ? $employee->salaire * $employee->tauxCnss : $employee->salaire * 0.036;
+                                $its = $employee->tauxIts ? $employee->salaire * $employee->tauxIts : $employee->salaire * 0.05;
+                                $total = $cnss + $its;
+                                CotisationEmploye::updateOrCreate([
+                                    'client_id' => $record->id,
+                                    'agent' => "$employee->nom $employee->prenoms",
+                                    'annee_id' => self::$annee->id,
+                                    'mois' => now()->format('F'),
+                                ],[
+                                    'client_id' => $record->id,
+                                    'agent' => "$employee->nom $employee->prenoms",
+                                    'annee_id' => self::$annee->id,
+                                    'cnss' => $cnss,
+                                    'its' => $its,
+                                    'total' => $total,
+                                    'mois' => now()->format('F'),
+                                ]);
+                            }
+                            redirect(static::getUrl('cotisations-employes', ['record' => $record]));
+                        })
+                        ->icon('heroicon-o-currency-dollar')
+                        ->color(Color::Orange)
+                        ->label('Cotisations employés'),
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
@@ -183,6 +210,7 @@ class ClientResource extends Resource
             'edit' => Pages\EditClient::route('/{record}/edit'),
             'cotisations' => Pages\CotisationsClient::route('/{record}/cotisations'),
             'etats-personnel' => Pages\EtatsPersonelPage::route('/{record}/etats-personnel'),
+            'cotisations-employes' => Pages\CotisationsEmployes::route('/{record}/cotisations-employes'),
         ];
     }
 
