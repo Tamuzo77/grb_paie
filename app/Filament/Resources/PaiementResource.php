@@ -138,26 +138,33 @@ class PaiementResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime(format: 'd F Y')
+                    ->label('Créé le')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime(format: 'd F Y')
+                    ->label('Modifié le')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->dateTime(format: 'd F Y')
+                    ->label('Supprimé le')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->groups([
                 'employee.client.nom',
             ])
+            ->reorderable()
+            ->recordUrl(null)
             ->filters([
                 Filter::make('date_debut')
                     ->form([
-                        DatePicker::make('from'),
-                        DatePicker::make('until'),
+                        DatePicker::make('from')
+                            ->label('Du'),
+                        DatePicker::make('until')
+                            ->label('Au'),
                     ])->query(function ($query, array $data) {
                         return $query->when($data['from'], fn($query) => $query->whereDate('date_debut', '>=', $data['from']))
                             ->when($data['until'], fn($query) => $query->whereDate('date_debut', '<=', $data['until']));

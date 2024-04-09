@@ -28,7 +28,7 @@ class Annee extends Model
     /**
      * @var array
      */
-    protected $fillable = ['slug', 'nom', 'debut', 'fin', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
+    protected $fillable = ['slug', 'nom', 'debut', 'fin', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at', 'statut'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

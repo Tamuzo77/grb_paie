@@ -20,8 +20,12 @@ class AbsencesRelationManager extends RelationManager
                 Forms\Components\Section::make('Absences')
                     ->description('Enregsitrement des absences de l\' employé')
                     ->schema([
-                        Forms\Components\DateTimePicker::make('date_debut'),
-                        Forms\Components\DateTimePicker::make('date_fin'),
+                        Forms\Components\DateTimePicker::make('date_debut')
+                            ->required()
+                            ->label('Date de début'),
+                        Forms\Components\DateTimePicker::make('date_fin')
+                            ->required()
+                            ->label('Date de fin'),
                         ToggleButtons::make('deductible')
                             ->label('Est elle déductible ?')
                             ->options([
@@ -46,7 +50,19 @@ class AbsencesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('deductible')
             ->columns([
-                Tables\Columns\TextColumn::make('deductible'),
+                Tables\Columns\IconColumn::make('deductible')
+                    ->icon(function ($record) {
+                        return $record->deductible ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle';
+                    })
+                    ->color(function ($record) {
+                        return $record->deductible ? 'success' : 'error';
+                    }),
+                Tables\Columns\TextColumn::make('date_debut')
+                    ->dateTime(format: 'd F Y')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('date_fin')
+                    ->dateTime(format: 'd F Y')
+                    ->sortable(),
             ])
             ->filters([
                 //
