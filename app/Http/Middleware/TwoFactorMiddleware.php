@@ -20,7 +20,7 @@ class TwoFactorMiddleware
                 auth()->logout();
 
                 return redirect()->route('login')
-                    ->withStatus('Your verification code expired. Please re-login.');
+                    ->withStatus('Votre code de vérification a expiré. Veuillez vous reconnecter.');
             }
             if (! $request->is('verify*')) {
                 return redirect()->route('verify.index');
