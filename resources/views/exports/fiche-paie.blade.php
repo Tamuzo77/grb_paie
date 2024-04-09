@@ -22,7 +22,7 @@ $mois = [
         </tr>
         <tr>
             <td style="height:35px"></td>
-            <td style="height:50px;border:2px solid #3498db;text-align:center;vertical-align:middle;font-weight:bold;text-align:center;" colspan="4">CMFD Sarl</td>
+            <td style="height:50px;border:2px solid #3498db;text-align:center;vertical-align:middle;font-weight:bold;text-align:center;" colspan="4">{{$employee->client->nom}}</td>
             <td style="height:50px;border:2px solid #3498db;vertical-align:middle;font-weight:bold;text-align:center;" colspan="10"></td>
         </tr>
 
@@ -112,7 +112,7 @@ $mois = [
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">RETENUES OBLIGATOIRES</td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">XXXXX</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4"></td>
     </tr>
     <tr>
         <td style="height:35px"></td>
@@ -132,7 +132,7 @@ $mois = [
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">AVANCE SUR SALAIRE</td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">{{ $montantAvance }}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">{{ $montantAvance ==0 ? '': $montantAvance }}</td>
     </tr>
     <tr class="">
         <td style="height:50px"></td>
