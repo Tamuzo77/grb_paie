@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Client;
+use App\Models\CotisationClient;
 use App\Models\Employee;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -56,41 +57,47 @@ class CotisationsClientOverview extends Component implements HasForms, HasTable
 
         return $table
             ->query(function () {
-                return Employee::query()
-//                    ->selectRaw('QUARTER(paiements.date_paiement) AS trimestre, MONTHNAME(paiements.date_paiement) AS mois, SUM(employees.salaire) AS total, SUM(employees.salaire * 0.23) AS cotisations')
-//                    ->join('paiements', 'employees.id', '=', 'paiements.employee_id')
+//                return Employee::query()
+////                    ->selectRaw('QUARTER(paiements.date_paiement) AS trimestre, MONTHNAME(paiements.date_paiement) AS mois, SUM(employees.salaire) AS total, SUM(employees.salaire * 0.23) AS cotisations')
+////                    ->join('paiements', 'employees.id', '=', 'paiements.employee_id')
+////                    ->where('employees.client_id', $this->client->id)
+////                    ->whereBetween('paiements.date_paiement', ["$currentYear-01-01", "$currentYear-12-31"])
+////                    ->groupBy('trimestre', 'mois')
+////                    ->orderBy('trimestre') // Tri par trimestre
+////                    ->orderByRaw("FIELD(mois, 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre')");
+//                    ->selectRaw('QUARTER(NOW()) AS trimestre,MONTHNAME(NOW()) AS mois, SUM(employees.salaire) AS total, SUM(employees.salaire * 0.23) AS cotisations')
 //                    ->where('employees.client_id', $this->client->id)
-//                    ->whereBetween('paiements.date_paiement', ["$currentYear-01-01", "$currentYear-12-31"])
-//                    ->groupBy('trimestre', 'mois')
-//                    ->orderBy('trimestre') // Tri par trimestre
-//                    ->orderByRaw("FIELD(mois, 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre')");
-                    ->selectRaw('QUARTER(NOW()) AS trimestre,MONTHNAME(NOW()) AS mois, SUM(employees.salaire) AS total, SUM(employees.salaire * 0.23) AS cotisations')
-                    ->where('employees.client_id', $this->client->id)
-                    ->groupBy('mois', 'trimestre');
+//                    ->groupBy('mois', 'trimestre');
+                return CotisationClient::query()->where('client_id', $this->client->id);
             })
             ->columns([
                 //                TextColumn::make('trimestre')
                 //                    ->label('Trimestre'),
-                TextColumn::make('mois')
+                TextColumn::make('agent')
                     ->label('Agent'),
-                TextColumn::make('total')
-                    ->summarize(Sum::make()->label('Total des salaires')->money('XOF'))
+                TextColumn::make('somme_salaires_bruts')
                     ->label('Total des salaires brutes'),
-                TextColumn::make('cotisations')
-                    ->summarize(Sum::make()->label('Total des cotisations')->money('XOF'))
+                TextColumn::make('somme_cotisations')
                     ->label('23%'),
 
             ])
-            ->defaultGroup('trimestre')
-            ->groupingSettingsHidden()
-            ->bulkActions([
-                ExportBulkAction::make()
+            ->headerActions([
+                \pxlrbt\FilamentExcel\Actions\Tables\ExportAction::make()
                     ->exports([
                         ExcelExport::make('table')
                             ->fromTable()
                             ->withFilename('cotisations'),
                     ])
                     ->label('Exporter'),
+            ])
+            ->bulkActions([
+//                ExportBulkAction::make()
+//                    ->exports([
+//                        ExcelExport::make('table')
+//                            ->fromTable()
+//                            ->withFilename('cotisations'),
+//                    ])
+//                    ->label('Exporter'),
 
             ])
             ->emptyStateHeading('Aucune cotisation(s) sociale(s) enregistrée(s)')
