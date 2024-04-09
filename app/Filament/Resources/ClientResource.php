@@ -57,13 +57,15 @@ class ClientResource extends Resource
                                     ->helperText('Adresse de l\'entreprise')
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('telephone')
-                                    ->prefix('+229')
+//                                    ->prefix('+229')
+                                    ->placeholder('Ex: +229 97 97 97 97')
                                     ->tel()
+                                    ->label('Téléphone')
                                     ->hint('Contact téléphonique')
                                     ->required()
                                     ->unique(ignoreRecord : true)
-                                    ->numeric()
-                                    ->maxLength(8),
+                                    ->numeric(),
+//                                    ->maxLength(8),
                                 Forms\Components\TextInput::make('email')
                                     ->email()
                                     ->required()

@@ -27,6 +27,12 @@ class AnneeResource extends Resource
                     ->required(),
                 Forms\Components\DatePicker::make('fin')
                     ->required(),
+                Forms\Components\Select::make('statut')
+                    ->options([
+                        'en_cours' => 'En cours',
+                        'cloture' => 'Clôturée',
+                    ])
+                    ->required(),
             ]);
     }
 
@@ -39,10 +45,24 @@ class AnneeResource extends Resource
                     ->label('Année')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('debut')
+                    ->label('Début')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('fin')
+                    ->label('Fin')
                     ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('statut')
+                    ->icon(fn (string $state): string => match ($state) {
+                        'en_cours' => 'heroicon-o-lock-open',
+                        'cloture' => 'heroicon-o-lock-closed',
+                        default => 'heroicon-o-information-circle',
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        'cloture' => 'gray',
+                        'en_cours' => 'success',
+                        default => 'accent',
+                    })
                     ->sortable(),
             ])
             ->filters([

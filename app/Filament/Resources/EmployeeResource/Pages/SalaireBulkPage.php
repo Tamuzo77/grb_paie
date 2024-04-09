@@ -37,7 +37,7 @@ class SalaireBulkPage extends Page implements HasForms, HasTable
 
     public function getHeading(): string|Htmlable
     {
-        return 'Solde des Employées selectionnées';
+        return 'Solde des Employés selectionnés';
     }
 
     public function form(Form $form): Form
