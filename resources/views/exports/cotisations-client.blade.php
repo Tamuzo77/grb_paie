@@ -33,7 +33,7 @@
         <tr>
             <td colspan="2" style="height:35px"></td>
             <td colspan="3"
-                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$cotisation->agent == 'Total' ? 'TOTAL ANNUELLE' : $cotisation->agent}}</td>
+                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$cotisation->agent == 'Total' ? 'TOTAL ANNUEL' : $cotisation->agent}}</td>
             <td colspan="3"
                 style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$cotisation->somme_salaires_bruts}}</td>
             <td colspan="3"
