@@ -1,11 +1,13 @@
 <table>
     <thead>
-     <th colspan="2" style="height:35px"></th>
-     <th colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">Agent</th>
-     <th colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">CNSS</th>
-     <th colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">ITS</th>
-     <th colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">Total</th>
-     </thead> 
+        <tr>
+            <td colspan="2" style="height:35px"></td>
+            <td colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">Agent</td>
+            <td colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">CNSS</td>
+            <td colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">ITS</td>
+            <td colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">Total</td>       
+        </tr>
+    </thead> 
      <tbody>
          <tr>
             <td colspan="2" style="height:35px"></td>

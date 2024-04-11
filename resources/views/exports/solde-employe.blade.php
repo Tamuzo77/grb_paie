@@ -1,9 +1,11 @@
 <table>
     <thead>
-     <th colspan="2" style="height:35px"></th>
-     <th colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">Données</th>
-     <th colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">Montant</th>
-     </thead> 
+        <tr>
+            <td colspan="2" style="height:35px"></td>
+            <td colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">Données</td>
+            <td colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">Montant</td>       
+        </tr>
+    </thead> 
      <tbody>
          <tr>
             <td colspan="2" style="height:35px"></td>
