@@ -60,4 +60,6 @@ Route::middleware(['auth', 'twofactor'])->group(function () {
 
 Route::get('/download-etats-personnel/{id}', [AdminController::class, 'downloadEtatsPersonnel'])->name('download-etats-personnel');
 Route::get('/download-fiche-de-paie/{id}', [AdminController::class, 'downloadFicheDePaie'])->name('download-fiche-de-paie');
+Route::get('/download-soldes/{records}', [AdminController::class, 'downloadSoldes'])->name('download-soldes');
+Route::get('/download-cotisations-employes/{records}', [AdminController::class, 'downloadCotisationsEmployes'])->name('download-cotisations-employes');
 require __DIR__ . '/auth.php';

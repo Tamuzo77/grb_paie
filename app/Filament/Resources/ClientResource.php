@@ -229,6 +229,9 @@ class ClientResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\Action::make('cotisations-employes')
                         ->action(function ($record){
+                            $sommeCnss = 0;
+                            $sommeIts = 0;
+                            $sommeTotal = 0;
                             foreach ($record->employees as $employee) {
                                 $cnss = $employee->tauxCnss ? $employee->salaire * $employee->tauxCnss : $employee->salaire * 0.036;
                                 $its = $employee->tauxIts ? $employee->salaire * $employee->tauxIts : $employee->salaire * 0.05;
@@ -247,7 +250,24 @@ class ClientResource extends Resource
                                     'total' => $total,
                                     'mois' => now()->format('F'),
                                 ]);
+                                $sommeCnss = $sommeCnss + $cnss;
+                                $sommeIts = $sommeIts + $its;
+                                $sommeTotal = $sommeTotal + $total;
                             }
+                            CotisationEmploye::updateOrCreate([
+                                'client_id' => $record->id,
+                                'agent' => 'Total',
+                                'annee_id' => self::$annee->id,
+                                'mois' => now()->format('F'),
+                            ],[
+                                'client_id' => $record->id,
+                                'agent' => 'Total',
+                                'annee_id' => self::$annee->id,
+                                'cnss' => $sommeCnss,
+                                'its' => $sommeIts,
+                                'total' => $sommeTotal,
+                                'mois' => now()->format('F'),
+                            ]);
                             redirect(static::getUrl('cotisations-employes', ['record' => $record]));
                         })
                         ->icon('heroicon-o-currency-dollar')
