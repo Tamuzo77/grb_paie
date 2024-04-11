@@ -13,14 +13,14 @@ use Maatwebsite\Excel\Concerns\FromView;
     /**
     * @return \Illuminate\Support\Collection
     */
-    public function __construct(CotisationEmploye $cotisations)
+    public function __construct( $cotisations)
     {
         $this->cotisations = $cotisations;
     }
 
     #[\Override] public function view(): View
     {
-        return view('exports.cotisations-employes', [
+        return view('exports.cotisations-employe', [
             'records' => $this->cotisations
         ]);
     }

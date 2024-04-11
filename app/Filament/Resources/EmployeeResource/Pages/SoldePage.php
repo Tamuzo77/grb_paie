@@ -85,12 +85,12 @@ class SoldePage extends ListRecords
                     ]),
             ])
             ->headerActions([
-                \pxlrbt\FilamentExcel\Actions\Tables\ExportAction::make()
-                    ->exports([
-                        ExcelExport::make()
-                            ->fromTable()
-                            ->withFilename($this->record->nom . ' ' . $this->record->prenoms . ' - Solde Compte'),
-                    ]),
+//                \pxlrbt\FilamentExcel\Actions\Tables\ExportAction::make()
+//                    ->exports([
+//                        ExcelExport::make()
+//                            ->fromTable()
+//                            ->withFilename($this->record->nom . ' ' . $this->record->prenoms . ' - Solde Compte'),
+//                    ]),
                 Action::make('export')
                     ->label('Exporter')
                     ->color('primary')

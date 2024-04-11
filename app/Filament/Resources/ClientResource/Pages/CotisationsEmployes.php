@@ -100,19 +100,19 @@ class CotisationsEmployes extends ListRecords
                     ]),
             ])
             ->headerActions([
-                ExportAction::make()
-                    ->exports([
-                        ExcelExport::make()
-                            ->withFilename('cotisations sociales des employes '. $this->record->nom )
-                            ->fromTable(),
-                    ]),
+//                ExportAction::make()
+//                    ->exports([
+//                        ExcelExport::make()
+//                            ->withFilename('cotisations sociales des employes '. $this->record->nom )
+//                            ->fromTable(),
+//                    ]),
                 Action::make('export')
                     ->label('Exporter')
                     ->color('primary')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->action(function () {
                         try {
-                            redirect(route('download-soldes',['records' => $this->getTableRecords()->pluck('id')->implode(',')]));
+                            redirect(route('download-cotisations-employes',['records' => $this->getTableRecords()->pluck('id')->implode(',')]));
 
                             Notification::make('Etat personnel téléchargé avec succès')
                                 ->title('Téléchargement réussi')
