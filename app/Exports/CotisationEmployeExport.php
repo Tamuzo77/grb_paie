@@ -21,7 +21,7 @@ use Maatwebsite\Excel\Concerns\FromView;
     #[\Override] public function view(): View
     {
         return view('exports.cotisations-employe', [
-            'records' => $this->cotisations
+            'cotisations' => $this->cotisations
         ]);
     }
 }
