@@ -1,10 +1,12 @@
 <table>
     <thead>
-     <th colspan="2" style="height:35px"></th>
-     <th colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">AGENT</th>
-     <th colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">Total des salaires brutes</th>
-     <th colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">23%</th>
-     </thead> 
+    <tr>
+        <td colspan="2" style="height:35px"></td>
+        <td colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">AGENT</td>
+        <td colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">Total des salaires brutes</td>
+        <td colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">23%</td>   
+    </tr>
+    </thead> 
      <tbody>
          <tr>
             <td colspan="2" style="height:35px"></td>
