@@ -46,24 +46,31 @@ class GRB extends Page implements HasForms, HasInfolists
                                 ->columnSpan(2)
                                 ->label('Nom'),
                             TextInput::make('adresse')
+                                ->default(Company::first()->adresse)
                                 ->columnSpan(2)
                                 ->label('Adresse'),
                             TextInput::make('telephone')
+                                ->default(Company::first()->telephone)
                                 ->columnSpan(1)
                                 ->label('Téléphone'),
                             TextInput::make('email')
+                                ->default(Company::first()->email)
                                 ->columnSpan(2)
                                 ->label('Email'),
                             TextInput::make('slogan')
+                                ->default(Company::first()->slogan)
                                 ->columnSpan(1)
                                 ->label('Slogan'),
                             TextInput::make('directeur')
+                                ->default(Company::first()->directeur)
                                 ->columnSpan('full')
                                 ->label('Directeur / Directrice'),
                             FileUpload::make('signature')
+                                ->default(Company::first()->signature)
                                 ->columnSpan(2)
                                 ->label('Signature'),
                             FileUpload::make('logo')
+                                ->default(Company::first()->logo)
                                 ->columnSpan(2)
                                 ->label('Logo')
                                 ->directory('logos')
