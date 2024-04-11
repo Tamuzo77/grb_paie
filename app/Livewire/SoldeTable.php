@@ -6,8 +6,10 @@ use App\Models\Employee;
 use App\Models\SoldeCompte;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Concerns\HasTabs;
 use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -61,7 +63,29 @@ class SoldeTable extends Component implements HasForms, HasTable
                     ]),
             ])
             ->headerActions([
+                Action::make('export')
+                    ->label('Exporter')
+                    ->color('primary')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(function () {
+                        try {
+                            redirect(route('download-soldes',['records' => $this->getTableRecords()->pluck('id')->implode(',')]));
 
+                            Notification::make('Etat personnel téléchargé avec succès')
+                                ->title('Téléchargement réussi')
+                                ->body('Le téléchargement de l\'état personnel a été effectué avec succès.')
+                                ->color('success')
+                                ->iconColor('success')
+                                ->send();
+                        } catch (\Exception $e) {
+                            Notification::make('Erreur lors du téléchargement de l\'état personnel')
+                                ->title('Erreur')
+                                ->body("Une erreur s'est produite lors du téléchargement de l'état personnel. Veuillez réessayer.")
+                                ->color('danger')
+                                ->iconColor('danger')
+                                ->send();
+                        }
+                    })
             ])
             ->paginated(false);
 
