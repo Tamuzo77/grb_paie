@@ -7,10 +7,12 @@ use App\Models\CotisationClient;
 use App\Models\Employee;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Concerns\HasTabs;
 use Filament\Support\Contracts\TranslatableContentDriver;
 use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -144,13 +146,36 @@ class CotisationsClientOverview extends Component implements HasForms, HasTable
             ])
             ->striped()
             ->headerActions([
-                \pxlrbt\FilamentExcel\Actions\Tables\ExportAction::make()
-                    ->exports([
-                        ExcelExport::make('table')
-                            ->fromTable()
-                            ->withFilename('cotisations'),
-                    ])
-                    ->label('Exporter'),
+//                \pxlrbt\FilamentExcel\Actions\Tables\ExportAction::make()
+//                    ->exports([
+//                        ExcelExport::make('table')
+//                            ->fromTable()
+//                            ->withFilename('cotisations'),
+//                    ])
+//                    ->label('Exporter'),
+                Action::make('export')
+                    ->label('Exporter')
+                    ->color('primary')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(function () {
+                        try {
+                            redirect(route('download-cotisations-clients',['records' => $this->getTableRecords()->pluck('id')->implode(',')]));
+
+                            Notification::make('Cotisation du client téléchargé avec succès')
+                                ->title('Téléchargement réussi')
+                                ->body('Le téléchargement des cotisations du client a été effectué avec succès.')
+                                ->color('success')
+                                ->iconColor('success')
+                                ->send();
+                        } catch (\Exception $e) {
+                            Notification::make('Erreur lors du téléchargement')
+                                ->title('Erreur')
+                                ->body("Une erreur s'est produite lors du téléchargement. Veuillez réessayer.")
+                                ->color('danger')
+                                ->iconColor('danger')
+                                ->send();
+                        }
+                    })
             ])
             ->bulkActions([
 //                ExportBulkAction::make()

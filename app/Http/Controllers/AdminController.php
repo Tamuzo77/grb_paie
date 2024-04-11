@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CotisationClientExport;
 use App\Exports\CotisationEmployeExport;
 use App\Exports\EtatPersonnelExport;
 use App\Exports\FichePaieExport;
 use App\Exports\SoldesExport;
 use App\Models\Client;
+use App\Models\CotisationClient;
 use App\Models\CotisationEmploye;
 use App\Models\Paiement;
 use App\Models\SoldeCompte;
@@ -50,6 +52,14 @@ class AdminController extends Controller
         $recordIds = explode(',', $records);
         $records = CotisationEmploye::whereIn('id', $recordIds)->get();
         $export = new CotisationEmployeExport($records);
+        return Excel::download($export, 'cotisations-employes.xlsx');
+    }
+
+    public function downloadCotisationsClients($records)
+    {
+        $recordIds = explode(',', $records);
+        $records = CotisationClient::whereIn('id', $recordIds)->get();
+        $export = new CotisationClientExport($records);
         return Excel::download($export, 'cotisations-employes.xlsx');
     }
 }
