@@ -40,13 +40,13 @@ Route::get('/dashboard', function () {
         return redirect()->route('first');
     }
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'twofactor',])->name('dashboard');
+})->middleware(['auth', 'twofactor'])->name('dashboard');
 Route::get('/first', function () {
     $user = auth()->user();
     return Inertia::render('Auth/FirstLogin', [
         'user' => $user
     ]);
-})->middleware(['auth', 'twofactor',])->name('first');
+})->middleware(['auth', 'twofactor'])->name('first');
 Route::middleware('auth')->group(function () {
     Route::resource('/client', ClientController::class);
     Route::get('fichepaie', [FicheController::class, 'index']);

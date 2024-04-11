@@ -20,6 +20,7 @@
     },
     "type": "module",
     "dependencies": {
-        "@inertiajs/inertia-react": "^0.8.1"
+        "@inertiajs/inertia-react": "^0.8.1",
+        "framer-motion": "^11.0.28"
     }
 }

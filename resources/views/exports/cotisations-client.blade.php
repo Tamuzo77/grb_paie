@@ -1,5 +1,13 @@
 <table>
     <thead>
+        <tr>
+            <td colspan="2" style="height:35px"></td>
+            <td colspan="9" style="background-color:#3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">Nom de lentreprise</td>           
+        </tr>
+        <tr><td colspan="11" style="height:35px"></td></tr>
+    
+    </thead> 
+     <tbody>
     <tr>
         <td colspan="2" style="height:35px"></td>
         <td colspan="3" style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">AGENT</td>

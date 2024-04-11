@@ -56,7 +56,7 @@ const TwoFactor = ({ status }) => {
 
     return (
         <GuestLayout>
-            <div>
+            <div className='text-lg'>
                 {status && <div className="mb-4 font-medium text-sm text-blue-900 dark:text-cyan-600 text-center">{status}</div>}
             </div>
             <div className="mb-4 font-medium text-center text-sm text-blue-900 dark:text-cyan-600">Veuillez consulter votre mail pour
@@ -94,7 +94,7 @@ const TwoFactor = ({ status }) => {
             <div className='flex items-center justify-center mt-4'>
                 <Link
                     href={route('verify.resend')}
-                    className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none"
+                    className="underline text-blue-600 dark:text-cyan-600 hover:text-blue-700 dark:hover:text-cyan-700"
                 >
                     Renvoyez le code
                 </Link>
