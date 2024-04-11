@@ -7,10 +7,12 @@ use App\Models\Employee;
 use App\Models\SoldeCompte;
 use Filament\Actions;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -53,7 +55,7 @@ class SoldePage extends ListRecords
                 TextColumn::make('montant')
                     ->weight(fn($record) => $record->donnees == SoldeCompte::TOTAL ? FontWeight::Bold : null)
                     ->size(fn($record) => $record->donnees == SoldeCompte::TOTAL ? TextColumn\TextColumnSize::Large : null)
-                    ->money('XOF', locale: 'fr', )
+                    ->money('XOF', locale: 'fr',)
                     ->prefix(function ($record) {
                         if ($record->donnees == SoldeCompte::TOTAL) {
                             return ' ';
@@ -83,12 +85,35 @@ class SoldePage extends ListRecords
                     ]),
             ])
             ->headerActions([
-                \pxlrbt\FilamentExcel\Actions\Tables\ExportAction::make()
-                    ->exports([
-                        ExcelExport::make()
-                            ->fromTable()
-                            ->withFilename($this->record->nom . ' ' . $this->record->prenoms . ' - Solde Compte'),
-                    ]),
+//                \pxlrbt\FilamentExcel\Actions\Tables\ExportAction::make()
+//                    ->exports([
+//                        ExcelExport::make()
+//                            ->fromTable()
+//                            ->withFilename($this->record->nom . ' ' . $this->record->prenoms . ' - Solde Compte'),
+//                    ]),
+                Action::make('export')
+                    ->label('Exporter')
+                    ->color('primary')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(function () {
+                        try {
+                            redirect(route('download-soldes',['records' => $this->getTableRecords()->pluck('id')->implode(',')]));
+
+                            Notification::make('Etat personnel téléchargé avec succès')
+                                ->title('Téléchargement réussi')
+                                ->body('Le téléchargement de l\'état personnel a été effectué avec succès.')
+                                ->color('success')
+                                ->iconColor('success')
+                                ->send();
+                        } catch (\Exception $e) {
+                            Notification::make('Erreur lors du téléchargement de l\'état personnel')
+                                ->title('Erreur')
+                                ->body("Une erreur s'est produite lors du téléchargement de l'état personnel. Veuillez réessayer.")
+                                ->color('danger')
+                                ->iconColor('danger')
+                                ->send();
+                        }
+                    })
             ])
             ->bulkActions([
 //                ExportBulkAction::make()

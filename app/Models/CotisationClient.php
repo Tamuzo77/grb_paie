@@ -31,7 +31,6 @@ class CotisationClient extends Model
      * @var array
      */
     protected $fillable = ['client_id', 'annee_id', 'slug', 'agent', 'somme_salaires_bruts', 'somme_cotisations', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

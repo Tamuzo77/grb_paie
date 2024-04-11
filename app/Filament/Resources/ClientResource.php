@@ -123,76 +123,80 @@ class ClientResource extends Resource
             ->actions([
                 Tables\Actions\Action::make('cotisations')
                     ->action(function ($record){
+                        $mois = [
+                            'January' => 'Janvier',
+                            'February' => 'Février',
+                            'March' => 'Mars',
+                            'April' => 'Avril',
+                            'May' => 'Mai',
+                            'June' => 'Juin',
+                            'July' => 'Juillet',
+                            'August' => 'Août',
+                            'September' => 'Septembre',
+                            'October' => 'Octobre',
+                            'November' => 'Novembre',
+                            'December' => 'Décembre'
+                        ];
                         $sommeCotisations = 0;
                         $sommeSalaireBrut = 0;
+                        foreach ($mois as $mo)
+                        {
+                            CotisationClient::updateOrCreate([
+                                'client_id' => $record->id,
+                                'annee_id' => self::$annee->id,
+                                'agent' => $mo,
+                            ], [
+                                'client_id' => $record->id,
+                                'annee_id' => self::$annee->id,
+                                'agent' => $mo,
+                                'somme_cotisations' => 0,
+                                'somme_salaires_bruts' => 0,
+                            ]);
+
+                            if ($mo == 'Mars' || $mo == 'Juin' || $mo == 'Septembre' || $mo == 'Décembre')
+                            {
+                                $trimestre = $mo == 'Mars' ? 'Trimestre 1' : ($mo == 'Juin' ? 'Trimestre 2' : ($mo == 'Septembre' ? 'Trimestre 3' : 'Trimestre 4'));
+
+                                CotisationClient::updateOrCreate([
+                                    'client_id' => $record->id,
+                                    'annee_id' => self::$annee->id,
+                                    'agent' => $trimestre,
+                                ], [
+                                    'client_id' => $record->id,
+                                    'annee_id' => self::$annee->id,
+                                    'agent' => $trimestre,
+                                ]);
+                            }
+
+                        }
+
+
                         foreach ($record->employees as $employee) {
                             $sommeSalaireBrut += $employee->salaire;
                             $sommeCotisations += $employee->salaire * 0.23;
                         }
+                        $currentMonth = now()->format('F');
                         CotisationClient::updateOrCreate([
                             'client_id' => $record->id,
                             'annee_id' => self::$annee->id,
-                            'agent' => now()->format('F'),
+                            'agent' => $mois[$currentMonth],
                         ], [
                             'client_id' => $record->id,
                             'annee_id' => self::$annee->id,
-                            'agent' => now()->format('F'),
+                            'agent' => $mois[$currentMonth] ,
                             'somme_cotisations' => $sommeCotisations,
                             'somme_salaires_bruts' => $sommeSalaireBrut,
                         ]);
-                        if (now()->format('F') == now()->endOfQuarter()->format('F')) {
-                            if (now()->format('F') == now()->endOfQuarter()->format('F')) {
-                                if (now()->format('F') == now()->endOfQuarter()->format('F')) {
-                                    $startOfQuarter = now()->startOfQuarter();
-                                    $endOfQuarter = now()->endOfQuarter();
 
-                                    $totalSommeCotisations = CotisationClient::where('client_id', $record->id)
-                                        ->where('annee_id', self::$annee->id)
-                                        ->whereBetween('created_at', [$startOfQuarter, $endOfQuarter])
-                                        ->sum('somme_cotisations');
-                                    $totalSommeSalaires = CotisationClient::where('client_id', $record->id)
-                                        ->where('annee_id', self::$annee->id)
-                                        ->whereBetween('created_at', [$startOfQuarter, $endOfQuarter])
-                                        ->sum('somme_salaires_bruts');
-
-                                    CotisationClient::updateOrCreate([
-                                        'client_id' => $record->id,
-                                        'annee_id' => self::$annee->id,
-                                        'agent' => 'Trimestre' . now()->quarter,
-                                    ], [
-                                        'client_id' => $record->id,
-                                        'annee_id' => self::$annee->id,
-                                        'agent' => 'Trimestre' . now()->quarter,
-                                        'somme_cotisations' => $totalSommeCotisations,
-                                        'somme_salaires_bruts' => $totalSommeSalaires,
-                                    ]);
-                                }
-                                CotisationClient::updateOrCreate([
-                                    'client_id' => $record->id,
-                                    'annee_id' => self::$annee->id,
-                                    'agent' => 'Trimestre' . now()->quarter,
-                                ], [
-                                    'client_id' => $record->id,
-                                    'annee_id' => self::$annee->id,
-                                    'agent' => 'Trimestre' . now()->quarter,
-                                    'somme_cotisations' => $sommeCotisations,
-                                    'somme_salaire_brut' => $sommeSalaireBrut,
-
-                                ]);
-                            }
-                            CotisationClient::updateOrCreate([
-                                'client_id' => $record->id,
-                                'annee_id' => self::$annee->id,
-                                'agent' => 'Trimestre' . now()->quarter,
-                            ], [
-                                'client_id' => $record->id,
-                                'annee_id' => self::$annee->id,
-                                'agent' => 'Trimestre' . now()->quarter,
-                                'somme_cotisations' => $sommeCotisations,
-                                'somme_salaire_brut' => $sommeSalaireBrut,
-
-                            ]);
-                        }
+                        CotisationClient::updateOrCreate([
+                            'client_id' => $record->id,
+                            'annee_id' => self::$annee->id,
+                            'agent' => 'Total',
+                        ], [
+                            'client_id' => $record->id,
+                            'annee_id' => self::$annee->id,
+                            'agent' => 'Total',
+                        ]);
                         redirect(static::getUrl('cotisations', ['record' => $record]));
                     })
 //                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
@@ -229,6 +233,9 @@ class ClientResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\Action::make('cotisations-employes')
                         ->action(function ($record){
+                            $sommeCnss = 0;
+                            $sommeIts = 0;
+                            $sommeTotal = 0;
                             foreach ($record->employees as $employee) {
                                 $cnss = $employee->tauxCnss ? $employee->salaire * $employee->tauxCnss : $employee->salaire * 0.036;
                                 $its = $employee->tauxIts ? $employee->salaire * $employee->tauxIts : $employee->salaire * 0.05;
@@ -247,7 +254,24 @@ class ClientResource extends Resource
                                     'total' => $total,
                                     'mois' => now()->format('F'),
                                 ]);
+                                $sommeCnss = $sommeCnss + $cnss;
+                                $sommeIts = $sommeIts + $its;
+                                $sommeTotal = $sommeTotal + $total;
                             }
+                            CotisationEmploye::updateOrCreate([
+                                'client_id' => $record->id,
+                                'agent' => 'Total',
+                                'annee_id' => self::$annee->id,
+                                'mois' => now()->format('F'),
+                            ],[
+                                'client_id' => $record->id,
+                                'agent' => 'Total',
+                                'annee_id' => self::$annee->id,
+                                'cnss' => $sommeCnss,
+                                'its' => $sommeIts,
+                                'total' => $sommeTotal,
+                                'mois' => now()->format('F'),
+                            ]);
                             redirect(static::getUrl('cotisations-employes', ['record' => $record]));
                         })
                         ->icon('heroicon-o-currency-dollar')

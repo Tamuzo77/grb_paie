@@ -7,12 +7,17 @@ use App\Filament\Resources\EmployeeResource;
 use App\Models\Client;
 use App\Models\CotisationEmploye;
 use App\Models\Employee;
+use App\Models\SoldeCompte;
 use Filament\Actions;
 use Filament\Forms\Components\Tabs\Tab;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Layout\Panel;
 use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -45,14 +50,23 @@ class CotisationsEmployes extends ListRecords
             })
             ->columns([
                 TextColumn::make('agent')
+                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->label('Agent'),
                 TextColumn::make('cnss')
+                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->money('XOF', locale: 'fr', )
+//                    ->summarize(Sum::make()->money('XOF', locale: 'fr', )->label('Total'))
                     ->label('CNSS'),
                 TextColumn::make('its')
+                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->money('XOF', locale: 'fr', )
                     ->label('ITS'),
                 TextColumn::make('total')
+                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->money('XOF', locale: 'fr', )
                     ->default(function ($record) {
                         return $record->cnss + $record->its;
@@ -86,12 +100,35 @@ class CotisationsEmployes extends ListRecords
                     ]),
             ])
             ->headerActions([
-                ExportAction::make()
-                    ->exports([
-                        ExcelExport::make()
-                            ->withFilename('cotisations sociales des employes '. $this->record->nom )
-                            ->fromTable(),
-                    ]),
+//                ExportAction::make()
+//                    ->exports([
+//                        ExcelExport::make()
+//                            ->withFilename('cotisations sociales des employes '. $this->record->nom )
+//                            ->fromTable(),
+//                    ]),
+                Action::make('export')
+                    ->label('Exporter')
+                    ->color('primary')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(function () {
+                        try {
+                            redirect(route('download-cotisations-employes',['records' => $this->getTableRecords()->pluck('id')->implode(',')]));
+
+                            Notification::make('Etat personnel téléchargé avec succès')
+                                ->title('Téléchargement réussi')
+                                ->body('Le téléchargement de l\'état personnel a été effectué avec succès.')
+                                ->color('success')
+                                ->iconColor('success')
+                                ->send();
+                        } catch (\Exception $e) {
+                            Notification::make('Erreur lors du téléchargement de l\'état personnel')
+                                ->title('Erreur')
+                                ->body("Une erreur s'est produite lors du téléchargement de l'état personnel. Veuillez réessayer.")
+                                ->color('danger')
+                                ->iconColor('danger')
+                                ->send();
+                        }
+                    })
             ])
             ->bulkActions([
 //                ExportBulkAction::make()
@@ -99,8 +136,7 @@ class CotisationsEmployes extends ListRecords
 //                        ExcelExport::make()
 //                            ->fromTable(),
 //                    ]),
-            ])
-            ->selectable();
+            ]);
     }
 
     public function getBreadcrumb(): ?string
