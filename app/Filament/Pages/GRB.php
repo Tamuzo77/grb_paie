@@ -145,7 +145,7 @@ class GRB extends Page implements HasForms, HasInfolists
                         TextEntry::make('tauxIts')
                             ->size('lg')
                             ->weight(FontWeight::Bold)
-                            ->label('Taux ITS')
+                            ->label('Taux CNSS : 3.6%'),
                     ])
                     ->columns(3)
             ]);

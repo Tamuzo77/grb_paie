@@ -103,7 +103,7 @@ class CotisationClientObserver
             ->where('annee_id', $cotisationClient->annee_id)
             ->where('agent', 'Total')
             ->first();
-        $total->update([
+        $total?->update([
             'somme_salaires_bruts' => $trimestre1->somme_salaires_bruts + $trimestre2->somme_salaires_bruts + $trimestre3->somme_salaires_bruts + $trimestre4->somme_salaires_bruts,
             'somme_cotisations' => $trimestre1->somme_cotisations + $trimestre2->somme_cotisations + $trimestre3->somme_cotisations + $trimestre4->somme_cotisations,
         ]);
