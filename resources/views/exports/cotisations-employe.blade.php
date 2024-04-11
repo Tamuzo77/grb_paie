@@ -1,11 +1,27 @@
+@php
+    $mois = [
+        'January' => 'Janvier',
+        'February' => 'Février',
+        'March' => 'Mars',
+        'April' => 'Avril',
+        'May' => 'Mai',
+        'June' => 'Juin',
+        'July' => 'Juillet',
+        'August' => 'Août',
+        'September' => 'Septembre',
+        'October' => 'Octobre',
+        'November' => 'Novembre',
+        'December' => 'Décembre'
+    ]
+@endphp
 <table>
     <thead>
         <tr>
             <td colspan="2" style="height:35px"></td>
-            <td colspan="12" style="background-color:#3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">MOIS</td>           
+            <td colspan="12" style="background-color:#3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;text-align:center">{{ $mois[$cotisations[0]->mois] }}</td>
         </tr>
         <tr><td colspan="14" style="height:35px"></td></tr>
-    </thead> 
+    </thead>
      <tbody>
         <tr>
             <td colspan="2" style="height:35px"></td>
