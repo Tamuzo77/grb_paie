@@ -19,11 +19,11 @@ export default function ForgotPassword({ status }) {
         <GuestLayout>
             <Head title="Forgot Password" />
 
-            <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            <div className="mb-4 text-gray-600 dark:text-gray-400 text-lg">
                 Mot de passe oublié ? Pas de problème. Indiquez simplement votre adresse e-mail et nous vous enverrons un lien de réinitialisation de mot de passe par e-mail, ce qui vous permettra d'en choisir un nouveau.
             </div>
             <Link href="http://127.0.0.1:8000/login"
-                            className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md"
+                            className="underline text-blue-600 dark:text-cyan-600 hover:text-blue-700 dark:hover:text-cyan-700"
                         >
                             retour à la connexion
                         </Link>
