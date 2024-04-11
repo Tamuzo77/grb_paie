@@ -87,6 +87,7 @@ class SoldeTable extends Component implements HasForms, HasTable
                         }
                     })
             ])
+            ->selectable(false)
             ->paginated(false);
 
     }
