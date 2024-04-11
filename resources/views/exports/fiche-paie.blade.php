@@ -189,7 +189,9 @@ $mois = [
     <tr >
         <td style="height:50px;"></td>
         <td style="height:50px;vertical-align:middle;border:2px solid #3498db" colspan="9"></td>
-        <td style="height:50px;vertical-align:middle;border:2px solid #3498db;font-weight:bold;text-align:center" colspan="5">xxxxx</td>
+        <td style="height:50px;vertical-align:middle;border:2px solid #3498db;font-weight:bold;text-align:center" colspan="5">
+            <img src="storage/{{$company->signature}}" alt="" srcset="">
+        </td>
     </tr>
     </tbody>
 </table>

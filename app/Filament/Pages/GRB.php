@@ -41,6 +41,7 @@ class GRB extends Page implements HasForms, HasInfolists
                     Fieldset::make('Informations')
                         ->schema([
                             TextInput::make('nom')
+                                ->default(Company::first()->nom)
                                 ->required()
                                 ->columnSpan(2)
                                 ->label('Nom'),
