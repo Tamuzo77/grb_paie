@@ -79,7 +79,13 @@
                         </tr>
                         <tr>
                             <td colspan="16" style="height:50px;vertical-align:middle;font-size:15px;border:2px solid #3498db;font-weight:500;text-align:center">xxxxxxxx</td>
-                            <td style="height:50px;vertical-align:middle;border:2px solid #3498db;font-weight:500;font-size:15px;text-align:center" colspan="16">xxxxxxxxx</td>
+                            <td style="height:50px;vertical-align:middle;border:2px solid #3498db;font-weight:500;font-size:15px;text-align:center" colspan="16">
+                                @if($company->signature)
+                                <img src="storage/{{$company->signature}}" alt="" srcset="">
+                                @else
+                                <img src="" alt="" srcset="">
+                                @endif
+                            </td>
                         </tr>
                         </tbody>
                     </table>
