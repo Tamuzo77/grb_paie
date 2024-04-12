@@ -13,11 +13,19 @@ class TwoFactorController extends Controller
 {
     public function index()
     {
+        
+        $user = auth()->user();
+        
+        // Vérifier si l'utilisateur a configuré un code de vérification à deux facteurs
+        if (!$user->hasTwoFactorCode()) {
+             return inertia('/Dashboard');
+        }
+    
         return inertia('Auth/twofactor', [
             'status' => session('status'),
         ]);
     }
-
+    
     public function store(Request $request)
     {
         $request->validate([

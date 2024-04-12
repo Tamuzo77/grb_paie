@@ -11,7 +11,7 @@
                     <table style="border:2px solid  #3498db;">
                         <thead className='text-center bg-primary'>
                         <tr rowspan="3">
-                            <th colspan="32" style="background-color: #3498db;color: #ffffff;height:50px;vertical-align:middle;font-weight:bold;text-align:center">ETAT DES SALAIRES ET ACCESOIRES DU PERSONNEL DU CABINET CMFD</th>
+                            <th colspan="32" style="background-color: #3498db;color: #ffffff;height:50px;vertical-align:middle;font-weight:bold;text-align:center">ETAT DES SALAIRES ET ACCESOIRES DU PERSONNEL DE {{$client->nom}}</th>
                         </tr>
 
                         </thead>
@@ -78,14 +78,16 @@
                             <td style="border:2px solid #3498db;font-weight:500;height:50px;font-size:15px;text-align:center;vertical-align:middle" colspan="16">La Directrice</td>
                         </tr>
                         <tr>
-                            <td colspan="16" style="height:50px;vertical-align:middle;font-size:15px;border:2px solid #3498db;font-weight:500;text-align:center">xxxxxxxx</td>
-                            <td style="height:50px;vertical-align:middle;border:2px solid #3498db;font-weight:500;font-size:15px;text-align:center" colspan="16">
+                            <td colspan="16" style="height:100px;vertical-align:middle;font-size:15px;border-top:2px solid #3498db ;font-weight:500;text-align:center">xxxxxxxx</td>
+                            <td colspan="8" style="border-top:2px solid #3498db;height:100px;"></td>
+                            <td style="height:100px;vertical-align:middle;border-top:2px solid #3498db ;border-right:2px solid white;border-left:2px solid white ;font-weight:500;font-size:15px;text-align:center" colspan="2">
                                 @if($company->signature)
-                                <img src="storage/{{$company->signature}}" alt="" srcset="">
+                                <img src="storage/{{$company->signature}}" width="80px" height="80px" alt="" srcset="">
                                 @else
                                 <img src="" alt="" srcset="">
                                 @endif
                             </td>
+                            <td colspan="6" style="border-top:2px solid #3498db;height:100px;"></td>
                         </tr>
                         </tbody>
                     </table>

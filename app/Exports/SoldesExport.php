@@ -24,6 +24,7 @@ use Maatwebsite\Excel\Concerns\FromView;
         $avances = $this->soldes[4]->montant;
         $prets = $this->soldes[5]->montant;
         $total = $this->soldes[6]->montant;
+        $employe = $this->soldes[0]->employee;
         return view('exports.solde-employe', [
             'salaireMensuel' => $salaireMensuel,
             'treiziemeMois' => $treiziemeMois,
@@ -31,7 +32,8 @@ use Maatwebsite\Excel\Concerns\FromView;
             'preavis' => $preavis,
             'avances' => $avances,
             'prets' => $prets,
-            'total' => $total
+            'total' => $total,
+            'employe' => $employe,
         ]);
     }
 }

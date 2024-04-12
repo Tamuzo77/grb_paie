@@ -245,14 +245,15 @@
     </tr>
     <tr>
         <td style="height:50px;"></td>
-        <td style="height:50px;vertical-align:middle;border:2px solid #3498db" colspan="9"></td>
-        <td style="height:50px;vertical-align:middle;border:2px solid #3498db;font-weight:bold;text-align:center"
-            colspan="5">
+        <td style="height:50px;vertical-align:middle;border-top:1px solid white;border-bottom:1px solid white" colspan="11"></td>
+        <td style="height:100px;vertical-align:middle;border-bottom:1px solid white;border-left:1px solid white;border-top:1px solid white;font-weight:bold;text-align:center"
+            colspan="3">
             @if($company->signature)
-                <img src="storage/{{$company->signature}}" alt="" srcset="">
+                <img src="storage/{{$company->signature}}" alt="" srcset="" width="80px" height="80px">
             @else
                 <img src="" alt="" srcset="">
             @endif        </td>
     </tr>
+
     </tbody>
 </table>

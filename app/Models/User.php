@@ -98,4 +98,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         $this->two_factor_expires_at = null;
         $this->save();
     }
+    public function hasTwoFactorCode()
+{
+    // Vérifiez si l'utilisateur a un code de vérification à deux facteurs
+    return !empty($this->two_factor_code);
+}
 }

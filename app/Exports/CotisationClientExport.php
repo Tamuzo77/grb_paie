@@ -2,19 +2,15 @@
 
 namespace App\Exports;
 
-use AllowDynamicProperties;
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeSheet;
-use PhpOffice\PhpSpreadsheet\Style\Color;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-
-#[AllowDynamicProperties] class CotisationClientExport implements FromView
+class CotisationClientExport implements FromView, WithStyles, WithEvents
 {
     protected $cotisations;
 
@@ -30,38 +26,35 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
         ]);
     }
 
-    public function styles(Worksheet $sheet)
+    public function styles(Worksheet $sheet): array
     {
-        // Appliquer des styles à une cellule ou une plage de cellules
-        $sheet->getStyle('C7:K7')->applyFromArray([
-            'font' => [
-                'bold' => true,
-                'color' => ['rgb' => 'black'],
 
+        return [
+            'C7:K7' => [
+                'font' => [
+                    'bold' => true,
+                    'color' => ['rgb' => 'gray'], 
+                ],
+                'fill' => [
+                    'type' => Fill::FILL_SOLID,
+                    'color' => ['rgb' => '3498db'], 
+                ],
             ],
-            'fill' => [
-                'type' => Fill::FILL_SOLID,
-                'color' => ['rgb' => '3498db'],
-            ],
-        ]);
-
-        // Appliquer des styles à d'autres cellules ou plages de cellules si nécessaire
-        $sheet->getStyle('C11:K11')->getFont()->setBold(true);
-        $sheet->getStyle('C15:K15')->getFont()->setBold(true);
-        $sheet->getStyle('C19:K19')->getFont()->setBold(true);
-        $sheet->getStyle('C20:K20')->getFont()->setBold(true);
+            'C11:K11' => ['font' => ['bold' => true]],
+            'C15:K15' => ['font' => ['bold' => true]],
+            'C19:K19' => ['font' => ['bold' => true]],
+            'C20:K20' => ['font' => ['bold' => true]],
+        ];
     }
 
     public function registerEvents(): array
     {
         return [
             BeforeSheet::class => function (BeforeSheet $event) {
-                // Code à exécuter avant la création de la feuille
-                // Par exemple, définir les titres, ajouter des styles spécifiques, etc.
+
             },
             AfterSheet::class => function (AfterSheet $event) {
-                // Code à exécuter après la création de la feuille
-                // Par exemple, appliquer des formats de cellules ou des styles.
+
             },
         ];
     }
