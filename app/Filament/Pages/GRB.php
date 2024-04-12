@@ -66,11 +66,9 @@ class GRB extends Page implements HasForms, HasInfolists
                                 ->columnSpan('full')
                                 ->label('Directeur / Directrice'),
                             FileUpload::make('signature')
-                                ->default(Company::first()->signature)
                                 ->columnSpan(2)
                                 ->label('Signature'),
                             FileUpload::make('logo')
-                                ->default(Company::first()->logo)
                                 ->columnSpan(2)
                                 ->label('Logo')
                                 ->directory('logos')
@@ -79,6 +77,7 @@ class GRB extends Page implements HasForms, HasInfolists
                         ->columns(4)
 
                 ])
+                ->record(Company::first())
                 ->action(function (array $data) {
                     Company::first()->update($data);
                     Notification::make()
