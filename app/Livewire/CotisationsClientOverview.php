@@ -144,6 +144,7 @@ class CotisationsClientOverview extends Component implements HasForms, HasTable
                     ->label('23%'),
 
             ])
+            ->paginated(false)
             ->striped()
             ->headerActions([
 //                \pxlrbt\FilamentExcel\Actions\Tables\ExportAction::make()
