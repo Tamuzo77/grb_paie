@@ -193,9 +193,11 @@ class EmployeeResource extends Resource
                             ->suffix('FCFA')
                             ->numeric()
                             ->afterStateUpdated(fn(Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state)) ))
-                            ->default(0),
+                            ->default(0)
+                            ->columnSpanFull(Pages\EditEmployee::class),
                         Forms\Components\TextInput::make('tauxCnss')
                             ->numeric()
+                            ->hiddenOn(Pages\EditEmployee::class)
                             ->label('Taux CNSS')
                             ->suffix('%')
                             ->default(3.6),

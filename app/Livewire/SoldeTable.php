@@ -10,6 +10,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Concerns\HasTabs;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -47,9 +48,20 @@ class SoldeTable extends Component implements HasForms, HasTable
                     ->weight(fn($record) => $record->donnees == SoldeCompte::TOTAL ? FontWeight::Bold : null)
                     ->size(fn($record) => $record->donnees == SoldeCompte::TOTAL ? TextColumn\TextColumnSize::Large : null),
                 TextInputColumn::make('montant')
+                    ->type(fn($record) => $record->donnees == SoldeCompte::TREIZIEME_MOIS || $record->donnees == SoldeCompte::PREAVIS  ? 'checkbox' : 'text')
+                    ->afterStateUpdated(function ($record, $state) {
+                        if ($record->donnees == SoldeCompte::TREIZIEME_MOIS || $record->donnees == SoldeCompte::PREAVIS) {
+                            $salaire = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', SoldeCompte::SALAIRE_MENSUEL)->first()->montant;
+                            $value = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first()->montant;
+                            $state = $state == $value ? 0 : $salaire;
+                        }
+                        return $state;
+                    })
+//                    ->hidden(fn ($record) => $record->donnees == SoldeCompte::SALAIRE_MENSUEL || $record->donnees == SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU)
                     ->label('Montant')
                     ->default(0)
                     ->disabled(fn ($record) => $record->donnees == SoldeCompte::SALAIRE_MENSUEL || $record->donnees == SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU|| $record->donnees == SoldeCompte::TOTAL),
+
             ])
             ->filters([
 

@@ -152,8 +152,11 @@ class Employee extends Model
         {
             return Attribute::make(
                 get: function ($value) {
-                    return $value / 100;
+                    return $value / 10000;
                 },
+                set: function ($value) {
+                    return $value * 100;
+                }
             );
 
         }
