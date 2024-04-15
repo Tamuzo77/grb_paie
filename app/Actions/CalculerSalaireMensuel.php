@@ -29,7 +29,9 @@ class CalculerSalaireMensuel
     {
         $nb_jours_absences = 0;
         foreach ($employee->absences()->where('date_debut', '>=', now()->startOfMonth())->whereDeductible(true)->get() as $absence) {
-            $nb_jours_absences += date_diff($absence->date_debut, $absence->date_fin)->days;
+            $startDate = new DateTime($absence->date_debut);
+            $endDate = new DateTime($absence->date_fin);
+            $nb_jours_absences += date_diff($startDate, $endDate)->days;
         }
         return 20 - $nb_jours_absences;
 
