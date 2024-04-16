@@ -229,7 +229,7 @@
         <td style="height:50px"></td>
         <td style="height:50px;vertical-align:middle;border:2px solid #3498db;font-weight:bold;text-align:center;"
             colspan="14">DANS VOTRE INTERET ET POUR VALIDER VOS DROITS, VEILLER CONSERVER CETTE FICHE DE PAIE SANS
-            LIMITATION DE DUREE
+            LIMITATION DE DUREE,AUCUN DUPLICATA NE SERA DÉLIVRÉ.
         </td>
     </tr>
     <tr>

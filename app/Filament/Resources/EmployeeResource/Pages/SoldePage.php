@@ -27,7 +27,7 @@ class SoldePage extends ListRecords
 
     protected static string $resource = EmployeeResource::class;
 
-    protected ?string $heading = "Solde de Compte";
+    protected ?string $heading = "Solde de tout compte";
 
     public function mount(): void
     {
