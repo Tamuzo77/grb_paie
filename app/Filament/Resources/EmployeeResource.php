@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
 use PHPUnit\Exception;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
+use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 
 class EmployeeResource extends Resource
 {
@@ -122,11 +124,12 @@ class EmployeeResource extends Resource
                             ->label('Prénoms')
                             ->required()
                             ->maxLength(15),
-                        Forms\Components\TextInput::make('telephone')
-                            ->tel()
+                        PhoneInput::make('telephone')
+//                                    ->prefix('+229')
                             ->label('Téléphone')
-                            ->unique(ignoreRecord: true)
+                            ->hint('Contact téléphonique')
                             ->required()
+                            ->unique(ignoreRecord : true)
 //                            ->prefix('+229')
 //                            ->maxLength(8)
                             ->default(null),
@@ -139,8 +142,7 @@ class EmployeeResource extends Resource
                         Forms\Components\DatePicker::make('date_naissance')
                             ->date()
                             ->label('Date de naissance')
-                            ->maxDate(now()->subYears(18))
-                            ->required(),
+                            ->maxDate(now()->subYears(18)),
                         Forms\Components\TextInput::make('lieu_naissance')
                             ->maxLength(20)
                             ->label('Lieu de naissance')
@@ -194,9 +196,11 @@ class EmployeeResource extends Resource
                             ->suffix('FCFA')
                             ->numeric()
                             ->afterStateUpdated(fn(Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state)) ))
-                            ->default(0),
+                            ->default(0)
+                            ->columnSpanFull(Pages\EditEmployee::class),
                         Forms\Components\TextInput::make('tauxCnss')
                             ->numeric()
+                            ->hiddenOn(Pages\EditEmployee::class)
                             ->label('Taux CNSS')
                             ->suffix('%')
                             ->default(3.6),
@@ -238,7 +242,7 @@ class EmployeeResource extends Resource
                 Tables\Columns\TextColumn::make('prenoms')
                     ->label('Prénoms')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('telephone')
+                PhoneColumn::make('telephone')
                     ->label('Téléphone')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')

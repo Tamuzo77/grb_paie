@@ -17,6 +17,8 @@ use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
+use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 
 class ClientResource extends Resource
 {
@@ -58,16 +60,27 @@ class ClientResource extends Resource
                                     ->required()
                                     ->helperText('Adresse de l\'entreprise')
                                     ->maxLength(255),
-                                Forms\Components\TextInput::make('telephone')
+                                PhoneInput::make('telephone')
 //                                    ->prefix('+229')
-                                    ->placeholder('Ex: +229 97 97 97 97')
-                                    ->tel()
                                     ->label('Téléphone')
                                     ->hint('Contact téléphonique')
                                     ->required()
-                                    ->unique(ignoreRecord : true)
-                                    ->numeric(),
+                                    ->unique(ignoreRecord : true),
 //                                    ->maxLength(8),
+                            Forms\Components\TextInput::make('ifu')
+                                ->placeholder('Ex: 1234567890123')
+                                ->helperText('Numéro IFU de l\'entreprise')
+                                ->label('Numéro IFU'),
+                                Forms\Components\FileUpload::make('rc')
+                                    ->label('Registre de commerce')
+                                    ->previewable(true)
+                                    ->directory('rc')
+                                    ->preserveFilenames()
+                                    ->downloadable(true)
+//                                    ->required()
+                                    ->acceptedFileTypes(['image/*', 'application/pdf'])
+                                    ->hint('Fichier PDF ou image'),
+//                                    ->maxFiles(1),
                                 Forms\Components\TextInput::make('email')
                                     ->email()
                                     ->required()
@@ -107,6 +120,9 @@ class ClientResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nom')
+                    ->searchable(),
+                PhoneColumn::make('telephone')
+                    ->label('Téléphone')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nom_donneur_ordre')
                     ->searchable(),

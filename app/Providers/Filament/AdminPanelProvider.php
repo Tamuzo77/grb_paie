@@ -28,6 +28,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
+use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
 use pxlrbt\FilamentSpotlight\SpotlightPlugin;
 
 class AdminPanelProvider extends PanelProvider
@@ -85,6 +86,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 ThemesPlugin::make(),
+                EnvironmentIndicatorPlugin::make(),
                 BreezyCore::make()
                     ->myProfile(
                         hasAvatars: true,
