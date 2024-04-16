@@ -2,14 +2,16 @@
 
 namespace App\Filament\Clusters\Settings\Resources;
 
-use App\Filament\Clusters\Settings;
-use App\Filament\Clusters\Settings\Resources\AnneeResource\Pages;
-use App\Models\Annee;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Annee;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
+use App\Filament\Clusters\Settings;
+use Tables\Actions\DeleteBulkAction;
+use App\Filament\Clusters\Settings\Resources\AnneeResource\Pages;
 
 class AnneeResource extends Resource
 {
@@ -74,14 +76,21 @@ class AnneeResource extends Resource
                     ->placeholder('Années'),
             ])
             ->actions([
+
+                Tables\Actions\Action::make('Rapport Annuel')
+                ->color(Color::Teal)
+                ->label('Rapport Annuel')
+                ->visible(Annee::latest()->first()?->statut == 'cloture')
+                ->icon('heroicon-o-document-text'),
+
                 Tables\Actions\EditAction::make(),
-//                Tables\Actions\DeleteAction::make(),
+                //Tables\Actions\DeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
-//                Tables\Actions\ForceDeleteAction::make(),
+                //\Actions\ForceDeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-//                    Tables\Actions\DeleteBulkAction::make(),
+//                    DeleteBulkAction::make(),
 //                    Tables\Actions\RestoreBulkAction::make(),
 //                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
@@ -101,6 +110,7 @@ class AnneeResource extends Resource
             'index' => Pages\ListAnnees::route('/'),
             //            'create' => Pages\CreateAnnee::route('/create'),
             'edit' => Pages\EditAnnee::route('/{record}/edit'),
+            
         ];
     }
 }

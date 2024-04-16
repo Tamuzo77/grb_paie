@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Cviebrock\EloquentSluggable\Sluggable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
+use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use LaracraftTech\LaravelDateScopes\DateScopes;
 
 /**
  * @property integer $id
@@ -26,7 +27,7 @@ use Wildside\Userstamps\Userstamps;
  */
 class CotisationEmploye extends Model
 {
-    use Sluggable, SoftDeletes, Userstamps;
+    use Sluggable, SoftDeletes, Userstamps, DateScopes;
     /**
      * @var array
      */

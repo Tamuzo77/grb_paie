@@ -188,6 +188,7 @@ class EmployeeResource extends Resource
                             ->numeric()
                             ->default(null),
                         Forms\Components\TextInput::make('salaire')
+                            ->label('Salaire brut')
                             ->required()
                             ->live()
                             ->mask(RawJs::make('$money($input)'))
