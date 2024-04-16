@@ -19,6 +19,7 @@ use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
 use PHPUnit\Exception;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class EmployeesRelationManager extends RelationManager
 {
@@ -90,12 +91,12 @@ class EmployeesRelationManager extends RelationManager
                             ->label('Prénoms')
                             ->required()
                             ->maxLength(15),
-                        Forms\Components\TextInput::make('telephone')
-                            ->tel()
+                        PhoneInput::make('telephone')
+//                                    ->prefix('+229')
                             ->label('Téléphone')
-                            ->unique(ignoreRecord: true)
+                            ->hint('Contact téléphonique')
                             ->required()
-                            ->placeholder('Ex: +229 97 97 97 97')
+                            ->unique(ignoreRecord : true)
 //                            ->prefix('+229')
                             ->default(null),
                         Forms\Components\TextInput::make('email')

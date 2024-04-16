@@ -18,6 +18,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
+use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 
 class ClientResource extends Resource
 {
@@ -119,6 +120,9 @@ class ClientResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nom')
+                    ->searchable(),
+                PhoneColumn::make('telephone')
+                    ->label('Téléphone')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nom_donneur_ordre')
                     ->searchable(),
