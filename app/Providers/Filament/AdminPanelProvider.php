@@ -79,9 +79,11 @@ class AdminPanelProvider extends PanelProvider
             Dashboard::class
             ])
             ->navigationGroups([
+                NavigationGroup::make(label: 'Dépendances salariales'),
                 NavigationGroup::make(label: 'Etats et Paiements'),
                 NavigationGroup::make(label: 'Paramètres')
                     ->icon('heroicon-o-cog-6-tooth'),
+                NavigationGroup::make('Filament Shield')
 
             ])
             ->plugins([

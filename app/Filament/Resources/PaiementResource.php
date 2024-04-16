@@ -27,6 +27,7 @@ class PaiementResource extends Resource
     protected static ?string $navigationGroup = 'Etats et Paiements';
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?int $navigationSort = 1;
 
     protected static ?Annee $annee = null;
 
