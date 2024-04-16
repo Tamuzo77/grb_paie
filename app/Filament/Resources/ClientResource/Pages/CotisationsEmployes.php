@@ -2,28 +2,29 @@
 
 namespace App\Filament\Resources\ClientResource\Pages;
 
-use App\Filament\Resources\ClientResource;
-use App\Filament\Resources\EmployeeResource;
-use App\Models\Client;
-use App\Models\CotisationEmploye;
-use App\Models\Employee;
-use App\Models\SoldeCompte;
 use Filament\Actions;
-use Filament\Forms\Components\Tabs\Tab;
-use Filament\Notifications\Notification;
-use Filament\Resources\Pages\Concerns\InteractsWithRecord;
-use Filament\Resources\Pages\ListRecords;
-use Filament\Support\Enums\FontWeight;
+use App\Models\Client;
+use App\Models\Employee;
+use Filament\Tables\Table;
+use App\Models\SoldeCompte;
+use App\Models\CotisationEmploye;
 use Filament\Tables\Actions\Action;
+use Filament\Support\Enums\FontWeight;
+use Filament\Forms\Components\Tabs\Tab;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Columns\Layout\Panel;
 use Filament\Tables\Columns\Layout\Split;
-use Filament\Tables\Columns\Summarizers\Sum;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Table;
+use App\Filament\Resources\ClientResource;
+use App\Filament\Resources\EmployeeResource;
+use Filament\Tables\Columns\Summarizers\Sum;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use Filament\Resources\Pages\Concerns\InteractsWithRecord;
+use AymanAlhattami\FilamentDateScopesFilter\DateScopeFilter;
 
 class CotisationsEmployes extends ListRecords
 {
@@ -98,6 +99,7 @@ class CotisationsEmployes extends ListRecords
                         'November' => 'Novembre',
                         'December' => 'Décembre',
                     ]),
+                    DateScopeFilter::make('created_at')
             ])
             ->headerActions([
 //                ExportAction::make()
