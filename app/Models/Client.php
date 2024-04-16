@@ -35,7 +35,7 @@ class Client extends Model
     /**
      * @var array
      */
-    protected $fillable = ['bank_id', 'slug', 'matricule', 'nom', 'adresse', 'telephone', 'email', 'nom_donneur_ordre', 'prenom_donneur_ordre', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at', 'annee_id'];
+    protected $fillable = ['bank_id', 'slug', 'matricule', 'nom', 'adresse', 'telephone', 'email', 'nom_donneur_ordre', 'prenom_donneur_ordre', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at', 'annee_id', 'ifu', 'rc'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -23,11 +23,13 @@
         "maatwebsite/excel": "^3.1",
         "owenvoke/blade-fontawesome": "^2.6",
         "psr/simple-cache": "^3.0",
+        "pxlrbt/filament-environment-indicator": "^2.0",
         "pxlrbt/filament-excel": "^2.3",
         "pxlrbt/filament-spotlight": "^1.2",
         "rmunate/spell-number": "*",
         "tightenco/ziggy": "^2.0",
         "wildside/userstamps": "^2.4",
+        "ysfkaya/filament-phone-input": "^2.3",
         "z3d0x/filament-logger": "^0.7.1"
     },
     "require-dev": {
