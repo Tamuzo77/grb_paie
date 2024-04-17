@@ -163,8 +163,6 @@ class CotisationsEmployes extends ListRecords
                 ->label('ITS'),
             Tab::make('total')
                 ->label('TOTAL')
-
-
         ];
     }
     public function getDefaultActiveTab(): string| int|null
