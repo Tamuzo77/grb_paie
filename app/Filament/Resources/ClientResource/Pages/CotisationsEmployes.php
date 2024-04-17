@@ -53,26 +53,26 @@ class CotisationsEmployes extends ListRecords
             })
             ->columns([
                 TextColumn::make('agent')
-                    ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
-                    ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
+                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->label('Agent'),
                 TextColumn::make('cnss')
-                    ->visible(fn ($livewire) => $livewire->activeTab == '0' || $livewire->activeTab == '2')
-                    ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
-                    ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
+                    ->visible(fn($livewire) => $livewire->activeTab == 'cnss' || $livewire->activeTab == 'total')
+                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->money('XOF', locale: 'fr',)
                     //                    ->summarize(Sum::make()->money('XOF', locale: 'fr', )->label('Total'))
                     ->label('CNSS'),
                 TextColumn::make('its')
-                    ->visible(fn ($livewire) => $livewire->activeTab == '1' || $livewire->activeTab == '2')
-                    ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
-                    ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
+                    ->visible(fn($livewire) => $livewire->activeTab == 'its' || $livewire->activeTab == 'total')
+                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->money('XOF', locale: 'fr',)
                     ->label('ITS'),
                 TextColumn::make('total')
-                    ->visible(fn ($livewire) => $livewire->activeTab == '2')
-                    ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
-                    ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
+                    ->visible(fn($livewire) => $livewire->activeTab == 'total')
+                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->money('XOF', locale: 'fr',)
                     ->default(function ($record) {
                         return $record->cnss + $record->its;
@@ -156,19 +156,19 @@ class CotisationsEmployes extends ListRecords
     public function getTabs(): array
     {
         return [
-
-            Tab::make('cnss')
+            "cnss" => Tab::make('cnss')
                 ->label('CNSS'),
-            Tab::make('its')
+            "its" => Tab::make('its')
                 ->label('ITS'),
-            Tab::make('total')
-                ->label('TOTAL')
+            "total" => Tab::make('total')
+                ->label('Total'),
 
 
         ];
     }
-    public function getDefaultActiveTab(): string| int|null
+
+    public function getDefaultActiveTab(): string|int|null
     {
-        return 0;
+        return 'cnss';
     }
 }
