@@ -24,6 +24,7 @@ use App\Filament\Resources\EmployeeResource;
 use Filament\Tables\Columns\Summarizers\Sum;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use AymanAlhattami\FilamentDateScopesFilter\DateScopeFilter;
@@ -53,26 +54,26 @@ class CotisationsEmployes extends ListRecords
             })
             ->columns([
                 TextColumn::make('agent')
-                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
-                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
+                    ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->label('Agent'),
                 TextColumn::make('cnss')
-                    ->visible(fn($livewire) => $livewire->activeTab == 'cnss' || $livewire->activeTab == 'total')
-                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
-                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
+                    ->visible(fn ($livewire) => $livewire->activeTab == 'cnss' || $livewire->activeTab == 'total')
+                    ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->money('XOF', locale: 'fr',)
                     //                    ->summarize(Sum::make()->money('XOF', locale: 'fr', )->label('Total'))
                     ->label('CNSS'),
                 TextColumn::make('its')
-                    ->visible(fn($livewire) => $livewire->activeTab == 'its' || $livewire->activeTab == 'total')
-                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
-                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
+                    ->visible(fn ($livewire) => $livewire->activeTab == 'its' || $livewire->activeTab == 'total')
+                    ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->money('XOF', locale: 'fr',)
                     ->label('ITS'),
                 TextColumn::make('total')
-                    ->visible(fn($livewire) => $livewire->activeTab == 'total')
-                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
-                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
+                    ->visible(fn ($livewire) => $livewire->activeTab == 'total')
+                    ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->money('XOF', locale: 'fr',)
                     ->default(function ($record) {
                         return $record->cnss + $record->its;
@@ -104,7 +105,7 @@ class CotisationsEmployes extends ListRecords
                         'November' => 'Novembre',
                         'December' => 'Décembre',
                     ]),
-                DateScopeFilter::make('created_at')
+                DateScopeFilter::make('Période')
 
             ])
             ->headerActions([
@@ -155,19 +156,18 @@ class CotisationsEmployes extends ListRecords
 
     public function getTabs(): array
     {
-        return [
-            "cnss" => Tab::make('cnss')
-                ->label('CNSS'),
-            "its" => Tab::make('its')
-                ->label('ITS'),
-            "total" => Tab::make('total')
-                ->label('Total'),
 
+        return [
+            'cnss' => Tab::make('cnss')
+                ->label('CNSS'),
+            'its' => Tab::make('its')
+                ->label('ITS'),
+            'total' => Tab::make('total')
+                ->label('TOTAL')
 
         ];
     }
-
-    public function getDefaultActiveTab(): string|int|null
+    public function defaultTab(): ?string
     {
         return 'cnss';
     }
