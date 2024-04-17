@@ -17,7 +17,6 @@ class CreateEmployee extends CreateRecord
         $data['tauxIts'] = ItsService::getIts($data['salaire']);
         $annee = Annee::latest()->first()->get();
         $data['annee_id'] = $annee[0]['id'] ?? 1;
-
         return $data;
     }
 
