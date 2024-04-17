@@ -9,8 +9,10 @@ use Filament\Tables\Table;
 use App\Models\SoldeCompte;
 use App\Models\CotisationEmploye;
 use Filament\Tables\Actions\Action;
+use Filament\Forms\Components\Tabs;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Resources\Components\Tab;
 use Filament\Support\Enums\FontWeight;
-use Filament\Forms\Components\Tabs\Tab;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
@@ -51,36 +53,39 @@ class CotisationsEmployes extends ListRecords
             })
             ->columns([
                 TextColumn::make('agent')
-                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
-                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
+                    ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->label('Agent'),
                 TextColumn::make('cnss')
-                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
-                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
-                    ->money('XOF', locale: 'fr', )
-//                    ->summarize(Sum::make()->money('XOF', locale: 'fr', )->label('Total'))
+                    ->visible(fn ($livewire) => $livewire->activeTab == '0' || $livewire->activeTab == '2')
+                    ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
+                    ->money('XOF', locale: 'fr',)
+                    //                    ->summarize(Sum::make()->money('XOF', locale: 'fr', )->label('Total'))
                     ->label('CNSS'),
                 TextColumn::make('its')
-                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
-                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
-                    ->money('XOF', locale: 'fr', )
+                    ->visible(fn ($livewire) => $livewire->activeTab == '1' || $livewire->activeTab == '2')
+                    ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
+                    ->money('XOF', locale: 'fr',)
                     ->label('ITS'),
                 TextColumn::make('total')
-                    ->weight(fn($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
-                    ->size(fn($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
-                    ->money('XOF', locale: 'fr', )
+                    ->visible(fn ($livewire) => $livewire->activeTab == '2')
+                    ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
+                    ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
+                    ->money('XOF', locale: 'fr',)
                     ->default(function ($record) {
                         return $record->cnss + $record->its;
                     })
                     ->label('Total'),
-//                Panel::make([
-//                    Split::make([
-//                        TextColumn::make('telephone')
-//                            ->icon('heroicon-m-phone'),
-//                        TextColumn::make('email')
-//                            ->icon('heroicon-m-envelope'),
-//                    ])->from('md'),
-//                ])->collapsible(),
+                //                Panel::make([
+                //                    Split::make([
+                //                        TextColumn::make('telephone')
+                //                            ->icon('heroicon-m-phone'),
+                //                        TextColumn::make('email')
+                //                            ->icon('heroicon-m-envelope'),
+                //                    ])->from('md'),
+                //                ])->collapsible(),
             ])
             ->filters([
                 SelectFilter::make('mois')
@@ -99,22 +104,24 @@ class CotisationsEmployes extends ListRecords
                         'November' => 'Novembre',
                         'December' => 'Décembre',
                     ]),
-                    DateScopeFilter::make('created_at')
+                DateScopeFilter::make('created_at')
+
             ])
             ->headerActions([
-//                ExportAction::make()
-//                    ->exports([
-//                        ExcelExport::make()
-//                            ->withFilename('cotisations sociales des employes '. $this->record->nom )
-//                            ->fromTable(),
-//                    ]),
+                //                ExportAction::make()
+                //                    ->exports([
+                //                        ExcelExport::make()
+                //                            ->withFilename('cotisations sociales des employes '. $this->record->nom )
+                //                            ->fromTable(),
+                //                    ]),
+
                 Action::make('export')
                     ->label('Exporter')
                     ->color('primary')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->action(function () {
                         try {
-                            redirect(route('download-cotisations-employes',['records' => $this->getTableRecords()->pluck('id')->implode(',')]));
+                            redirect(route('download-cotisations-employes', ['records' => $this->getTableRecords()->pluck('id')->implode(',')]));
 
                             Notification::make('Etat personnel téléchargé avec succès')
                                 ->title('Téléchargement réussi')
@@ -133,11 +140,11 @@ class CotisationsEmployes extends ListRecords
                     })
             ])
             ->bulkActions([
-//                ExportBulkAction::make()
-//                    ->exports([
-//                        ExcelExport::make()
-//                            ->fromTable(),
-//                    ]),
+                //                ExportBulkAction::make()
+                //                    ->exports([
+                //                        ExcelExport::make()
+                //                            ->fromTable(),
+                //                    ]),
             ]);
     }
 
@@ -149,7 +156,19 @@ class CotisationsEmployes extends ListRecords
     public function getTabs(): array
     {
         return [
-            'all' => Tab::make('Tous les employés')
+
+            Tab::make('cnss')
+                ->label('CNSS'),
+            Tab::make('its')
+                ->label('ITS'),
+            Tab::make('total')
+                ->label('TOTAL')
+
+
         ];
+    }
+    public function getDefaultActiveTab(): string| int|null
+    {
+        return 0;
     }
 }
