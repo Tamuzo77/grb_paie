@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3.3",
+        "andrewdwallo/filament-selectify": "^2.0",
         "aymanalhattami/filament-date-scopes-filter": "^1.0",
         "bezhansalleh/filament-shield": "^3.2",
         "codewithdennis/filament-select-tree": "^3.1",

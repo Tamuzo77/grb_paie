@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BilanAnnuelExport;
 use App\Exports\CotisationClientExport;
 use App\Exports\CotisationEmployeExport;
 use App\Exports\EtatPersonnelExport;
 use App\Exports\FichePaieExport;
 use App\Exports\SoldesExport;
+use App\Models\Annee;
 use App\Models\Client;
 use App\Models\CotisationClient;
 use App\Models\CotisationEmploye;
+use App\Models\Employee;
 use App\Models\Paiement;
 use App\Models\SoldeCompte;
 use Filament\Notifications\Notification;
@@ -61,5 +64,17 @@ class AdminController extends Controller
         $records = CotisationClient::whereIn('id', $recordIds)->get();
         $export = new CotisationClientExport($records);
         return Excel::download($export, 'cotisations-employes.xlsx');
+    }
+
+    public function downloadBilanAnnuel($record)
+    {
+        $annee = Annee::find($record);
+//        $export = new BilanAnnuelExport($annee);
+//        return Excel::download($export, 'bilan-annuel.xlsx');
+        $employees = Employee::where('annee_id', $annee->id)->with(['soldeComptes', 'demandeConges', 'misAPieds'])->get();
+        return view('exports.bilan-annuel', [
+            'annee' => $annee,
+            'employees' => $employees
+        ]);
     }
 }

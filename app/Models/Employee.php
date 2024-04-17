@@ -124,7 +124,10 @@ class Employee extends Model
     {
         return $this->belongsTo('App\Models\Category');
     }
-
+    public function misAPieds()
+    {
+        return $this->hasMany('App\Models\MisAPied');
+    }
     public function sluggable(): array
     {
         return [

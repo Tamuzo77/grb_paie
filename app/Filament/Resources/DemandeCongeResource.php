@@ -26,6 +26,7 @@ class DemandeCongeResource extends Resource
     protected static ?int $navigationSort = 3;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static ?string $navigationGroup = 'Dépendances salariales';
 
     public static function form(Form $form): Form
     {
