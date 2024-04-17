@@ -3,6 +3,7 @@
 namespace App\Filament\Clusters\Settings\Resources;
 
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Tables;
 use App\Models\Annee;
 use Filament\Forms\Form;
@@ -56,12 +57,12 @@ class AnneeResource extends Resource
                     ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('statut')
-                    ->icon(fn (string $state): string => match ($state) {
+                    ->icon(fn(string $state): string => match ($state) {
                         'en_cours' => 'heroicon-o-lock-open',
                         'cloture' => 'heroicon-o-lock-closed',
                         default => 'heroicon-o-information-circle',
                     })
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'cloture' => 'gray',
                         'en_cours' => 'success',
                         default => 'accent',
@@ -78,10 +79,33 @@ class AnneeResource extends Resource
             ->actions([
 
                 Tables\Actions\Action::make('Rapport Annuel')
-                ->color(Color::Teal)
-                ->label('Rapport Annuel')
-                ->visible(Annee::latest()->first()?->statut == 'cloture')
-                ->icon('heroicon-o-document-text'),
+                    ->color(Color::Teal)
+                    ->label('Rapport Annuel')
+                    ->requiresConfirmation()
+                    ->action(function (Annee $record) {
+                        try {
+                            redirect(route('download-bilan-annuel', $record->id));
+
+                            Notification::make('Bilan annuel téléchargé avec succès')
+                                ->title('Téléchargement réussi')
+                                ->body('Le téléchargement du bilan a été effectué avec succès.')
+                                ->color('success')
+                                ->iconColor('success')
+                                ->send()
+                                ->sendToDatabase(auth()->user(),true);
+                        }catch (\Exception $e) {
+                            Notification::make('Erreur lors du téléchargement')
+                                ->title('Erreur')
+                                ->body("Une erreur s'est produite lors du téléchargement. Veuillez réessayer.")
+                                ->color('danger')
+                                ->iconColor('danger')
+                                ->send()
+                                ->sendToDatabase(auth()->user(), true);
+                        }
+                    })
+
+                    ->visible(Annee::latest()->first()?->statut == 'cloture')
+                    ->icon('heroicon-o-document-text'),
 
                 Tables\Actions\EditAction::make(),
                 //Tables\Actions\DeleteAction::make(),
@@ -110,7 +134,7 @@ class AnneeResource extends Resource
             'index' => Pages\ListAnnees::route('/'),
             //            'create' => Pages\CreateAnnee::route('/create'),
             'edit' => Pages\EditAnnee::route('/{record}/edit'),
-            
+
         ];
     }
 }
