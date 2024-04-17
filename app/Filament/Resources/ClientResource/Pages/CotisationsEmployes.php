@@ -8,9 +8,8 @@ use App\Models\Employee;
 use Filament\Tables\Table;
 use App\Models\SoldeCompte;
 use App\Models\CotisationEmploye;
-use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Tabs;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Actions\Action;
 use Filament\Resources\Components\Tab;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\TextColumn;
@@ -19,11 +18,13 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Columns\Layout\Panel;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ClientResource;
 use App\Filament\Resources\EmployeeResource;
 use Filament\Tables\Columns\Summarizers\Sum;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use AymanAlhattami\FilamentDateScopesFilter\DateScopeFilter;
@@ -104,7 +105,7 @@ class CotisationsEmployes extends ListRecords
                         'November' => 'Novembre',
                         'December' => 'Décembre',
                     ]),
-                DateScopeFilter::make('created_at')
+                DateScopeFilter::make('Période')
 
             ])
             ->headerActions([
@@ -155,17 +156,18 @@ class CotisationsEmployes extends ListRecords
 
     public function getTabs(): array
     {
+
         return [
-            "cnss" => Tab::make('cnss')
+            'cnss' => Tab::make('cnss')
                 ->label('CNSS'),
-            "its" => Tab::make('its')
+            'its' => Tab::make('its')
                 ->label('ITS'),
-            Tab::make('total')
+            'total' => Tab::make('total')
                 ->label('TOTAL')
+
         ];
     }
-
-    public function getDefaultActiveTab(): string|int|null
+    public function defaultTab(): ?string
     {
         return 'cnss';
     }
