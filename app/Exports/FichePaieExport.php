@@ -40,7 +40,7 @@ use Rmunate\Utilities\SpellNumber;
             $nb_jours_absences += date_diff($startDate, $endDate)->days;
         }
         $this->paiement->employee->misAPieds->each(function ($misAPied) use ($retenueObligatoire) {
-            $retenueObligatoire += $misAPied->montant;
+            $retenueObligatoire += $misAPied->montant * $misAPied->nbre_jours;
         });
         $company = Company::first();
         return view('exports.fiche-paie', [

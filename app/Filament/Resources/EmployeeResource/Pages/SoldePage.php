@@ -48,6 +48,7 @@ class SoldePage extends ListRecords
     {
         return $table
             ->query(SoldeCompte::query()->where('employee_id', $this->record->id))
+            ->recordUrl(null)
             ->columns([
                 TextColumn::make('donnees')
                     ->weight(fn($record) => $record->donnees == SoldeCompte::TOTAL ? FontWeight::Bold : null)

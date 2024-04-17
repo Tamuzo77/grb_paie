@@ -22,7 +22,7 @@ class CalculerSalaireMensuel
 
         $result = $salaire * $nb_jours_travaille / 20;
         $employee->misAPieds->each(function ($misAPied) use ($result) {
-            $result -= $misAPied->montant;
+            $result -= $misAPied->montant * $misAPied->nbre_jours;
         });
 
         return $result;

@@ -45,6 +45,7 @@ class SoldeTable extends Component implements HasForms, HasTable
     {
         return $table
             ->query(SoldeCompte::query()->where('employee_id', $this->employee->id))
+            ->recordUrl(null)
             ->columns([
                 TextColumn::make('donnees')
                     ->weight(fn($record) => $record->donnees == SoldeCompte::TOTAL ? FontWeight::Bold : null)
