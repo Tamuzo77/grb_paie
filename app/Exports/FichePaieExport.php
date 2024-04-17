@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\Company;
 use App\Models\Paiement;
 use App\Models\SoldeCompte;
+use DateTime;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -29,8 +30,18 @@ use Rmunate\Utilities\SpellNumber;
         $solde = SoldeCompte::where('employee_id', $this->paiement->employee_id)->where('mois', now()->format('F'));
         $salaireMensuel = SoldeCompte::where('employee_id', $this->paiement->employee_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->get('montant');
         $montantAvance = SoldeCompte::where('employee_id', $this->paiement->employee_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::AVANCE_SUR_SALAIRE)->get('montant');
-        $montantLettre = SpellNumber::value($salaireMensuel[0]['montant'])->locale('fr')->toLetters();
-
+        $totalNet = $solde->where('donnees', \App\Models\SoldeCompte::TOTAL)->get('montant');
+        $montantLettre = SpellNumber::value($totalNet[0]['montant'])->locale('fr')->toLetters();
+        $retenueObligatoire = 0;
+        $nb_jours_absences = 0;
+        foreach ($this->paiement->employee->absences()->where('date_debut', '>=', now()->startOfMonth())->whereDeductible(true)->get() as $absence) {
+            $startDate = new DateTime($absence->date_debut);
+            $endDate = new DateTime($absence->date_fin);
+            $nb_jours_absences += date_diff($startDate, $endDate)->days;
+        }
+        $this->paiement->employee->misAPieds->each(function ($misAPied) use ($retenueObligatoire) {
+            $retenueObligatoire += $misAPied->montant;
+        });
         $company = Company::first();
         return view('exports.fiche-paie', [
             'paiement' => $this->paiement,
@@ -39,7 +50,9 @@ use Rmunate\Utilities\SpellNumber;
             'montantAvance' => $montantAvance[0]['montant'],
             'salaireMensuel' => $salaireMensuel[0]['montant'],
             'montantLettre' => $montantLettre,
-            'company' => $company
+            'company' => $company,
+            'totalNet' => $totalNet[0]['montant'],
+            'retenueObligatoire' => $retenueObligatoire,
         ]);
     }
 }

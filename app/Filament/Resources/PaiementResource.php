@@ -185,14 +185,6 @@ class PaiementResource extends Resource
                     ->icon('heroicon-o-currency-dollar'),
                 Tables\Actions\Action::make('fiche_de_paie')
                     ->color(Color::Fuchsia)
-                    ->form([
-                        Forms\Components\Section::make("Supplémentaire")
-                            ->schema([
-                                Forms\Components\Checkbox::make('preavis')
-                                    ->label('Préavis'),
-                            ])
-                            ->columns(2)
-                    ])
                     ->label('Fiche de paie')
                     ->visible(fn(Paiement $record) => $record->type_paiement_id == TypePaiement::SALAIRE)
                     ->requiresConfirmation()

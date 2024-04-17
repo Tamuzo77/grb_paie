@@ -147,7 +147,7 @@
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">RETENUES OBLIGATOIRES</td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4"></td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">{{$retenueObligatoire == 0 ? ' ' : $retenueObligatoire}}</td>
     </tr>
     <tr>
         <td style="height:35px"></td>
@@ -194,7 +194,7 @@
             colspan="8">SALAIRE NET A PAYER
         </td>
         <td style="background-color: #3498db;color: #ffffff;height:50px;vertical-align:middle;font-weight:bold;text-align:center;"
-            colspan="4">{{ $salaireMensuel }}</td>
+            colspan="4">{{ $totalNet }}</td>
     </tr>
     <tr>
         <td style="height:35px"></td>
