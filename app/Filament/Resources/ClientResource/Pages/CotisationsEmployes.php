@@ -100,6 +100,7 @@ class CotisationsEmployes extends ListRecords
                         'December' => 'Décembre',
                     ]),
                     DateScopeFilter::make('created_at')
+                    
             ])
             ->headerActions([
 //                ExportAction::make()
@@ -108,6 +109,7 @@ class CotisationsEmployes extends ListRecords
 //                            ->withFilename('cotisations sociales des employes '. $this->record->nom )
 //                            ->fromTable(),
 //                    ]),
+
                 Action::make('export')
                     ->label('Exporter')
                     ->color('primary')
@@ -149,7 +151,9 @@ class CotisationsEmployes extends ListRecords
     public function getTabs(): array
     {
         return [
-            'all' => Tab::make('Tous les employés')
+            'cnss' => Tab::make()
+            ->modifyQueryUsing(fn (Builder $query)=>$query->where('client_id', $this->record->id)),
+
         ];
     }
 }
