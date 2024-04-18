@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\ClientResource\Pages;
 
-
 use App\Filament\Resources\EmployeeResource;
 use App\Models\Client;
 use App\Models\CotisationEmploye;

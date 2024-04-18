@@ -59,6 +59,7 @@ class CotisationsClientOverview extends Component implements HasForms, HasTable
         $currentYear = date('Y');
 
         return $table
+            ->recordUrl(null)
             ->query(function () {
                 //                return Employee::query()
                 ////                    ->selectRaw('QUARTER(paiements.date_paiement) AS trimestre, MONTHNAME(paiements.date_paiement) AS mois, SUM(employees.salaire) AS total, SUM(employees.salaire * 0.23) AS cotisations')
