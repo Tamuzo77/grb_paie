@@ -28,6 +28,8 @@ class MisAPied extends Model
 {
     use Sluggable, SoftDeletes, Userstamps;
 
+    public const CONSERVATOIRE = 'Conservatoire';
+    public const DISCIPLINAIRE = 'Disciplinaire';
     /**
      * @var array
      */

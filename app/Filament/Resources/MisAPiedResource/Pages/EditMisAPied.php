@@ -16,4 +16,9 @@ class EditMisAPied extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Mise à pied modifiée avec succès';
+    }
 }

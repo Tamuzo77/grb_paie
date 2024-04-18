@@ -21,6 +21,7 @@ use Maatwebsite\Excel\Concerns\FromView;
 
         return view('exports.bilan-annuel', [
             'annee' => $this->annee,
+            'employees' => $employees,
         ]);
     }
 }

@@ -45,6 +45,7 @@ class CotisationsEmployes extends ListRecords
     public function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->modifyQueryUsing(function ($query) {
                 return CotisationEmploye::query()->where('client_id', $this->record->id);
             })

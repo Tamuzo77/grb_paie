@@ -186,7 +186,7 @@ class PaiementResource extends Resource
                     })
                     ->icon('heroicon-o-currency-dollar'),
                 Tables\Actions\Action::make('fiche_de_paie')
-                    ->color(Color::Fuchsia)
+                    ->color(Color::Blue)
                     ->label('Fiche de paie')
                     ->visible(fn (Paiement $record) => $record->type_paiement_id == TypePaiement::SALAIRE)
                     ->requiresConfirmation()
