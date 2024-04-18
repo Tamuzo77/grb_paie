@@ -15,7 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
-//        Activity::class => ActivityPolicy::class,
+        //        Activity::class => ActivityPolicy::class,
     ];
 
     /**

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
 /**
- * @property integer $id
+ * @property int $id
  * @property string $slug
  * @property string $nom
  * @property string $adresse
@@ -21,14 +21,15 @@ use Wildside\Userstamps\Userstamps;
  * @property string $signature
  * @property string $created_at
  * @property string $updated_at
- * @property integer $created_by
- * @property integer $updated_by
- * @property integer $deleted_by
+ * @property int $created_by
+ * @property int $updated_by
+ * @property int $deleted_by
  * @property string $deleted_at
  */
 class Company extends Model
 {
     use Sluggable, SoftDeletes, Userstamps;
+
     /**
      * @var array
      */
@@ -43,12 +44,12 @@ class Company extends Model
         ];
     }
 
-//    public function logo(): Attribute
-//    {
-//        return Attribute::make(
-//          set: function ($value) {
-//              return $value->store('logos', 'public');
-//          },
-//        );
-//    }
+    //    public function logo(): Attribute
+    //    {
+    //        return Attribute::make(
+    //          set: function ($value) {
+    //              return $value->store('logos', 'public');
+    //          },
+    //        );
+    //    }
 }

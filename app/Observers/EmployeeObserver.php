@@ -23,10 +23,10 @@ class EmployeeObserver
      */
     public function updated(Employee $employee): void
     {
-//        $employee->update([
-//            'annee_id' => Annee::latest()->first()->id,
-//            'tauxIts' => ItsService::getIts($employee->salaire),
-//        ]);
+        //        $employee->update([
+        //            'annee_id' => Annee::latest()->first()->id,
+        //            'tauxIts' => ItsService::getIts($employee->salaire),
+        //        ]);
     }
 
     /**

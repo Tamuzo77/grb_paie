@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Actions\GenereCode;
 use App\Models\TypePaiement;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TypePaiementSeeder extends Seeder
@@ -22,8 +21,8 @@ class TypePaiementSeeder extends Seeder
 
         foreach ($typePaiements as $typePaiement) {
             \App\Models\TypePaiement::create($typePaiement + [
-                    'code' => (new GenereCode())->handle(TypePaiement::class, 'TP'),
-                ]);
+                'code' => (new GenereCode())->handle(TypePaiement::class, 'TP'),
+            ]);
         }
     }
 }

@@ -5,6 +5,3 @@ it('can render the dashboard page', function () {
 
     $response->assertStatus(200);
 });
-
-
-

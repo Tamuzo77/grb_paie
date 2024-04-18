@@ -8,18 +8,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
 /**
- * @property integer $id
- * @property integer $client_id
- * @property integer $annee_id
+ * @property int $id
+ * @property int $client_id
+ * @property int $annee_id
  * @property string $slug
  * @property string $agent
  * @property string $somme_salaires_bruts
  * @property string $somme_cotisations
  * @property string $created_at
  * @property string $updated_at
- * @property integer $created_by
- * @property integer $updated_by
- * @property integer $deleted_by
+ * @property int $created_by
+ * @property int $updated_by
+ * @property int $deleted_by
  * @property string $deleted_at
  * @property Client $client
  * @property Annee $annee
@@ -27,10 +27,12 @@ use Wildside\Userstamps\Userstamps;
 class CotisationClient extends Model
 {
     use Sluggable, SoftDeletes, Userstamps;
+
     /**
      * @var array
      */
     protected $fillable = ['client_id', 'annee_id', 'slug', 'agent', 'somme_salaires_bruts', 'somme_cotisations', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

@@ -3,14 +3,14 @@
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeSheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class CotisationClientExport implements FromView, WithStyles, WithEvents
+class CotisationClientExport implements FromView, WithEvents, WithStyles
 {
     protected $cotisations;
 
@@ -22,7 +22,7 @@ class CotisationClientExport implements FromView, WithStyles, WithEvents
     public function view(): \Illuminate\Contracts\View\View
     {
         return view('exports.cotisations-client', [
-            'cotisations' => $this->cotisations
+            'cotisations' => $this->cotisations,
         ]);
     }
 
@@ -33,11 +33,11 @@ class CotisationClientExport implements FromView, WithStyles, WithEvents
             'C7:K7' => [
                 'font' => [
                     'bold' => true,
-                    'color' => ['rgb' => 'gray'], 
+                    'color' => ['rgb' => 'gray'],
                 ],
                 'fill' => [
                     'type' => Fill::FILL_SOLID,
-                    'color' => ['rgb' => '3498db'], 
+                    'color' => ['rgb' => '3498db'],
                 ],
             ],
             'C11:K11' => ['font' => ['bold' => true]],

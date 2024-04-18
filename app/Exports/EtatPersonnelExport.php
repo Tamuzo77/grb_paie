@@ -6,7 +6,6 @@ use App\Models\Client;
 use App\Models\Company;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\FromCollection;
 
 class EtatPersonnelExport implements FromView
 {
@@ -16,17 +15,20 @@ class EtatPersonnelExport implements FromView
     {
         $this->client = $client;
     }
+
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function view(): View
-    {   $company = Company::first();
+    {
+        $company = Company::first();
         $employees = $this->client->employees()->get();
+
         return view('exports.etats-personnel',
-        [
-            'employees' => $employees,
-            'company' => $company,
-            'client' => $this->client
-        ]);
+            [
+                'employees' => $employees,
+                'company' => $company,
+                'client' => $this->client,
+            ]);
     }
 }

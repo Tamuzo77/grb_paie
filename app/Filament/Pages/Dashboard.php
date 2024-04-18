@@ -3,7 +3,6 @@
 namespace App\Filament\Pages;
 
 use App\Models\Annee;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -13,7 +12,6 @@ use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 class Dashboard extends BaseDashboard
 {
     use HasFiltersForm;
-
 
     public function filtersForm(Form $form): Form
     {
@@ -27,12 +25,9 @@ class Dashboard extends BaseDashboard
                             ->searchable()
                             ->optionsLimit(3)
                             ->default(Annee::latest()->first()?->slug)
-                            ->options(fn()=> Annee::pluck('nom', 'slug'))
+                            ->options(fn () => Annee::pluck('nom', 'slug')),
                     ]),
             ])
             ->columns(4);
     }
-
-
-
 }

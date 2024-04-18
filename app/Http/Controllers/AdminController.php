@@ -15,22 +15,17 @@ use App\Models\CotisationEmploye;
 use App\Models\Employee;
 use App\Models\Paiement;
 use App\Models\SoldeCompte;
-use Filament\Notifications\Notification;
-use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
-
-
     public function downloadEtatsPersonnel($id)
     {
         $client = Client::find($id);
 
-            $export = new EtatPersonnelExport($client);
+        $export = new EtatPersonnelExport($client);
 
-            return Excel::download($export, "etat-personnel-{$client->nom}.xlsx");
-
+        return Excel::download($export, "etat-personnel-{$client->nom}.xlsx");
 
     }
 
@@ -39,6 +34,7 @@ class AdminController extends Controller
         $paiement = Paiement::find($id);
         $export = new FichePaieExport($paiement);
         $excel = Excel::download($export, "fiche-de-paie-{$paiement->employee->nom}.xlsx");
+
         return $excel;
     }
 
@@ -47,6 +43,7 @@ class AdminController extends Controller
         $recordIds = explode(',', $records);
         $records = SoldeCompte::whereIn('id', $recordIds)->get();
         $export = new SoldesExport($records);
+
         return Excel::download($export, 'soldes.xlsx');
     }
 
@@ -55,6 +52,7 @@ class AdminController extends Controller
         $recordIds = explode(',', $records);
         $records = CotisationEmploye::whereIn('id', $recordIds)->get();
         $export = new CotisationEmployeExport($records);
+
         return Excel::download($export, 'cotisations-employes.xlsx');
     }
 
@@ -63,18 +61,20 @@ class AdminController extends Controller
         $recordIds = explode(',', $records);
         $records = CotisationClient::whereIn('id', $recordIds)->get();
         $export = new CotisationClientExport($records);
+
         return Excel::download($export, 'cotisations-employes.xlsx');
     }
 
     public function downloadBilanAnnuel($record)
     {
         $annee = Annee::find($record);
-//        $export = new BilanAnnuelExport($annee);
-//        return Excel::download($export, 'bilan-annuel.xlsx');
+        //        $export = new BilanAnnuelExport($annee);
+        //        return Excel::download($export, 'bilan-annuel.xlsx');
         $employees = Employee::where('annee_id', $annee->id)->with(['soldeComptes', 'demandeConges', 'misAPieds'])->get();
+
         return view('exports.bilan-annuel', [
             'annee' => $annee,
-            'employees' => $employees
+            'employees' => $employees,
         ]);
     }
 }

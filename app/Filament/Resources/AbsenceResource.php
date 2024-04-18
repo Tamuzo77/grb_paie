@@ -24,6 +24,7 @@ class AbsenceResource extends Resource
     protected static ?int $navigationSort = 4;
 
     protected static ?string $navigationIcon = 'heroicon-o-question-mark-circle';
+
     protected static ?string $navigationGroup = 'Dépendances salariales';
 
     public static function form(Form $form): Form

@@ -6,7 +6,6 @@ use AllowDynamicProperties;
 use App\Models\Annee;
 use App\Models\Employee;
 use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromView;
 
 #[AllowDynamicProperties] class BilanAnnuelExport implements FromView

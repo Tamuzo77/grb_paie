@@ -39,8 +39,6 @@ class SendTwoFactorCode extends Notification
             ->line('Le code expirera dans 10 minutes.')
             ->line('Si vous n\'avez pas fait cette demande, veuillez l\'ignorer');
     }
-    
-
 
     /**
      * Get the array representation of the notification.

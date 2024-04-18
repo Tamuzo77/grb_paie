@@ -20,6 +20,6 @@ class CreateTypePaiement extends CreateRecord
 
     protected function getCreatedNotificationTitle(): ?string
     {
-        return "Type de paiement enregistré avec succès";
+        return 'Type de paiement enregistré avec succès';
     }
 }

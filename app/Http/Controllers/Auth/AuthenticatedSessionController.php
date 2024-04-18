@@ -63,7 +63,7 @@ class AuthenticatedSessionController extends Controller
     public function firstLogin()
     {
         $user = auth()->user();
-       Inertia::render('Auth/FirstLogin');
+        Inertia::render('Auth/FirstLogin');
     }
 
     public function firstLoginUpdatePassword(Request $request)

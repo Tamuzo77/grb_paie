@@ -23,11 +23,13 @@ use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 class ClientResource extends Resource
 {
     use InteractsWithPageFilters;
+
     protected static ?string $model = Client::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
 
     protected static ?string $recordTitleAttribute = 'nom';
+
     protected static ?Annee $annee = null;
 
     public function __construct()
@@ -36,6 +38,7 @@ class ClientResource extends Resource
         self::$annee = $annee;
 
     }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -66,11 +69,11 @@ class ClientResource extends Resource
                                     ->hint('Contact téléphonique')
                                     ->required()
                                     ->unique(ignoreRecord : true),
-//                                    ->maxLength(8),
-                            Forms\Components\TextInput::make('ifu')
-                                ->placeholder('Ex: 1234567890123')
-                                ->helperText('Numéro IFU de l\'entreprise')
-                                ->label('Numéro IFU'),
+                                //                                    ->maxLength(8),
+                                Forms\Components\TextInput::make('ifu')
+                                    ->placeholder('Ex: 1234567890123')
+                                    ->helperText('Numéro IFU de l\'entreprise')
+                                    ->label('Numéro IFU'),
                                 Forms\Components\FileUpload::make('rc')
                                     ->label('Registre de commerce')
                                     ->previewable(true)
@@ -80,7 +83,7 @@ class ClientResource extends Resource
 //                                    ->required()
                                     ->acceptedFileTypes(['image/*', 'application/pdf'])
                                     ->hint('Fichier PDF ou image'),
-//                                    ->maxFiles(1),
+                                //                                    ->maxFiles(1),
                                 Forms\Components\TextInput::make('email')
                                     ->email()
                                     ->required()
@@ -111,7 +114,7 @@ class ClientResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(function (){
+            ->query(function () {
                 return Client::query()
                     ->where('annee_id', self::$annee->id);
             })
@@ -138,7 +141,7 @@ class ClientResource extends Resource
             ])
             ->actions([
                 Tables\Actions\Action::make('cotisations')
-                    ->action(function ($record){
+                    ->action(function ($record) {
                         $mois = [
                             'January' => 'Janvier',
                             'February' => 'Février',
@@ -151,12 +154,11 @@ class ClientResource extends Resource
                             'September' => 'Septembre',
                             'October' => 'Octobre',
                             'November' => 'Novembre',
-                            'December' => 'Décembre'
+                            'December' => 'Décembre',
                         ];
                         $sommeCotisations = 0;
                         $sommeSalaireBrut = 0;
-                        foreach ($mois as $mo)
-                        {
+                        foreach ($mois as $mo) {
                             CotisationClient::updateOrCreate([
                                 'client_id' => $record->id,
                                 'annee_id' => self::$annee->id,
@@ -169,8 +171,7 @@ class ClientResource extends Resource
                                 'somme_salaires_bruts' => 0,
                             ]);
 
-                            if ($mo == 'Mars' || $mo == 'Juin' || $mo == 'Septembre' || $mo == 'Décembre')
-                            {
+                            if ($mo == 'Mars' || $mo == 'Juin' || $mo == 'Septembre' || $mo == 'Décembre') {
                                 $trimestre = $mo == 'Mars' ? 'Trimestre 1' : ($mo == 'Juin' ? 'Trimestre 2' : ($mo == 'Septembre' ? 'Trimestre 3' : 'Trimestre 4'));
 
                                 CotisationClient::updateOrCreate([
@@ -186,7 +187,6 @@ class ClientResource extends Resource
 
                         }
 
-
                         foreach ($record->employees as $employee) {
                             $sommeSalaireBrut += $employee->salaire;
                             $sommeCotisations += $employee->salaire * 0.23;
@@ -199,7 +199,7 @@ class ClientResource extends Resource
                         ], [
                             'client_id' => $record->id,
                             'annee_id' => self::$annee->id,
-                            'agent' => $mois[$currentMonth] ,
+                            'agent' => $mois[$currentMonth],
                             'somme_cotisations' => $sommeCotisations,
                             'somme_salaires_bruts' => $sommeSalaireBrut,
                         ]);
@@ -221,7 +221,7 @@ class ClientResource extends Resource
                     ->label('Cotisations'),
                 Tables\Actions\Action::make('etats')
                     ->requiresConfirmation()
-                    ->action(function ($record){
+                    ->action(function ($record) {
                         try {
                             redirect(route('download-etats-personnel', $record->id));
 
@@ -231,8 +231,8 @@ class ClientResource extends Resource
                                 ->color('success')
                                 ->iconColor('success')
                                 ->send()
-                                ->sendToDatabase(auth()->user(),true);
-                        }catch (\Exception $e) {
+                                ->sendToDatabase(auth()->user(), true);
+                        } catch (\Exception $e) {
                             Notification::make('Erreur lors du téléchargement de l\'état personnel')
                                 ->title('Erreur')
                                 ->body("Une erreur s'est produite lors du téléchargement de l'état personnel. Veuillez réessayer.")
@@ -241,14 +241,14 @@ class ClientResource extends Resource
                                 ->send()
                                 ->sendToDatabase(auth()->user(), true);
                         }
-//                        EtatsPersonnelEvent::dispatch($record);
+                        //                        EtatsPersonnelEvent::dispatch($record);
                     })
                     ->icon('heroicon-o-table-cells')
                     ->color(Color::Sky)
                     ->label('Etats'),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\Action::make('cotisations-employes')
-                        ->action(function ($record){
+                        ->action(function ($record) {
                             $sommeCnss = 0;
                             $sommeIts = 0;
                             $sommeTotal = 0;
@@ -261,7 +261,7 @@ class ClientResource extends Resource
                                     'agent' => "$employee->nom $employee->prenoms",
                                     'annee_id' => self::$annee->id,
                                     'mois' => now()->format('F'),
-                                ],[
+                                ], [
                                     'client_id' => $record->id,
                                     'agent' => "$employee->nom $employee->prenoms",
                                     'annee_id' => self::$annee->id,
@@ -279,7 +279,7 @@ class ClientResource extends Resource
                                 'agent' => 'Total',
                                 'annee_id' => self::$annee->id,
                                 'mois' => now()->format('F'),
-                            ],[
+                            ], [
                                 'client_id' => $record->id,
                                 'agent' => 'Total',
                                 'annee_id' => self::$annee->id,
@@ -339,6 +339,4 @@ class ClientResource extends Resource
     {
         return Client::where('annee_id', self::$annee?->id)->count();
     }
-
-
 }

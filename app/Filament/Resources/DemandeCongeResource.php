@@ -26,6 +26,7 @@ class DemandeCongeResource extends Resource
     protected static ?int $navigationSort = 3;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
+
     protected static ?string $navigationGroup = 'Dépendances salariales';
 
     public static function form(Form $form): Form
@@ -62,11 +63,11 @@ class DemandeCongeResource extends Resource
                         Forms\Components\DateTimePicker::make('date_fin')
                             ->required()
                             ->rules([
-                                fn (Forms\Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get){
+                                fn (Forms\Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
                                     $startDate = new DateTime($get('date_debut'));
                                     $endDate = new DateTime($value);
-                                $nbre_jours = date_diff($startDate, $endDate)->days;
-                                $nbre_jours_acquis = Employee::find($get('employee_id'))->nb_jours_conges_acquis;
+                                    $nbre_jours = date_diff($startDate, $endDate)->days;
+                                    $nbre_jours_acquis = Employee::find($get('employee_id'))->nb_jours_conges_acquis;
                                     if ($nbre_jours > $nbre_jours_acquis) {
                                         $fail(' Le nombre de jours de congés demandés est supérieur au nombre de jours de congés acquis');
                                     }
@@ -74,7 +75,7 @@ class DemandeCongeResource extends Resource
                             ])
                             ->date()
                             ->after('date_debut'),
-                            // ->beforeOrEqual($date_debut>addDays(11)),
+                        // ->beforeOrEqual($date_debut>addDays(11)),
                         ToggleButtons::make('statut')
                             ->label('Statut')
                             ->options([

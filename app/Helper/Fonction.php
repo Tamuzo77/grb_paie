@@ -6,10 +6,13 @@ function nbreJoursTravaille(\App\Models\Employee $employee)
     foreach ($employee->absences()->where('date_debut', '>=', now()->startOfMonth())->whereDeductible(true)->get() as $absence) {
         $nb_jours_absences += date_diff($absence->date_debut, $absence->date_fin)->days;
     }
+
     return 20 - $nb_jours_absences;
 
 }
-function convertir_en_lettres($nombre) {
-    $f = new NumberFormatter("fr", NumberFormatter::SPELLOUT);
+function convertir_en_lettres($nombre)
+{
+    $f = new NumberFormatter('fr', NumberFormatter::SPELLOUT);
+
     return $f->format($nombre);
 }

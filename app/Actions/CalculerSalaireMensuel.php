@@ -36,6 +36,7 @@ class CalculerSalaireMensuel
             $endDate = new DateTime($absence->date_fin);
             $nb_jours_absences += date_diff($startDate, $endDate)->days;
         }
+
         return 20 - $nb_jours_absences;
 
     }
@@ -53,16 +54,19 @@ class CalculerSalaireMensuel
             ->get();
         if ($result->sum('reste') == 0 || $result->sum('reste') == null) {
             $pas = $result->sum('pas') ?? 1;
-            if ($pas == 0 || $pas == null)
+            if ($pas == 0 || $pas == null) {
                 $pas = 1;
+            }
             $montant = $result->sum('total') / $pas;
-        }else{
+        } else {
             $pas = $result->sum('pas') ?? 1;
-            if ($pas == 0 || $pas == null)
+            if ($pas == 0 || $pas == null) {
                 $pas = 1;
-            $montant = $result->sum('reste') / $pas ;
+            }
+            $montant = $result->sum('reste') / $pas;
 
         }
+
         return $montant;
 
     }

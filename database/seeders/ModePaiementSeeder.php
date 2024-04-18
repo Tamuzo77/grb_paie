@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Actions\GenereCode;
 use App\Models\ModePaiement;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ModePaiementSeeder extends Seeder
@@ -16,7 +15,7 @@ class ModePaiementSeeder extends Seeder
     {
         $modePaiements = [
             [
-                'nom' => 'Caisse'
+                'nom' => 'Caisse',
             ],
             ['nom' => 'Virement'],
             ['nom' => 'Chèque'],
@@ -24,8 +23,8 @@ class ModePaiementSeeder extends Seeder
 
         foreach ($modePaiements as $modePaiement) {
             \App\Models\ModePaiement::create($modePaiement + [
-                    'code' => (new GenereCode())->handle(ModePaiement::class, 'MP'),
-                ]);
+                'code' => (new GenereCode())->handle(ModePaiement::class, 'MP'),
+            ]);
         }
     }
 }

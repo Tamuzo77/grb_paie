@@ -268,11 +268,11 @@ class EmployeesRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-//                Tables\Actions\Action::make('cotisations')
-////                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
-//                    ->icon('heroicon-o-currency-dollar')
-//                    ->color('success')
-//                    ->label('Cotisations'),
+                //                Tables\Actions\Action::make('cotisations')
+                ////                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
+                //                    ->icon('heroicon-o-currency-dollar')
+                //                    ->color('success')
+                //                    ->label('Cotisations'),
                 Tables\Actions\Action::make('payer')
                     ->icon('heroicon-o-banknotes')
                     ->color('tertiary')
@@ -286,9 +286,9 @@ class EmployeesRelationManager extends RelationManager
                                     ->suffix('FCFA')
                                     ->numeric()
                                     ->live(onBlur: true)
-                                    ->hidden(fn(Forms\Get $get) => $get('type_paiement_id') == TypePaiement::SALAIRE)
+                                    ->hidden(fn (Forms\Get $get) => $get('type_paiement_id') == TypePaiement::SALAIRE)
                                     ->maxValue(function (Employee $record, Forms\Get $get) {
-                                        if ($get('type_paiement_id') == TypePaiement::AVANCE ) {
+                                        if ($get('type_paiement_id') == TypePaiement::AVANCE) {
                                             return $record->salaire / 2;
                                         }
                                     })
@@ -334,11 +334,11 @@ class EmployeesRelationManager extends RelationManager
                                     })
                                     ->required(),
                                 Forms\Components\TextInput::make('pas')
-                                    ->visible(fn(Forms\Get $get) => $get('type_paiement_id') == TypePaiement::PRET)
+                                    ->visible(fn (Forms\Get $get) => $get('type_paiement_id') == TypePaiement::PRET)
                                     ->columnSpan(2)
                                     ->default(1)
                                     ->helperText('Echelonner le paiement')
-                                    ->numeric()
+                                    ->numeric(),
 
                             ])->columns(2),
                         //                        $this->getContentSection(),

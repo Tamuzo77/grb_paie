@@ -19,6 +19,6 @@ class EditPaiement extends EditRecord
 
     protected function getSavedNotificationTitle(): ?string
     {
-        return "Paiement modifié avec succès";
+        return 'Paiement modifié avec succès';
     }
 }
