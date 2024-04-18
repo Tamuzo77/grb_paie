@@ -5,11 +5,7 @@ namespace App\Listeners;
 use App\Events\EtatsPersonnelEvent;
 use App\Exports\EtatPersonnelExport;
 use App\Models\Client;
-use App\Models\User;
 use Filament\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Maatwebsite\Excel\Excel;
 
 class DownloadEtatsPersonnelListener
 {
@@ -17,6 +13,7 @@ class DownloadEtatsPersonnelListener
      * Create the event listener.
      */
     protected Client $client;
+
     public function __construct()
     {
         //
@@ -36,8 +33,8 @@ class DownloadEtatsPersonnelListener
                 ->color('success')
                 ->iconColor('success')
                 ->send()
-                ->sendToDatabase(auth()->user(),true);
-        }catch (\Exception $e) {
+                ->sendToDatabase(auth()->user(), true);
+        } catch (\Exception $e) {
             Notification::make('Erreur lors du téléchargement de l\'état personnel')
                 ->title('Erreur')
                 ->body($e)

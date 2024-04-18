@@ -3,12 +3,10 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MisAPiedResource\Pages;
-use App\Filament\Resources\MisAPiedResource\RelationManagers;
 use App\Models\Client;
 use App\Models\Employee;
 use App\Models\MisAPied;
 use Filament\Forms;
-use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\IconSize;
@@ -16,7 +14,6 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Wallo\FilamentSelectify\Components\ButtonGroup;
 
 class MisAPiedResource extends Resource
@@ -24,9 +21,13 @@ class MisAPiedResource extends Resource
     protected static ?string $model = MisAPied::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-minus-circle';
+
     protected static ?string $modelLabel = 'Mise à pied';
+
     protected static ?string $pluralModelLabel = 'Mises à pied';
+
     protected static ?int $navigationSort = 100;
+
     protected static ?string $navigationGroup = 'Dépendances salariales';
 
     public static function form(Form $form): Form
@@ -46,13 +47,13 @@ class MisAPiedResource extends Resource
                             ->options(Client::all()->pluck('nom', 'id')),
                         Forms\Components\Select::make('employee_id')
                             ->label('Employé')
-                            ->placeholder(fn(Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
+                            ->placeholder(fn (Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
                             ->hintColor('accent')
                             ->options(function (Forms\Get $get) {
                                 return Employee::where('client_id', $get('client_id'))->get()->pluck('nom', 'id');
                             })
 //                            ->relationship('employee', modifyQueryUsing: fn(Builder $query) => $query->orderBy('nom')->orderBy('prenoms'))
-                            ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->nom} {$record->prenoms}")
+                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom} {$record->prenoms}")
                             ->hintIcon('heroicon-o-user-group')
                             ->searchable(['nom', 'prenoms'])
                             ->required()
@@ -78,7 +79,7 @@ class MisAPiedResource extends Resource
                             ->label('Type')
                             ->onColor('primary')
                             ->offColor('gray')
-                            ->gridDirection('row',)
+                            ->gridDirection('row')
                             ->default('Conservatoire')
                             ->icons([
                                 'Conservatoire' => 'heroicon-m-user',
@@ -90,7 +91,6 @@ class MisAPiedResource extends Resource
                         Forms\Components\Textarea::make('motif'),
 
                     ]),
-
 
             ]);
     }

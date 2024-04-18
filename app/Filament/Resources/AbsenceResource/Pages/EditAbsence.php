@@ -20,6 +20,6 @@ class EditAbsence extends EditRecord
 
     protected function getSavedNotificationTitle(): ?string
     {
-        return "Absence modifié avec succès";
+        return 'Absence modifié avec succès';
     }
 }

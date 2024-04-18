@@ -4,28 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Notifications\SendTwoFactorCode;
-use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class TwoFactorController extends Controller
 {
     public function index()
     {
-        
+
         $user = auth()->user();
-        
+
         // Vérifier si l'utilisateur a configuré un code de vérification à deux facteurs
-        if (!$user->hasTwoFactorCode()) {
-             return inertia('/Dashboard');
+        if (! $user->hasTwoFactorCode()) {
+            return inertia('/Dashboard');
         }
-    
+
         return inertia('Auth/twofactor', [
             'status' => session('status'),
         ]);
     }
-    
+
     public function store(Request $request)
     {
         $request->validate([
@@ -51,7 +50,6 @@ class TwoFactorController extends Controller
                 return redirect()->route('login')->with('status', 'Trop de tentatives. Votre compte a été bloqué. Veuillez contacter l\'administrateur.');
             }
 
-
             return redirect()->back()->with('status', 'Code non valide');
         }
 
@@ -60,14 +58,13 @@ class TwoFactorController extends Controller
         // Réinitialiser le nombre de tentatives après une connexion réussie
         Session::forget('verification_attempts');
 
-//        if (auth()->user()->login_count == 1)
-//        {
-            return redirect(RouteServiceProvider::HOME);
-//        }
-//        else{
-//            return redirect(RouteServiceProvider::ADMIN);
-//        }
-
+        //        if (auth()->user()->login_count == 1)
+        //        {
+        return redirect(RouteServiceProvider::HOME);
+        //        }
+        //        else{
+        //            return redirect(RouteServiceProvider::ADMIN);
+        //        }
 
     }
 
@@ -76,6 +73,7 @@ class TwoFactorController extends Controller
         $user = auth()->user();
         $user->generateTwoFactorCode();
         $user->notify(new SendTwoFactorCode());
+
         return back()->withStatus(__('Le code a été renvoyé.'));
     }
 }

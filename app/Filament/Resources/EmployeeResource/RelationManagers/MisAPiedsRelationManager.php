@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\EmployeeResource\RelationManagers;
 
-use App\Models\Employee;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
@@ -10,14 +9,14 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\Enums\IconSize;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Wallo\FilamentSelectify\Components\ButtonGroup;
 
 class MisAPiedsRelationManager extends RelationManager
 {
     protected static string $relationship = 'misAPieds';
+
     protected static ?string $modelLabel = 'Mise à pied';
+
     protected static ?string $pluralModelLabel = 'Mises à pied';
 
     public function form(Form $form): Form
@@ -31,7 +30,7 @@ class MisAPiedsRelationManager extends RelationManager
                         Forms\Components\TextInput::make('nom')
                             ->required()
                             ->readOnly()
-                            ->default(function(Forms\Get $get) {
+                            ->default(function (Forms\Get $get) {
                                 return "Mise à pied de {$this->getOwnerRecord()->nom} {$this->getOwnerRecord()->prenoms} pour {$get('nbre_jours')} jours";
                             })
                             ->columnSpanFull(),
@@ -59,7 +58,7 @@ class MisAPiedsRelationManager extends RelationManager
                             ->label('Type')
                             ->onColor('primary')
                             ->offColor('gray')
-                            ->gridDirection('row',)
+                            ->gridDirection('row')
                             ->default('Conservatoire')
                             ->icons([
                                 'Conservatoire' => 'heroicon-m-user',

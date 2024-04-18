@@ -42,6 +42,7 @@ class SoldeCompte extends Model
     public const AVANCE_SUR_SALAIRE = 'Avance sur salaire';
 
     public const PRET_ENTREPRISE = 'Prêt entreprise';
+
     public const TOTAL = 'Total';
 
     /**

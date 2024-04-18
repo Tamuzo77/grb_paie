@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\EmployeeResource\RelationManagers;
 
-use App\Models\Employee;
 use Closure;
 use DateTime;
 use Filament\Forms;
@@ -29,7 +28,7 @@ class DemandeCongesRelationManager extends RelationManager
                         Forms\Components\DateTimePicker::make('date_fin')
                             ->required()
                             ->rules([
-                                fn(Forms\Get $get,): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                                fn (Forms\Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
                                     $startDate = new DateTime($get('date_debut'));
                                     $endDate = new DateTime($value);
                                     $nbre_jours = date_diff($startDate, $endDate)->days;
@@ -67,7 +66,7 @@ class DemandeCongesRelationManager extends RelationManager
             ->recordTitleAttribute('statut')
             ->columns([
                 Tables\Columns\TextColumn::make('statut')
-                    ->badge(fn($record) => match ($record->statut) {
+                    ->badge(fn ($record) => match ($record->statut) {
                         'paye' => 'success',
                         'non paye' => 'accent',
                     }),

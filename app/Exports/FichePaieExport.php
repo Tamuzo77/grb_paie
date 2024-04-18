@@ -3,19 +3,16 @@
 namespace App\Exports;
 
 use AllowDynamicProperties;
-use App\Models\Client;
 use App\Models\Company;
 use App\Models\Paiement;
 use App\Models\SoldeCompte;
 use DateTime;
 use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromView;
 use Rmunate\Utilities\SpellNumber;
 
 #[AllowDynamicProperties] class FichePaieExport implements FromView
 {
-
     public function __construct(Paiement $paiement)
     {
         $this->paiement = $paiement;
@@ -43,6 +40,7 @@ use Rmunate\Utilities\SpellNumber;
             $retenueObligatoire += $misAPied->montant * $misAPied->nbre_jours;
         });
         $company = Company::first();
+
         return view('exports.fiche-paie', [
             'paiement' => $this->paiement,
             'employee' => $this->paiement->employee,

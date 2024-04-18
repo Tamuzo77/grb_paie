@@ -24,6 +24,6 @@ class EditClient extends EditRecord
 
     protected function getSavedNotificationTitle(): ?string
     {
-        return "Client modifié avec succès";
+        return 'Client modifié avec succès';
     }
 }

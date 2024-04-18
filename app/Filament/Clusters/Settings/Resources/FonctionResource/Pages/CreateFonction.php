@@ -11,6 +11,6 @@ class CreateFonction extends CreateRecord
 
     protected function getCreatedNotificationTitle(): ?string
     {
-        return "Fonction enregistrée avec succès";
+        return 'Fonction enregistrée avec succès';
     }
 }

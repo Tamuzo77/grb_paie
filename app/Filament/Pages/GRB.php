@@ -18,11 +18,10 @@ use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Enums\FontWeight;
-use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
 class GRB extends Page implements HasForms, HasInfolists
 {
-    use InteractsWithInfolists, InteractsWithForms;
+    use InteractsWithForms, InteractsWithInfolists;
 
     //    protected static ?string $navigationIcon = 'heroicon-s-information-circle';
 
@@ -72,9 +71,9 @@ class GRB extends Page implements HasForms, HasInfolists
                                 ->columnSpan(2)
                                 ->label('Logo')
                                 ->directory('logos')
-                                ->acceptedFileTypes(['image/*'])
+                                ->acceptedFileTypes(['image/*']),
                         ])
-                        ->columns(4)
+                        ->columns(4),
 
                 ])
                 ->record(Company::first())
@@ -88,7 +87,7 @@ class GRB extends Page implements HasForms, HasInfolists
                 })
                 ->successNotificationTitle('Informations mises à jour')
                 ->color('primary')
-                ->icon('heroicon-s-pencil')
+                ->icon('heroicon-s-pencil'),
         ];
     }
 
@@ -133,9 +132,9 @@ class GRB extends Page implements HasForms, HasInfolists
                             ->label('Logo')
                             ->width('100')
                             ->height('100')
-                            ->columnSpanFull()
+                            ->columnSpanFull(),
                     ])
-                    ->columns(3)
+                    ->columns(3),
             ]);
     }
 
@@ -144,7 +143,7 @@ class GRB extends Page implements HasForms, HasInfolists
         return $infolist
             ->record(Company::first())
             ->state([
-                ['tauxIts' => '3.6']
+                ['tauxIts' => '3.6'],
             ])
             ->schema([
                 Section::make('Informations du système')
@@ -154,7 +153,7 @@ class GRB extends Page implements HasForms, HasInfolists
                             ->weight(FontWeight::Bold)
                             ->label('Taux CNSS : 3.6%'),
                     ])
-                    ->columns(3)
+                    ->columns(3),
             ]);
 
     }

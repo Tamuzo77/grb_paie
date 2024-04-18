@@ -2,21 +2,22 @@
 
 namespace App\Filament\Clusters\Settings\Resources;
 
-use Filament\Forms;
-use Filament\Notifications\Notification;
-use Filament\Tables;
+use App\Filament\Clusters\Settings;
+use App\Filament\Clusters\Settings\Resources\AnneeResource\Pages;
 use App\Models\Annee;
+use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Tables\Table;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
-use App\Filament\Clusters\Settings;
+use Filament\Tables;
+use Filament\Tables\Table;
 use Tables\Actions\DeleteBulkAction;
-use App\Filament\Clusters\Settings\Resources\AnneeResource\Pages;
 
 class AnneeResource extends Resource
 {
     protected static ?string $model = Annee::class;
+
     protected static ?string $modelLabel = 'Année d\'exercice';
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
@@ -57,12 +58,12 @@ class AnneeResource extends Resource
                     ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('statut')
-                    ->icon(fn(string $state): string => match ($state) {
+                    ->icon(fn (string $state): string => match ($state) {
                         'en_cours' => 'heroicon-o-lock-open',
                         'cloture' => 'heroicon-o-lock-closed',
                         default => 'heroicon-o-information-circle',
                     })
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'cloture' => 'gray',
                         'en_cours' => 'success',
                         default => 'accent',
@@ -92,8 +93,8 @@ class AnneeResource extends Resource
                                 ->color('success')
                                 ->iconColor('success')
                                 ->send()
-                                ->sendToDatabase(auth()->user(),true);
-                        }catch (\Exception $e) {
+                                ->sendToDatabase(auth()->user(), true);
+                        } catch (\Exception $e) {
                             Notification::make('Erreur lors du téléchargement')
                                 ->title('Erreur')
                                 ->body("Une erreur s'est produite lors du téléchargement. Veuillez réessayer.")
@@ -114,9 +115,9 @@ class AnneeResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-//                    DeleteBulkAction::make(),
-//                    Tables\Actions\RestoreBulkAction::make(),
-//                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    //                    DeleteBulkAction::make(),
+                    //                    Tables\Actions\RestoreBulkAction::make(),
+                    //                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }

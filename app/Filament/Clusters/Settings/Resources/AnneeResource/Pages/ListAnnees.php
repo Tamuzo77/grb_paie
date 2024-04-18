@@ -16,6 +16,7 @@ class ListAnnees extends ListRecords
     protected static string $resource = AnneeResource::class;
 
     protected ?string $heading = 'Années d\'exercice';
+
     protected function getHeaderActions(): array
     {
         return [

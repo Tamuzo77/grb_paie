@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Clusters\Settings\Resources\CustomActivityResource;
 use App\Filament\Pages\Dashboard;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Forms\Components\FileUpload;
@@ -24,7 +23,6 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
@@ -40,14 +38,14 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandLogo(fn()=> view('filament.admin.logo-light'))
-            ->darkModeBrandLogo(fn()=> view('filament.admin.logo'))
+            ->brandLogo(fn () => view('filament.admin.logo-light'))
+            ->darkModeBrandLogo(fn () => view('filament.admin.logo'))
             ->brandLogoHeight('3.5rem')
             ->passwordReset()
             ->emailVerification()
             ->profile()
             ->resources([
-                config('filament-logger.activity_resource')
+                config('filament-logger.activity_resource'),
             ])
 //            ->userMenuItems([
 //                'profile' => MenuItem::make()
@@ -75,15 +73,15 @@ class AdminPanelProvider extends PanelProvider
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
             ->sidebarFullyCollapsibleOnDesktop()
             ->pages([
-//                Pages\Dashboard::class,
-            Dashboard::class
+                //                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->navigationGroups([
                 NavigationGroup::make(label: 'Dépendances salariales'),
                 NavigationGroup::make(label: 'Etats et Paiements'),
                 NavigationGroup::make(label: 'Paramètres')
                     ->icon('heroicon-o-cog-6-tooth'),
-                NavigationGroup::make('Filament Shield')
+                NavigationGroup::make('Filament Shield'),
 
             ])
             ->plugins([

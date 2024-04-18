@@ -8,25 +8,26 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
 /**
- * @property integer $id
- * @property integer $employee_id
+ * @property int $id
+ * @property int $employee_id
  * @property string $slug
  * @property string $nom
  * @property string $type
- * @property integer $montant
+ * @property int $montant
  * @property string $motif
- * @property integer $nbre_jours
+ * @property int $nbre_jours
  * @property string $created_at
  * @property string $updated_at
- * @property integer $created_by
- * @property integer $updated_by
- * @property integer $deleted_by
+ * @property int $created_by
+ * @property int $updated_by
+ * @property int $deleted_by
  * @property string $deleted_at
  * @property Employee $employee
  */
 class MisAPied extends Model
 {
     use Sluggable, SoftDeletes, Userstamps;
+
     /**
      * @var array
      */

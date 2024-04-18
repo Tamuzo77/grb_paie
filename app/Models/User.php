@@ -20,7 +20,7 @@ use Wildside\Userstamps\Userstamps;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable, Sluggable, SoftDeletes, TwoFactorAuthenticatable, Userstamps, HasPanelShield;
+    use HasApiTokens, HasFactory, HasPanelShield, HasRoles, Notifiable, Sluggable, SoftDeletes, TwoFactorAuthenticatable, Userstamps;
 
     /**
      * The attributes that are mass assignable.
@@ -98,9 +98,10 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         $this->two_factor_expires_at = null;
         $this->save();
     }
+
     public function hasTwoFactorCode()
-{
-    // Vérifiez si l'utilisateur a un code de vérification à deux facteurs
-    return !empty($this->two_factor_code);
-}
+    {
+        // Vérifiez si l'utilisateur a un code de vérification à deux facteurs
+        return ! empty($this->two_factor_code);
+    }
 }
