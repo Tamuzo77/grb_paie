@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Employee;
 use App\Models\SoldeCompte;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
@@ -44,6 +45,7 @@ class SoldeTable extends Component implements HasForms, HasTable
     {
         return $table
             ->query(SoldeCompte::query()->where('employee_id', $this->employee->id))
+            ->recordUrl(null)
             ->columns([
                 TextColumn::make('donnees')
                     ->weight(fn($record) => $record->donnees == SoldeCompte::TOTAL ? FontWeight::Bold : null)
@@ -103,14 +105,19 @@ class SoldeTable extends Component implements HasForms, HasTable
             ->actions([
                 Action::make('add')
                     ->label(function ($record) {
-                        $salaire = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', SoldeCompte::SALAIRE_MENSUEL)->first()->montant;
-                        $value = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first()->montant;
+                        if ($record->donnees == SoldeCompte::TREIZIEME_MOIS) {
+                            $salaire = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', SoldeCompte::SALAIRE_MENSUEL)->first()->montant;
+                            $value = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first()->montant;
 
-                        if ((int)$value == $salaire):
-                            return 'Retrancher';
-                        else:
+                            if ((int)$value == $salaire):
+                                return 'Retrancher';
+                            else:
+                                return 'Ajouter';
+                            endif;
+                        }
+                        if ($record->donnees == SoldeCompte::PREAVIS) {
                             return 'Ajouter';
-                        endif;
+                        }
                     })
                     ->visible(function ($record) {
                         if ($record->donnees == SoldeCompte::TREIZIEME_MOIS || $record->donnees == SoldeCompte::PREAVIS):
@@ -120,38 +127,73 @@ class SoldeTable extends Component implements HasForms, HasTable
                         endif;
                     })
                     ->icon(function ($record) {
-                        $salaire = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', SoldeCompte::SALAIRE_MENSUEL)->first()->montant;
-                        $value = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first()->montant;
+                        if ($record->donnees == SoldeCompte::TREIZIEME_MOIS) {
+                            $salaire = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', SoldeCompte::SALAIRE_MENSUEL)->first()->montant;
+                            $value = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first()->montant;
 
-                        if ((int)$value == $salaire):
-                            return 'heroicon-o-minus';
-                        else:
+                            if ((int)$value == $salaire):
+                                return 'heroicon-o-minus';
+                            else:
+                                return 'heroicon-o-plus';
+                            endif;
+                        }
+                        if ($record->donnees == SoldeCompte::PREAVIS) {
                             return 'heroicon-o-plus';
-                        endif;
+                        }
                     })
-                    ->action(function ($record) {
+                    ->form(function ($record) {
+                        if ($record->donnees == SoldeCompte::PREAVIS) {
+                            $salaire = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', SoldeCompte::SALAIRE_MENSUEL)->first()->montant;
+                            $value = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first()->montant;
+                            return [
+                                TextInput::make('nbre_mois')
+                                    ->numeric()
+                                    ->maxValue(12)
+                                    ->required()
+                                    ->rules(['required', 'numeric', 'max:12'])
+                                    ->label('Nombre de mois')
+                                    ->default(1),
+                            ];
+                        } else {
+                            return null;
+                        }
+                    })
+                    ->modalWidth('xl')
+                    ->action(function (array $data, $record) {
                         $salaire = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', SoldeCompte::SALAIRE_MENSUEL)->first()->montant;
                         $value = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first()->montant;
+                        if ($record->donnees == SoldeCompte::TREIZIEME_MOIS) {
+                            if ((int)$value == $salaire):
+                                $solde = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first();
+                                $solde->montant = 0;
+                                return $solde->update();
+                            else:
+                                $solde = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first();
+                                $solde->montant = $salaire;
+                                return $solde->update();
+                            endif;
+                        }
+                        if ($record->donnees == SoldeCompte::PREAVIS) {
+                            $solde = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first();
+                            $solde->montant = $salaire * $data['nbre_mois'];
+                            return $solde->update();
+                        }
 
-                        if ((int)$value == $salaire):
-                            $solde = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first();
-                            $solde->montant = 0;
-                            return $solde->update();
-                        else:
-                            $solde = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first();
-                            $solde->montant = $salaire;
-                            return $solde->update();
-                        endif;
                     })
                     ->color(function ($record) {
-                        $salaire = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', SoldeCompte::SALAIRE_MENSUEL)->first()->montant;
-                        $value = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first()->montant;
+                        if ($record->donnees == SoldeCompte::TREIZIEME_MOIS) {
+                            $salaire = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', SoldeCompte::SALAIRE_MENSUEL)->first()->montant;
+                            $value = SoldeCompte::where('employee_id', $record->employee_id)->where('donnees', $record->donnees)->first()->montant;
 
-                        if ((int)$value == $salaire):
-                            return 'danger';
-                        else:
+                            if ((int)$value == $salaire):
+                                return 'danger';
+                            else:
+                                return 'primary';
+                            endif;
+                        }
+                        if ($record->donnees == SoldeCompte::PREAVIS) {
                             return 'primary';
-                        endif;
+                        }
                     }),
             ])
             ->selectable(false)
