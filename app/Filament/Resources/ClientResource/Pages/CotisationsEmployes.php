@@ -7,14 +7,17 @@ use App\Models\Client;
 use App\Models\Employee;
 use Filament\Tables\Table;
 use App\Models\SoldeCompte;
+use Illuminate\Support\Carbon;
 use App\Models\CotisationEmploye;
-use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\Acti
+use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Tabs;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Components\Tab;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Notifications\Notification;
+use Filament\Forms\Components\DatePicker;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Columns\Layout\Panel;
 use Filament\Tables\Columns\Layout\Split;
@@ -24,9 +27,11 @@ use App\Filament\Resources\EmployeeResource;
 use Filament\Tables\Columns\Summarizers\Sum;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use AymanAlhattami\FilamentDateScopesFilter\DateScopeFilter;
+use Filament\Forms;
 
 class CotisationsEmployes extends ListRecords
 {
@@ -57,20 +62,20 @@ class CotisationsEmployes extends ListRecords
                     ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->label('Agent'),
                 TextColumn::make('cnss')
-                    ->visible(fn ($livewire) => $livewire->activeTab == 'cnss' || $livewire->activeTab == 'total')
+                ->visible(fn ($livewire) => $livewire->activeTab != 'its')
                     ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
                     ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->money('XOF', locale: 'fr',)
                     //                    ->summarize(Sum::make()->money('XOF', locale: 'fr', )->label('Total'))
                     ->label('CNSS'),
                 TextColumn::make('its')
-                    ->visible(fn ($livewire) => $livewire->activeTab == 'its' || $livewire->activeTab == 'total')
+                    ->visible(fn ($livewire) => $livewire->activeTab != 'cnss')
                     ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
                     ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->money('XOF', locale: 'fr',)
                     ->label('ITS'),
                 TextColumn::make('total')
-                    ->visible(fn ($livewire) => $livewire->activeTab == 'total')
+                    ->visible(fn ($livewire) => $livewire->activeTab != 'cnss' && $livewire->activeTab != 'its')
                     ->weight(fn ($record) => $record->agent == 'Total' ? FontWeight::Bold : null)
                     ->size(fn ($record) => $record->agent == 'Total' ? TextColumn\TextColumnSize::Large : null)
                     ->money('XOF', locale: 'fr',)
@@ -104,9 +109,28 @@ class CotisationsEmployes extends ListRecords
                         'November' => 'Novembre',
                         'December' => 'Décembre',
                     ]),
-                DateScopeFilter::make('created_at')
+
+ 
+                    Filter::make('created_at')
+                        ->form([
+                            Forms\Components\DatePicker::make('created_from')->label('Date Début'),
+                            Forms\Components\DatePicker::make('created_until')->label('Date Fin'),
+                        ])
+                        ->query(function (Builder $query, array $data): Builder {
+                            return $query
+                                ->when(
+                                    $data['created_from'],
+                                    fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                                )
+                                ->when(
+                                    $data['created_until'],
+                                    fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                                );
+                        })   
+                        // DateScopeFilter::make('Période')
 
             ])
+            
             ->headerActions([
                 //                ExportAction::make()
                 //                    ->exports([
@@ -155,17 +179,18 @@ class CotisationsEmployes extends ListRecords
 
     public function getTabs(): array
     {
+
         return [
-            "cnss" => Tab::make('cnss')
-                ->label('CNSS'),
-            "its" => Tab::make('its')
+            'cnss' => Tab::make('cnss')
+            ->label('CNSS'),
+            'its' => Tab::make('its')
                 ->label('ITS'),
-            Tab::make('total')
+            'total' => Tab::make('total')
                 ->label('TOTAL')
+
         ];
     }
-
-    public function getDefaultActiveTab(): string|int|null
+    public function defaultTab(): ?string
     {
         return 'cnss';
     }
