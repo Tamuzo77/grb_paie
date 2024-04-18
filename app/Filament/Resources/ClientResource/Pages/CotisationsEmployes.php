@@ -9,7 +9,7 @@ use Filament\Tables\Table;
 use App\Models\SoldeCompte;
 use Illuminate\Support\Carbon;
 use App\Models\CotisationEmploye;
-use Filament\Tables\Actions\Acti
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Tabs;
 use Illuminate\Database\Eloquent\Builder;
