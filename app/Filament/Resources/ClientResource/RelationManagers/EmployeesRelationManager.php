@@ -152,15 +152,18 @@ class EmployeesRelationManager extends RelationManager
                             ->numeric()
                             ->default(null),
                         Forms\Components\TextInput::make('salaire')
+                            ->label('Salaire brut')
                             ->required()
                             ->mask(RawJs::make('$money($input)'))
                             ->stripCharacters(',')
                             ->suffix('FCFA')
                             ->numeric()
+                            ->columnSpanFull('edit')
                             ->default(0),
                         Forms\Components\TextInput::make('tauxCnss')
                             ->label('Taux CNSS')
                             ->numeric()
+                            ->hiddenOn('edit')
 //                            ->inputMode('decimal')
                             ->suffix('%')
                             ->default(3.6),

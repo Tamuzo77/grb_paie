@@ -40,13 +40,21 @@ class AbsenceResource extends Resource
                             ->label('Client')
                             ->required()
                             ->dehydrated(false)
-                            ->options(Client::all()->pluck('nom', 'id')),
+                            ->options(Client::pluck('nom', 'id')),
                         Forms\Components\Select::make('employee_id')
                             ->label('Employé')
                             ->placeholder(fn (Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
                             ->hintColor('accent')
-                            ->options(function (Forms\Get $get) {
-                                return Employee::where('client_id', $get('client_id'))->get()->pluck('nom', 'id');
+                            ->selectablePlaceholder(fn (Forms\Get $get): bool => empty($get('client_id')))
+                            ->options(function (?Absence $record,Forms\Get $get, Forms\Set $set) {
+                                $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
+                                if (!is_null($record) && $get('client_id') == null){
+                                    $set('client_id', $record->employee->client_id);
+                                    $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
+                                    $set('client_id', array_key_first($employees->toArray()));
+                                }
+
+                                return $employees;
                             })
 //                            ->relationship('employee', modifyQueryUsing: fn(Builder $query) => $query->orderBy('nom')->orderBy('prenoms'))
                             ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom} {$record->prenoms}")

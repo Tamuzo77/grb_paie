@@ -255,7 +255,7 @@ class EmployeeResource extends Resource
                 Tables\Columns\IconColumn::make('cadre')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('salaire')
-                    ->label('Salaire brute')
+                    ->label('Salaire brut')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

@@ -155,7 +155,7 @@
         @php
             $cnss = $employee->tauxCnss ? $employee->salaire * $employee->tauxCnss : $employee->salaire * 0.036;
             $montantIts = $employee->salaire * $employee->tauxIts;
-            $totalRetenu = $cnss + $montantAvance + $montantIts;
+            $totalRetenu = $cnss + $montantAvance + $montantIts + $retenueObligatoire;
         @endphp
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
             colspan="4">{{$cnss}}</td>

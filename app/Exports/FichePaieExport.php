@@ -27,6 +27,7 @@ use Rmunate\Utilities\SpellNumber;
         $solde = SoldeCompte::where('employee_id', $this->paiement->employee_id)->where('mois', now()->format('F'));
         $salaireMensuel = SoldeCompte::where('employee_id', $this->paiement->employee_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->get('montant');
         $montantAvance = SoldeCompte::where('employee_id', $this->paiement->employee_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::AVANCE_SUR_SALAIRE)->get('montant');
+        $montantPrete = SoldeCompte::where('employee_id', $this->paiement->employee_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::PRET_ENTREPRISE)->get('montant');
         $totalNet = $solde->where('donnees', \App\Models\SoldeCompte::TOTAL)->get('montant');
         $montantLettre = SpellNumber::value($totalNet[0]['montant'])->locale('fr')->toLetters();
         $retenueObligatoire = 0;
@@ -40,6 +41,11 @@ use Rmunate\Utilities\SpellNumber;
         foreach ($this->paiement->employee->misAPieds as $misAPied) {
             $retenueObligatoire += $misAPied->montant * $misAPied->nbre_jours;
         }
+        $salaire = $this->paiement->employee->salaire * (1 - $this->paiement->employee->tauxIts - $this->paiement->employee->tauxCnss);
+
+        $retenueObligatoire += $nb_jours_absences * $salaire / 20;
+        $retenueObligatoire += $montantPrete[0]['montant'];
+
         $company = Company::first();
 
         return view('exports.fiche-paie', [

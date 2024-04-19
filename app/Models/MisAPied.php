@@ -51,4 +51,9 @@ class MisAPied extends Model
             ],
         ];
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }
