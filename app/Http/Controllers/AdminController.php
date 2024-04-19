@@ -68,14 +68,15 @@ class AdminController extends Controller
     public function downloadBilanAnnuel($record)
     {
         $annee = Annee::find($record);
-                $export = new BilanAnnuelExport($annee);
-                return Excel::download($export, 'bilan-annuel.xlsx');
-//        $employees = Employee::where('annee_id', $annee->id)->with(['soldeComptes', 'demandeConges', 'misAPieds'])->get();
-//
-//
-//        return view('exports.bilan-annuel', [
-//            'annee' => $annee,
-//            'employees' => $employees,
-//        ]);
+        $export = new BilanAnnuelExport($annee);
+
+        return Excel::download($export, 'bilan-annuel.xlsx');
+        //        $employees = Employee::where('annee_id', $annee->id)->with(['soldeComptes', 'demandeConges', 'misAPieds'])->get();
+        //
+        //
+        //        return view('exports.bilan-annuel', [
+        //            'annee' => $annee,
+        //            'employees' => $employees,
+        //        ]);
     }
 }

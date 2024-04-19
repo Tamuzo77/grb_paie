@@ -20,9 +20,8 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-use Stichoza\GoogleTranslate\GoogleTranslate;
 
- // Translates into English
+// Translates into English
 Route::get('/test', function () {
     return view('test');
 });

@@ -46,9 +46,9 @@ class AbsenceResource extends Resource
                             ->placeholder(fn (Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
                             ->hintColor('accent')
                             ->selectablePlaceholder(fn (Forms\Get $get): bool => empty($get('client_id')))
-                            ->options(function (?Absence $record,Forms\Get $get, Forms\Set $set) {
+                            ->options(function (?Absence $record, Forms\Get $get, Forms\Set $set) {
                                 $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
-                                if (!is_null($record) && $get('client_id') == null){
+                                if (! is_null($record) && $get('client_id') == null) {
                                     $set('client_id', $record->employee->client_id);
                                     $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
                                     $set('client_id', array_key_first($employees->toArray()));
