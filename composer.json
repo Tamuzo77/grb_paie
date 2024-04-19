@@ -29,6 +29,7 @@
         "pxlrbt/filament-excel": "^2.3",
         "pxlrbt/filament-spotlight": "^1.2",
         "rmunate/spell-number": "*",
+        "stichoza/google-translate-php": "^5.1",
         "tightenco/ziggy": "^2.0",
         "wildside/userstamps": "^2.4",
         "ysfkaya/filament-phone-input": "^2.3",
