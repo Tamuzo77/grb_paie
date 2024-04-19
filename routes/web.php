@@ -20,13 +20,14 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
+ // Translates into English
 Route::get('/test', function () {
     return view('test');
 });
 
 Route::get('/', function () {
-
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -50,6 +51,7 @@ Route::get('/first', function () {
     ]);
 })->middleware(['auth', 'twofactor'])->name('first');
 Route::middleware('auth')->group(function () {
+
     Route::resource('/client', ClientController::class);
     Route::get('fichepaie', [FicheController::class, 'index']);
     Route::get('etat', [EtatController::class, 'etat']);
