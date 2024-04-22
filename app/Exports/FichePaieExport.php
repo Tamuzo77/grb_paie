@@ -49,7 +49,9 @@ use Rmunate\Utilities\SpellNumber;
         }
 
         $misApieds = 0;
+        $misApiedsJours = 0;
         foreach ($this->paiement->employee->misAPieds as $misAPied) {
+            $misApiedsJours += $misAPied->nbre_jours;
             $misApieds += $misAPied->montant * $misAPied->nbre_jours;
         }
         $salaire = $this->paiement->employee->salaire * (1 - $this->paiement->employee->tauxIts - $this->paiement->employee->tauxCnss);
@@ -74,6 +76,7 @@ use Rmunate\Utilities\SpellNumber;
             'misApieds' => $misApieds,
             'nb_jours_travaille' => $nb_jours_travaille,
             'nb_jours_conges_paye' => $nb_jours_conges_paye,
+            'misApiedsJours' => $misApiedsJours,
         ]);
     }
 }

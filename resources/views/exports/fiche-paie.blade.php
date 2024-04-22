@@ -190,13 +190,13 @@
             <td style="height:35px"></td>
             <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Salaire net 20 jours</td>
             <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-                colspan="4">xxxxxx</td>
+                colspan="4">{{$salaireForTwentyDays}}</td>
         </tr>
         <tr>
             <td style="height:35px"></td>
-            <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Mise à pied : xx</td>
+            <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Mise à pied: {{$misApiedsJours}} jour(s)</td>
             <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-                colspan="4">xxxxx</td>
+                colspan="4">{{$misApieds}}</td>
         </tr>
     <tr class="">
         <td style="height:50px"></td>
