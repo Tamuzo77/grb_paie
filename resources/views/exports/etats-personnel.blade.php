@@ -84,7 +84,7 @@
                                 @if($company->signature)
                                 <img src="storage/{{$company->signature}}" width="80px" height="80px" alt="" srcset="">
                                 @else
-                                <img src="" alt="" srcset="">
+                                <img src="image/image-null.png" alt="" srcset="">
                                 @endif
                             </td>
                             <td colspan="6" style="border-top:2px solid #3498db;height:100px;"></td>

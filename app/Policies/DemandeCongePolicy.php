@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\DemandeConge;
 use App\Models\User;
+use App\Models\DemandeConge;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DemandeCongePolicy
