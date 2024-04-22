@@ -7,7 +7,10 @@
     $totalMisAPiedConservatoire = 0;
     $totalMisAPiedDisciplinaire = 0;
     $totalJoursCongesAcquis = 0;
- @endphp
+    $totalJoursCongesJouis = 0;
+    $totalJoursCongesDus = 0;
+
+@endphp
 <table>
     <thead>
     <tr>
@@ -56,37 +59,54 @@
         <td colspan="2" style="height:40px;vertical-align:middle;text-align:center;border:2px solid #3498db">Acquis</td>
         <td colspan="2" style="height:40px;vertical-align:middle;text-align:center;border:2px solid #3498db">Jouis</td>
         <td colspan="2" style="height:40px;vertical-align:middle;text-align:center;border:2px solid #3498db">dûs</td>
-        <td colspan="2" style="height:40px;vertical-align:middle;text-align:center;border:2px solid #3498db">Conservatoire</td>
-        <td colspan="2" style="height:40px;vertical-align:middle;text-align:center;border:2px solid #3498db">Disciplinaire</td>
+        <td colspan="2" style="height:40px;vertical-align:middle;text-align:center;border:2px solid #3498db">
+            Conservatoire
+        </td>
+        <td colspan="2" style="height:40px;vertical-align:middle;text-align:center;border:2px solid #3498db">
+            Disciplinaire
+        </td>
         <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db"></td>
     </tr>
     </thead>
     <tbody>
     @foreach($employees as $employee)
         @php
-        $a = $employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * 0.036;
-        $b = $employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * $employee->tauxIts;
-        $c = $a + $b;
+            $nbJoursCongesJouis = 0;
+            $nbJoursCongesDus = 0;
+            $a = $employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * 0.036;
+            $b = $employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * $employee->tauxIts;
+            $c = $a + $b;
 
-        $totalSalaireAnnuelBrut += $employee->salaire * 12;
-        $totalSalaireAnnuelNet += $employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant');
-        $totalA += $a;
-        $totalB += $b;
-        $totalC += $c;
+            $totalSalaireAnnuelBrut += $employee->salaire * 12;
+            $totalSalaireAnnuelNet += $employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant');
+            $totalA += $a;
+            $totalB += $b;
+            $totalC += $c;
 
-        $misAPiedConservatoire = $employee->misAPieds->where('type', \App\Models\MisAPied::CONSERVATOIRE)->sum('montant');
-        $misAPiedDisciplinaire = $employee->misAPieds->where('type', \App\Models\MisAPied::DISCIPLINAIRE)->sum('montant');
-        $totalMisAPiedConservatoire += $misAPiedConservatoire;
-        $totalMisAPiedDisciplinaire += $misAPiedDisciplinaire;
+            $misAPiedConservatoire = $employee->misAPieds->where('type', \App\Models\MisAPied::CONSERVATOIRE)->sum('montant');
+            $misAPiedDisciplinaire = $employee->misAPieds->where('type', \App\Models\MisAPied::DISCIPLINAIRE)->sum('montant');
+            $totalMisAPiedConservatoire += $misAPiedConservatoire;
+            $totalMisAPiedDisciplinaire += $misAPiedDisciplinaire;
 
-        $totalJoursCongesAcquis += $employee->nb_jours_conges_acquis;
- @endphp
+            $totalJoursCongesAcquis += $employee->nb_jours_conges_acquis;
+
+             foreach ($employee->demandeConges as $demandeConge) {
+                $start = new DateTime($demandeConge->date_debut);
+                $end = new DateTime($demandeConge->date_fin);
+                $nbJoursCongesJouis += $start->diff($end)->days;
+             }
+
+            $nbJoursCongesDus += max(0, $employee->nb_jours_conges_acquis - $nbJoursCongesJouis);
+            $totalJoursCongesJouis += $nbJoursCongesJouis;
+            $totalJoursCongesDus += $nbJoursCongesDus;
+        @endphp
         <tr>
             <td colspan="2" style="height:35px"></td>
             <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">
                 {{$employee->nom . ' ' . $employee->prenoms}}
             </td>
-            <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$employee->salaire * 12}}
+            <td colspan="3"
+                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$employee->salaire * 12}}
             </td>
             <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">
                 {{$employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant')}}
@@ -97,12 +117,18 @@
             <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">
                 {{$b}}
             </td>
-            <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$c}}</td>
-            <td colspan="2" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$employee->nb_jours_conges_acquis}}</td>
-            <td colspan="2" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{00}}</td>
-            <td colspan="2" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{00}}</td>
-            <td colspan="2" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$misAPiedConservatoire}}</td>
-            <td colspan="2" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$misAPiedDisciplinaire}}</td>
+            <td colspan="3"
+                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$c}}</td>
+            <td colspan="2"
+                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$employee->nb_jours_conges_acquis}}</td>
+            <td colspan="2"
+                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$nbJoursCongesJouis}}</td>
+            <td colspan="2"
+                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$nbJoursCongesDus}}</td>
+            <td colspan="2"
+                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$misAPiedConservatoire}}</td>
+            <td colspan="2"
+                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$misAPiedDisciplinaire}}</td>
 
             <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">35555
             </td>
@@ -113,16 +139,26 @@
         <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">Total
             (sommes)
         </td>
-        <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalSalaireAnnuelBrut}}</td>
-        <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalSalaireAnnuelNet}}</td>
-        <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalA}}</td>
-        <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalB}}</td>
-        <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalC}}</td>
-        <td colspan="2" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalJoursCongesAcquis}}</td>
-        <td colspan="2" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">0</td>
-        <td colspan="2" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">0</td>
-        <td colspan="2" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalMisAPiedConservatoire}}</td>
-        <td colspan="2" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalMisAPiedDisciplinaire}}</td>
+        <td colspan="3"
+            style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalSalaireAnnuelBrut}}</td>
+        <td colspan="3"
+            style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalSalaireAnnuelNet}}</td>
+        <td colspan="3"
+            style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalA}}</td>
+        <td colspan="3"
+            style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalB}}</td>
+        <td colspan="3"
+            style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalC}}</td>
+        <td colspan="2"
+            style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalJoursCongesAcquis}}</td>
+        <td colspan="2"
+            style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalJoursCongesJouis}}</td>
+        <td colspan="2"
+            style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalJoursCongesDus}}</td>
+        <td colspan="2"
+            style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalMisAPiedConservatoire}}</td>
+        <td colspan="2"
+            style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$totalMisAPiedDisciplinaire}}</td>
         <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db"></td>
     </tr>
     </tbody>

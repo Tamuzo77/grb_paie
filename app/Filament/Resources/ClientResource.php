@@ -31,6 +31,7 @@ class ClientResource extends Resource
 {
     use InteractsWithPageFilters;
 
+    const string HEROICON_O_PHONE = 'heroicon-o-phone';
     protected static ?string $model = Client::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
@@ -363,10 +364,18 @@ class ClientResource extends Resource
                     ->compact()
                     ->columns(3)
                     ->columnSpan(3)
+                    ->footerActions([
+                            Action::make('rc')
+                                ->visible(fn() => $record->rc)
+                                ->action(function () use ($record) {
+                                    return response()->download(storage_path("app/public/{$record->rc}"));
+                                })
+                                ->label('Télécharger Registre de commerce')
+                    ])
                     ->collapsible(),
                 Section::make('Informations de contacts')
                     ->description('Informations de contacts')
-                    ->icon('heroicon-o-phone')
+                    ->icon(self::HEROICON_O_PHONE)
                     ->schema([
                         TextEntry::make('telephone')
                             ->copyable()
