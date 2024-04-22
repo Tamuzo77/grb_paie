@@ -11,9 +11,16 @@ use App\Models\CotisationClient;
 use App\Models\CotisationEmploye;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Actions\Action;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\Split;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -24,6 +31,7 @@ class ClientResource extends Resource
 {
     use InteractsWithPageFilters;
 
+    const string HEROICON_O_PHONE = 'heroicon-o-phone';
     protected static ?string $model = Client::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
@@ -139,6 +147,7 @@ class ClientResource extends Resource
                     ->label('Corbeille')
                     ->placeholder('Clients'),
             ])
+            ->recordUrl(fn ($record) => static::getUrl('view', ['record' => $record]))
             ->actions([
                 Tables\Actions\Action::make('cotisations')
                     ->action(function ($record) {
@@ -293,6 +302,7 @@ class ClientResource extends Resource
                         ->icon('heroicon-o-currency-dollar')
                         ->color(Color::Orange)
                         ->label('Cotisations employés'),
+                    Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
@@ -309,6 +319,83 @@ class ClientResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        $record = $infolist->record;
+        return $infolist->schema([
+            Split::make([
+                Section::make('Informations Générales')
+                    ->description('Informations sur le client')
+                    ->icon(self::$navigationIcon)
+                    ->headerActions([
+                        Action::make('edit')
+                            ->url(function () use ($record) {
+                                return static::getUrl('edit', ['record' => $record ]);
+                            }),
+                    ])
+                    ->schema([
+                        TextEntry::make('matricule')
+                            ->size(TextEntry\TextEntrySize::Large)
+                            ->label('Matricule'),
+                        TextEntry::make('nom')
+                            ->size(TextEntry\TextEntrySize::Large)
+                            ->weight(FontWeight::Bold)
+                            ->label('Nom'),
+                        TextEntry::make('adresse')
+                            ->copyable()
+                            ->size(TextEntry\TextEntrySize::Large)
+                            ->limit(25)
+                            ->label('Adresse'),
+                        TextEntry::make('ifu')
+                            ->placeholder('Pas d\'IFU')
+                            ->size(TextEntry\TextEntrySize::Large)
+                            ->label('IFU'),
+                        TextEntry::make('bank.name')
+                            ->size(TextEntry\TextEntrySize::Large)
+                            ->label('Banque'),
+                        TextEntry::make('nom_donneur_ordre')
+                            ->size(TextEntry\TextEntrySize::Large)
+                            ->label('Nom donneur ordre'),
+                        TextEntry::make('prenom_donneur_ordre')
+                            ->size(TextEntry\TextEntrySize::Large)
+                            ->label('Prénoms donneur ordre'),
+
+                    ])
+                    ->compact()
+                    ->columns(3)
+                    ->columnSpan(3)
+                    ->footerActions([
+                            Action::make('rc')
+                                ->visible(fn() => $record->rc)
+                                ->action(function () use ($record) {
+                                    return response()->download(storage_path("app/public/{$record->rc}"));
+                                })
+                                ->label('Télécharger Registre de commerce')
+                    ])
+                    ->collapsible(),
+                Section::make('Informations de contacts')
+                    ->description('Informations de contacts')
+                    ->icon(self::HEROICON_O_PHONE)
+                    ->schema([
+                        TextEntry::make('telephone')
+                            ->copyable()
+                            ->size(TextEntry\TextEntrySize::Large)
+                            ->label('Téléphone'),
+                        TextEntry::make('email')
+                            ->copyable()
+                            ->size(TextEntry\TextEntrySize::Large)
+                            ->label('Email'),
+                    ])
+                    ->columns(1)
+                    ->grow(false)
+                    ->collapsible(),
+            ])
+                ->columns(4)
+            ->columnSpanFull()
+
+        ]);
+    }
+
     public static function getRelations(): array
     {
         return [
@@ -322,6 +409,7 @@ class ClientResource extends Resource
             'index' => Pages\ListClients::route('/'),
             'create' => Pages\CreateClient::route('/create'),
             'edit' => Pages\EditClient::route('/{record}/edit'),
+            'view' => Pages\ViewClient::route('/{record}'),
             'cotisations' => Pages\CotisationsClient::route('/{record}/cotisations'),
             'etats-personnel' => Pages\EtatsPersonelPage::route('/{record}/etats-personnel'),
             'cotisations-employes' => Pages\CotisationsEmployes::route('/{record}/cotisations-employes'),
