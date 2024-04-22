@@ -416,7 +416,7 @@ class EmployeeResource extends Resource
                                 $startDate = new DateTime($record->demandeConges()->where('statut', 'paye')->first()?->date_debut);
                                 $endDate = new DateTime($record->demandeConges()->where('statut', 'paye')->first()?->date_fin);
                                 $montantJoursCongesPaye = date_diff($startDate, $endDate)->days * $record->solde_jours_conges_payes;
-                                $montantAvanceSalaire = $record->paiements()->where('type_paiement_id', 1)->sum('solde');
+                                $montantAvanceSalaire = $record->paiements()->where('type_paiement_id', TypePaiement::AVANCE)->sum('solde');
                                 $prets = CalculerSalaireMensuel::sommePrets($record);
                                 Paiement::updateOrCreate([
                                     'employee_id' => $record->id,
