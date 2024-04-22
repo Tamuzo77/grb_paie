@@ -182,10 +182,22 @@
         <td style="background-color: #3498db;color: #ffffff;height:50px;vertical-align:middle;font-weight:bold;text-align:center"
             colspan="4">{{$totalRetenu}}</td>
     </tr>
-    <tr>
+    {{-- <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="14" class='py-3'></td>
-    </tr>
+    </tr> --}}
+        <tr>
+            <td style="height:35px"></td>
+            <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Salaire net 20 jours</td>
+            <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
+                colspan="4">xxxxxx</td>
+        </tr>
+        <tr>
+            <td style="height:35px"></td>
+            <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Mise à pied : xx</td>
+            <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
+                colspan="4">xxxxx</td>
+        </tr>
     <tr class="">
         <td style="height:50px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db;background-color: #3498db;"
@@ -251,7 +263,7 @@
             @if($company->signature)
                 <img src="storage/{{$company->signature}}" alt="" srcset="" width="80px" height="80px">
             @else
-                <img src="" alt="" srcset="">
+                <img src="image/image-null.png" alt="" srcset="">
             @endif        </td>
     </tr>
 

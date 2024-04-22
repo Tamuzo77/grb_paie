@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+
 use App\Models\Absence;
 use App\Models\Annee;
 use App\Models\User;
