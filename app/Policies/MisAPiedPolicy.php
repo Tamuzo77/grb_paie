@@ -2,13 +2,22 @@
 
 namespace App\Policies;
 
+use App\Models\Annee;
 use App\Models\MisAPied;
 use App\Models\User;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MisAPiedPolicy
 {
     use HandlesAuthorization;
+    use InteractsWithPageFilters;
+
+    protected static ?Annee $annee = null;
+    public function __construct()
+    {
+        self::$annee = Annee::whereSlug($filters['annee_id'] ?? now()->year)->firstOrFail();
+    }
 
     /**
      * Determine whether the user can view any models.
@@ -31,7 +40,7 @@ class MisAPiedPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_mis::a::pied');
+        return $user->can('create_mis::a::pied') && self::$annee->hasStatutEnCours();
     }
 
     /**
