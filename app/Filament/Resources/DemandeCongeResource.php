@@ -111,13 +111,16 @@ class DemandeCongeResource extends Resource
                     ->searchable(isIndividual: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('employee.nom')
+                    ->label('Employé')
                     ->description(fn ($record) => $record->employee->prenoms)
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_debut')
+                    ->label('Date de début')
                     ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_fin')
+                    ->label('Date de fin')
                     ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('statut')

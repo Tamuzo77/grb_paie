@@ -125,19 +125,23 @@ class PaiementResource extends Resource
                     ->searchable(isIndividual: true, isGlobal: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('employee.nom')
+                    ->label('Employé')
                     ->description(fn ($record) => $record->employee->prenoms, position: 'above')
                     ->separator()
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('solde')
+                    ->label('Montant')
                     ->numeric()
 //                    ->money(currency: 'XOF')
                     ->suffix('  FCFA')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('typePaiement.nom')
+                    ->label('Type de paiement')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('modePaiement.nom')
+                    ->label('Mode de paiement')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
