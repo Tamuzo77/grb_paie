@@ -23,4 +23,9 @@ class CreateClient extends CreateRecord
     {
         return parent::getCreatedNotification()->title('Client crée avec succès');
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return self::$resource::getUrl('edit', ['record' => $this->getRecord(), ...$this->getRedirectUrlParameters()]);
+    }
 }

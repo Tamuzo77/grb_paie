@@ -329,6 +329,7 @@ class ClientResource extends Resource
                     ->icon(self::$navigationIcon)
                     ->headerActions([
                         Action::make('edit')
+                            ->label('Modifier')
                             ->url(function () use ($record) {
                                 return static::getUrl('edit', ['record' => $record ]);
                             }),
