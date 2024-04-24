@@ -28,11 +28,13 @@ class Annee extends Model
     /**
      * @var array
      */
-    protected $fillable = ['slug', 'nom', 'debut', 'fin', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
+    protected $fillable = ['slug', 'nom', 'debut', 'fin', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at', 'statut'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public const STATUT_EN_COURS = 'en_cours';
+    public const STATUT_CLOTURE = 'cloture';
     public function employees()
     {
         return $this->hasMany('App\Models\Employee');
@@ -50,5 +52,14 @@ class Annee extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    public function hasStatutEnCours()
+    {
+        return $this->statut == self::STATUT_EN_COURS;
+    }
+    public function hasStatutCloture()
+    {
+        return $this->statut == self::STATUT_CLOTURE;
     }
 }

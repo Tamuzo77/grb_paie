@@ -25,6 +25,8 @@ class AbsenceResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-question-mark-circle';
 
+    protected static ?string $navigationGroup = 'Dépendances salariales';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -38,13 +40,21 @@ class AbsenceResource extends Resource
                             ->label('Client')
                             ->required()
                             ->dehydrated(false)
-                            ->options(Client::all()->pluck('nom', 'id')),
+                            ->options(Client::pluck('nom', 'id')),
                         Forms\Components\Select::make('employee_id')
                             ->label('Employé')
                             ->placeholder(fn (Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
                             ->hintColor('accent')
-                            ->options(function (Forms\Get $get) {
-                                return Employee::where('client_id', $get('client_id'))->get()->pluck('nom', 'id');
+                            ->selectablePlaceholder(fn (Forms\Get $get): bool => empty($get('client_id')))
+                            ->options(function (?Absence $record, Forms\Get $get, Forms\Set $set) {
+                                $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
+                                if (! is_null($record) && $get('client_id') == null) {
+                                    $set('client_id', $record->employee->client_id);
+                                    $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
+                                    $set('client_id', array_key_first($employees->toArray()));
+                                }
+
+                                return $employees;
                             })
 //                            ->relationship('employee', modifyQueryUsing: fn(Builder $query) => $query->orderBy('nom')->orderBy('prenoms'))
                             ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom} {$record->prenoms}")
@@ -88,16 +98,20 @@ class AbsenceResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('employee.nom')
+                    ->label('Employé')
                     ->description(fn ($record) => $record->employee->prenoms)
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_debut')
-                    ->dateTime()
+                    ->label('Date de début')
+                    ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_fin')
-                    ->dateTime()
+                    ->label('Date de fin')
+                    ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('deductible')
+                    ->label('Déductible')
                     ->icon(fn (string $state): string => match ($state) {
                         '0' => 'heroicon-o-x-circle',
                         '1' => 'heroicon-o-check-circle',
@@ -109,15 +123,18 @@ class AbsenceResource extends Resource
                         default => 'accent',
                     }),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Crée le')
+                    ->dateTime(format: 'd F Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Modifié le')
+                    ->dateTime(format: 'd F Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->label('Supprimé le')
+                    ->dateTime(format: 'd F Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

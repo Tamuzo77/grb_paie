@@ -33,14 +33,17 @@ class SendTwoFactorCode extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->line("Your two-factor code is {$notifiable->two_factor_code}")
-            ->action('Verify Here', route('verify.index'))
-            ->line('The code will expire in 10 minutes')
-            ->line('If you didn\'t request this, please ignore.');
-    }
-    
+        $verificationUrl = route('verify.index');
 
+        return (new MailMessage)
+            ->subject('Code à deux facteurs')
+            ->greeting('Bonjour')
+            ->line("Votre code à deux facteurs est {$notifiable->two_factor_code}")
+            ->action('Vérifiez ici', route('verify.index'))
+            ->line('Le code expirera dans 10 minutes.')
+            ->line('Si vous n\'avez pas fait cette demande, veuillez l\'ignorer');
+
+    }
 
     /**
      * Get the array representation of the notification.

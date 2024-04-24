@@ -15,10 +15,11 @@ class FirstLoginMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->user()->login_count == 1 ){
+        if (auth()->user()->login_count == 1) {
 
             return redirect()->intended(route('auth.first-login'));
         }
+
         return $next($request);
     }
 }

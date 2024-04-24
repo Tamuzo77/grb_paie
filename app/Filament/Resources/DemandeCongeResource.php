@@ -27,6 +27,8 @@ class DemandeCongeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
+    protected static ?string $navigationGroup = 'Dépendances salariales';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -40,13 +42,21 @@ class DemandeCongeResource extends Resource
                             ->searchable()
                             ->label('Client')
                             ->dehydrated(false)
-                            ->options(Client::all()->pluck('nom', 'id')),
+                            ->options(Client::pluck('nom', 'id')),
                         Forms\Components\Select::make('employee_id')
                             ->label('Employé')
                             ->placeholder(fn (Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
                             ->hintColor('accent')
-                            ->options(function (Forms\Get $get) {
-                                return Employee::where('client_id', $get('client_id'))->get()->pluck('nom', 'id');
+                            ->selectablePlaceholder(fn (Forms\Get $get): bool => empty($get('client_id')))
+                            ->options(function (?DemandeConge $record, Forms\Get $get, Forms\Set $set) {
+                                $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
+                                if (! is_null($record) && $get('client_id') == null) {
+                                    $set('client_id', $record->employee->client_id);
+                                    $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
+                                    $set('client_id', array_key_first($employees->toArray()));
+                                }
+
+                                return $employees;
                             })
 //                            ->relationship('employee', modifyQueryUsing: fn(Builder $query) => $query->orderBy('nom')->orderBy('prenoms'))
                             ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom} {$record->prenoms}")
@@ -61,11 +71,11 @@ class DemandeCongeResource extends Resource
                         Forms\Components\DateTimePicker::make('date_fin')
                             ->required()
                             ->rules([
-                                fn (Forms\Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get){
+                                fn (Forms\Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
                                     $startDate = new DateTime($get('date_debut'));
                                     $endDate = new DateTime($value);
-                                $nbre_jours = date_diff($startDate, $endDate)->days;
-                                $nbre_jours_acquis = Employee::find($get('employee_id'))->nb_jours_conges_acquis;
+                                    $nbre_jours = date_diff($startDate, $endDate)->days;
+                                    $nbre_jours_acquis = Employee::find($get('employee_id'))->nb_jours_conges_acquis;
                                     if ($nbre_jours > $nbre_jours_acquis) {
                                         $fail(' Le nombre de jours de congés demandés est supérieur au nombre de jours de congés acquis');
                                     }
@@ -73,7 +83,7 @@ class DemandeCongeResource extends Resource
                             ])
                             ->date()
                             ->after('date_debut'),
-                            // ->beforeOrEqual($date_debut>addDays(11)),
+                        // ->beforeOrEqual($date_debut>addDays(11)),
                         ToggleButtons::make('statut')
                             ->label('Statut')
                             ->options([
@@ -101,14 +111,17 @@ class DemandeCongeResource extends Resource
                     ->searchable(isIndividual: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('employee.nom')
+                    ->label('Employé')
                     ->description(fn ($record) => $record->employee->prenoms)
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_debut')
-                    ->dateTime()
+                    ->label('Date de début')
+                    ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_fin')
-                    ->dateTime()
+                    ->label('Date de fin')
+                    ->dateTime(format: 'd F Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('statut')
                     ->icon(fn (string $state): string => match ($state) {
@@ -122,15 +135,18 @@ class DemandeCongeResource extends Resource
                         default => 'accent',
                     }),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime(format: 'd F Y')
+                    ->label('Créé le')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Modifié le')
+                    ->dateTime(format: 'd F Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->label('Supprimé le')
+                    ->dateTime(format: 'd F Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

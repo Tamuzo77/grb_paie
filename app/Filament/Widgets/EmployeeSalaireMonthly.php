@@ -2,10 +2,8 @@
 
 namespace App\Filament\Widgets;
 
-
 use App\Models\Annee;
 use App\Models\Paiement;
-use App\Models\TypePaiement;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
@@ -15,27 +13,24 @@ use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 class EmployeeSalaireMonthly extends ApexChartWidget
 {
     use InteractsWithPageFilters;
+
     protected static ?int $sort = 2;
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
+
     /**
      * Chart Id
-     *
-     * @var string
      */
     protected static ?string $chartId = 'employeeSalaireMonthly';
 
     /**
      * Widget Title
-     *
-     * @var string|null
      */
     protected static ?string $heading = 'Paiements effectués par mois';
 
     /**
      * Chart options (series, labels, types, size, animations...)
      * https://apexcharts.com/docs/options
-     *
-     * @return array
      */
     protected function getOptions(): array
     {
@@ -49,6 +44,7 @@ class EmployeeSalaireMonthly extends ApexChartWidget
             )
             ->perMonth()
             ->count();
+
         return [
             'chart' => [
                 'type' => 'area',
@@ -57,11 +53,11 @@ class EmployeeSalaireMonthly extends ApexChartWidget
             'series' => [
                 [
                     'name' => 'ParticipantsChart',
-                    'data' => $data->map(fn(TrendValue $value) => $value->aggregate),
+                    'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
                 ],
             ],
             'xaxis' => [
-                'categories' => $data->map(fn(TrendValue $value) =>gmdate("M ", strtotime($value->date) )),
+                'categories' => $data->map(fn (TrendValue $value) => gmdate('M ', strtotime($value->date))),
 
                 'labels' => [
                     'style' => [

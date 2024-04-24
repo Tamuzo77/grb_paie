@@ -3,6 +3,7 @@
 namespace App\Filament\Clusters\Settings\Resources\AnneeResource\Pages;
 
 use App\Filament\Clusters\Settings\Resources\AnneeResource;
+use App\Models\Annee;
 use Filament\Actions;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
@@ -15,10 +16,12 @@ class ListAnnees extends ListRecords
     protected static string $resource = AnneeResource::class;
 
     protected ?string $heading = 'Années d\'exercice';
+
     protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make()
+                ->visible(Annee::latest()->first()?->statut == 'cloture')
                 ->modalHeading("Session d'exercice")
                 ->form([
                     Fieldset::make('Ouvrir une nouvelle année')

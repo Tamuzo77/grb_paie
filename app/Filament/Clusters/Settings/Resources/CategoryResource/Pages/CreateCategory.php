@@ -3,7 +3,6 @@
 namespace App\Filament\Clusters\Settings\Resources\CategoryResource\Pages;
 
 use App\Filament\Clusters\Settings\Resources\CategoryResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateCategory extends CreateRecord
@@ -12,6 +11,6 @@ class CreateCategory extends CreateRecord
 
     protected function getCreatedNotificationTitle(): ?string
     {
-        return "Catégorie enregistrée avec succès";
+        return 'Catégorie enregistrée avec succès';
     }
 }

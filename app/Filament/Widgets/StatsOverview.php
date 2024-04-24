@@ -14,11 +14,14 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 class StatsOverview extends BaseWidget
 {
     use InteractsWithPageFilters;
+
     protected static ?int $sort = 1;
-    protected int | string | array $columnSpan = [
+
+    protected int|string|array $columnSpan = [
         'md' => 2,
         'xl' => 2,
     ];
+
     protected function getStats(): array
     {
         $annee = Annee::whereSlug($this->filters['annee_id'] ?? now()->year)->firstOrFail();
@@ -28,6 +31,7 @@ class StatsOverview extends BaseWidget
         $paiementSalaire = Paiement::where('annee_id', $annee->id)->where('type_paiement_id', TypePaiement::SALAIRE)->count();
         $paiementAvance = Paiement::where('annee_id', $annee->id)->where('type_paiement_id', TypePaiement::AVANCE)->count();
         $paiementPret = Paiement::where('annee_id', $annee->id)->where('type_paiement_id', TypePaiement::PRET)->count();
+
         return [
             Stat::make(label: 'Clients', value: $clients)
                 ->description("+ $clients croissant")

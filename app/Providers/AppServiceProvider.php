@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\CotisationClient;
+use App\Models\Employee;
 use App\Models\Paiement;
 use App\Models\SoldeCompte;
+use App\Observers\CotisationClientObserver;
+use App\Observers\EmployeeObserver;
 use App\Observers\PaiementObserver;
 use App\Observers\SoldeCompteObserver;
 use Illuminate\Support\ServiceProvider;
@@ -25,5 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Paiement::observe(PaiementObserver::class);
         SoldeCompte::observe(SoldeCompteObserver::class);
+        Employee::observe(EmployeeObserver::class);
+        CotisationClient::observe(CotisationClientObserver::class);
     }
 }

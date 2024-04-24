@@ -15,11 +15,17 @@ class CreateClient extends CreateRecord
     {
         $annee = Annee::latest()->first()->get();
         $data['annee_id'] = $annee[0]['id'] ?? 1;
+
         return $data;
     }
 
     protected function getCreatedNotification(): ?Notification
     {
         return parent::getCreatedNotification()->title('Client crée avec succès');
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return self::$resource::getUrl('edit', ['record' => $this->getRecord(), ...$this->getRedirectUrlParameters()]);
     }
 }

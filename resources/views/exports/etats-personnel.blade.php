@@ -8,74 +8,86 @@
 @endphp
 
 
-                    <table style="border: 1px solid  #ccc;">
+                    <table style="border:2px solid  #3498db;">
                         <thead className='text-center bg-primary'>
-                        <tr style="height:50px" rowspan="3">
-                            <th colspan="3" style="background-color: #3498db; color: #ffffff; text-align: center; border: 1px solid #ccc; padding: 10px;font-weight: bold"> N°  </th>
-                            <th colspan="3" style="background-color: #3498db; color: #ffffff; text-align: center; border: 1px solid #ccc; padding: 10px;font-weight: bold"> Nom et Prénoms </th>
-                            <th colspan="3" style="background-color: #3498db; color: #ffffff; text-align: center; border: 1px solid #ccc; padding: 10px;font-weight: bold"> Fonction </th>
-                            <th colspan="3" style="background-color: #3498db; color: #ffffff; text-align: center; border: 1px solid #ccc; padding: 10px;font-weight: bold"> Nombre d'enfant à charge </th>
-                            <th colspan="3" style="background-color: #3498db; color: #ffffff; text-align: center; border: 1px solid #ccc; padding: 10px;font-weight: bold"> Salaire Brut(Base +primes) </th>
-                            <th colspan="3" style="background-color: #3498db; color: #ffffff; text-align: center; border: 1px solid #ccc; padding: 10px;font-weight: bold"> CNSS(3,6%) </th>
-                            <th colspan="3" style="background-color: #3498db; color: #ffffff; text-align: center; border: 1px solid #ccc; padding: 10px;font-weight: bold"> IRPP-TS </th>
-                            <th colspan="3" style="background-color: #3498db; color: #ffffff; text-align: center; border: 1px solid #ccc; padding: 10px;font-weight: bold"> Salaire net </th>
-                            <th colspan="3" style="background-color: #3498db; color: #ffffff; text-align: center; border: 1px solid #ccc; padding: 10px;font-weight: bold"> Veserment patronale (VPS) </th>
-                            <th colspan="3" style="background-color: #3498db; color: #ffffff; text-align: center; border: 1px solid #ccc; padding: 10px;font-weight: bold"> Masse salariale </th>
-                            <th colspan="3" style="background-color: #3498db; color: #ffffff; text-align: center; border: 1px solid #ccc; padding: 10px;font-weight: bold"> Signature et PI </th>
+                        <tr rowspan="3">
+                            <th colspan="32" style="background-color: #3498db;color: #ffffff;height:50px;vertical-align:middle;font-weight:bold;text-align:center">ETAT DES SALAIRES ET ACCESOIRES DU PERSONNEL DE {{$client->nom}}</th>
                         </tr>
 
                         </thead>
 
                         <tbody >
-                        @forelse($employees as $employee)
                             <tr>
-                                <td colspan="3" style="border:2px solid  #000000;">{{ $loop->iteration }}</td>
-                                <td colspan="3">{{ $employee->nom }}</td>
-                                <td colspan="3">{{ $employee->fonctions()->first()?->nom }}</td>
-                                <td colspan="3">{{ $employee->nb_enfants }}</td>
-                                <td colspan="3">{{ $employee->salaire }}</td>
-                                <td colspan="3">{{ $employee->cnss }}</td>
-                                <td colspan="3">{{ $employee->salaire * (1-$employee->its) }}</td>
-                                <td colspan="3">{{ (new \App\Actions\CalculerSalaireMensuel)->handle($employee)}}</td>
-                                <td colspan="3">{{ $employee->salaire * 0.23 }}</td>
-                                <td colspan="3">{{ $employee->payroll_mass?? 0 }}</td>
-                                <td colspan="3">{{ $employee->signature }}</td>
+                                <td colspan="2" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> N°  </td>
+                                <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Nom et Prénoms </td>
+                                <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Fonction </td>
+                                <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Nombre d'enfant à charge </td>
+                                <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Salaire Brut(Base +primes) </td>
+                                <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> CNSS </td>
+                                <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> IRPP-TS </td>
+                                <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Salaire net </td>
+                                <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Versement patronale (VPS) </td>
+                                <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Masse salariale </td>
+                                <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Signature et PI </td>
+                            </tr>
+                        @forelse($employees as $employee)
+                            @php
+                            $cnss = $employee->tauxCnss ? $employee->salaire * $employee->tauxCnss : $employee->salaire * 0.036;
+                            $irpp = $employee->salaire * $employee->tauxIts;
+ @endphp
+                            <tr>
+                                <td colspan="2" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{ $loop->iteration }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;font-weight:500;text-align:center;border:2px solid #3498db">{{ $employee->nom . ' '. $employee->prenoms }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;font-weight:500;text-align:center;border:2px solid #3498db">{{ $employee->fonctions()->first()?->nom }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->nb_enfants }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->salaire }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $cnss }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $irpp }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ (new \App\Actions\CalculerSalaireMensuel)->handle($employee)}}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->salaire * 0.23 }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->payroll_mass?? 0 }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->signature }}</td>
                             </tr>
                             @php
-                                
+
                                 $sommeSalaire = $sommeSalaire + $employee->salaire;
-                                $sommeCnss = $sommeCnss + $employee->cnss;
-                                $sommeIrpp = $sommeIrpp + $employee->salaire * (1-$employee->its);
+                                $sommeCnss = $sommeCnss + $cnss;
+                                $sommeIrpp = $sommeIrpp + $irpp;
                                 $sommeSalaireNet = $sommeSalaireNet + (new \App\Actions\CalculerSalaireMensuel)->handle($employee);
-                                $sommeVps = $sommeVps + $employee->salaire * 0.23;
+                                $sommeVps = $sommeVps + ($employee->salaire * 0.23);
                                 $sommeMasseSalariale = $sommeMasseSalariale + $employee->payroll_mass??0;
                             @endphp
                         @empty
                             <tr>
-                                <td colSpan="3" className="text-center">No records found</td>
+                                <td colSpan="3" className="text-center">Aucun enregistrement trouvé</td>
                             </tr>
                         @endforelse
                         <tr>
-                            <td colSpan="6">Total</td>
-                            <td colspan="3">xxxxx</td>
-                            <td colspan="3">xxxxx</td>
-                            <td colspan="3">xxxxx</td>
-                            <td colspan="3">{{$sommeSalaire}}</td>
-                            <td colspan="3">{{$sommeCnss}}</td>
-                            <td colspan="3">{{$sommeIrpp}}</td>
-                            <td colspan="3">{{$sommeSalaireNet}}</td>
-                            <td colspan="3">{{$sommeVps}}</td>
-                            <td colspan="3">{{$sommeMasseSalariale}}</td>
+                            <td colSpan="11" style="height:35px;vertical-align:middle;font-weight:500;text-align:center;border:2px solid #3498db">Total</td>
+                            <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$sommeSalaire}}</td>
+                            <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$sommeCnss}}</td>
+                            <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$sommeIrpp}}</td>
+                            <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$sommeSalaireNet}}</td>
+                            <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$sommeVps}}</td>
+                            <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$sommeMasseSalariale}}</td>
+                            <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{' '}}</td>
                         </tr>
                         <tr >
-                            <td colspan="16 
-                            ">xxxxxxxx</td>
+                            <td colspan="16" style="border:2px solid #3498db;font-weight:500;height:50px;vertical-align:middle;font-size:15px;text-align:center">xxxxxxxx</td>
 
-                            <td style="text-align: end;" colspan="17">La Directrice</td>
+                            <td style="border:2px solid #3498db;font-weight:500;height:50px;font-size:15px;text-align:center;vertical-align:middle" colspan="16">La Directrice</td>
                         </tr>
                         <tr>
-                            <td colspan="16">xxxxxxxx</td>
-                            <td style="text-align:end;" colspan="17">xxxxxxxxx</td>
+                            <td colspan="16" style="height:100px;vertical-align:middle;font-size:15px;border-top:2px solid #3498db ;font-weight:500;text-align:center">xxxxxxxx</td>
+                            <td colspan="8" style="border-top:2px solid #3498db;height:100px;"></td>
+                            <td style="height:100px;vertical-align:middle;border-top:2px solid #3498db ;border-right:2px solid white;border-left:2px solid white ;font-weight:500;font-size:15px;text-align:center" colspan="2">
+                                @if($company->signature)
+                                <img src="storage/{{$company->signature}}" width="80px" height="80px" alt="" srcset="">
+                                @else
+                                <img src="image/image-null.png" alt="" srcset="">
+                                @endif
+                            </td>
+                            <td colspan="6" style="border-top:2px solid #3498db;height:100px;"></td>
                         </tr>
                         </tbody>
                     </table>

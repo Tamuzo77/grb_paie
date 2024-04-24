@@ -11,6 +11,6 @@ class CreateBank extends CreateRecord
 
     protected function getCreatedNotificationTitle(): ?string
     {
-        return "Banque enregistrée avec succès";
+        return 'Banque enregistrée avec succès';
     }
 }

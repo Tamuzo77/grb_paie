@@ -22,7 +22,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         EtatsPersonnelEvent::class => [
             DownloadEtatsPersonnelListener::class,
-        ]
+        ],
     ];
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\EmployeeResource\RelationManagers;
 
+use Closure;
+use DateTime;
 use Filament\Forms;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
@@ -20,8 +22,25 @@ class DemandeCongesRelationManager extends RelationManager
                 Forms\Components\Section::make('Demande de congés')
                     ->description('Enregsitrement des demandes de congés de l\' employé')
                     ->schema([
-                        Forms\Components\DateTimePicker::make('date_debut'),
-                        Forms\Components\DateTimePicker::make('date_fin'),
+                        Forms\Components\DateTimePicker::make('date_debut')
+                            ->required()
+                            ->date(),
+                        Forms\Components\DateTimePicker::make('date_fin')
+                            ->required()
+                            ->rules([
+                                fn (Forms\Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                                    $startDate = new DateTime($get('date_debut'));
+                                    $endDate = new DateTime($value);
+                                    $nbre_jours = date_diff($startDate, $endDate)->days;
+                                    $nbre_jours_acquis = $this->getOwnerRecord()->nb_jours_conges_acquis;
+                                    if ($nbre_jours > $nbre_jours_acquis) {
+                                        $fail(' Le nombre de jours de congés demandés est supérieur au nombre de jours de congés acquis');
+                                    }
+                                },
+                            ])
+                            ->date()
+                            ->after('date_debut'),
+                        // ->beforeOrEqual($date_debut>addDays(11)),
                         ToggleButtons::make('statut')
                             ->label('Statut')
                             ->options([
@@ -33,6 +52,7 @@ class DemandeCongesRelationManager extends RelationManager
                                 'non paye' => 'error',
                             ])
                             ->grouped()
+                            ->required()
                             ->inline(),
                     ]),
 
@@ -45,7 +65,20 @@ class DemandeCongesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('statut')
             ->columns([
-                Tables\Columns\TextColumn::make('statut'),
+                Tables\Columns\TextColumn::make('statut')
+                    ->badge(fn ($record) => match ($record->statut) {
+                        'paye' => 'success',
+                        'non paye' => 'accent',
+                    }),
+                Tables\Columns\TextColumn::make('date_debut')
+                    ->label('Date de début')
+                    ->dateTime(format: 'd F Y')
+//                    ->since()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('date_fin')
+                    ->label('Date de fin')
+                    ->dateTime(format: 'd F Y')
+                    ->sortable(),
             ])
             ->filters([
                 //

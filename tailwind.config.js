@@ -8,6 +8,7 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.jsx',
+        './vendor/andrewdwallo/filament-selectify/resources/views/**/*.blade.php',
     ],
 
     theme: {
@@ -18,5 +19,5 @@ export default {
         },
     },
 
-    plugins: [forms],
+    plugins: [forms,require("daisyui")],
 };

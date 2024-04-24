@@ -19,6 +19,6 @@ class EditDemandeConge extends EditRecord
 
     protected function getSavedNotificationTitle(): ?string
     {
-        return "Demande de congés modifié avec succès";
+        return 'Demande de congés modifié avec succès';
     }
 }

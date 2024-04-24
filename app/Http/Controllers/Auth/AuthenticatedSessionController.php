@@ -63,7 +63,7 @@ class AuthenticatedSessionController extends Controller
     public function firstLogin()
     {
         $user = auth()->user();
-       Inertia::render('Auth/FirstLogin');
+        Inertia::render('Auth/FirstLogin');
     }
 
     public function firstLoginUpdatePassword(Request $request)
@@ -83,8 +83,9 @@ class AuthenticatedSessionController extends Controller
 
         $user = auth()->user();
         $user->password = Hash::make($request->password);
+        $user->login_count = $user->login_count + 1;
         $user->save();
 
-        return redirect()->intended(RouteServiceProvider::ADMIN);
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 }

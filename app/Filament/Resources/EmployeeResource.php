@@ -6,20 +6,30 @@ use App\Actions\CalculerSalaireMensuel;
 use App\Filament\Resources\EmployeeResource\Pages;
 use App\Filament\Resources\EmployeeResource\RelationManagers\AbsencesRelationManager;
 use App\Filament\Resources\EmployeeResource\RelationManagers\DemandeCongesRelationManager;
+use App\Filament\Resources\EmployeeResource\RelationManagers\MisAPiedsRelationManager;
 use App\Models\Annee;
 use App\Models\Employee;
 use App\Models\ModePaiement;
 use App\Models\Paiement;
 use App\Models\SoldeCompte;
 use App\Models\TypePaiement;
+use App\Services\ItsService;
+use DateTime;
 use Filament\Forms;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 use PHPUnit\Exception;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
+use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 
 class EmployeeResource extends Resource
 {
@@ -30,6 +40,7 @@ class EmployeeResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $recordTitleAttribute = 'nom';
+
     protected static ?Annee $annee = null;
 
     public function __construct()
@@ -38,12 +49,16 @@ class EmployeeResource extends Resource
         self::$annee = $annee;
 
     }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Fieldset::make('Entreprise d\'appartenance')
                     ->schema([
+                        Forms\Components\TextInput::make('annee_id')
+                            ->default(self::$annee->id)
+                            ->hidden(),
                         Forms\Components\Select::make('client_id')
                             ->label('Client')
                             ->live()
@@ -90,8 +105,8 @@ class EmployeeResource extends Resource
                         Forms\Components\DatePicker::make('date_embauche')
                             ->date(),
                         Forms\Components\DatePicker::make('date_depart')
-                        ->date()
-                        ->after('date_embauche'),
+                            ->date()
+                            ->after('date_embauche'),
 
                     ])
                     ->columns(3),
@@ -101,37 +116,41 @@ class EmployeeResource extends Resource
                             ->label('Numero d\' idendentification personnelle (NPI)')
                             ->maxLength(10)
                             ->numeric()
+                            ->hidden()
                             ->default(null),
                         Forms\Components\TextInput::make('nom')
                             ->required()
-                            ->maxLength(8),
+                            ->columnSpan(2)
+                            ->autocapitalize(),
                         Forms\Components\TextInput::make('prenoms')
                             ->label('Prénoms')
                             ->required()
-                            ->maxLength(15)
-                            ->default(null),
-                        Forms\Components\TextInput::make('telephone')
-                            ->tel()
-                            ->unique()
+                            ->maxLength(15),
+                        PhoneInput::make('telephone')
+//                                    ->prefix('+229')
+                            ->label('Téléphone')
+                            ->hint('Contact téléphonique')
                             ->required()
-                            ->prefix('+229')
-                            ->maxLength(8)
+                            ->unique(ignoreRecord : true)
+//                            ->prefix('+229')
+//                            ->maxLength(8)
                             ->default(null),
                         Forms\Components\TextInput::make('email')
                             ->email()
-                            ->unique()
+                            ->unique(ignoreRecord: true)
                             ->required()
                             ->maxLength(255)
                             ->default(null),
                         Forms\Components\DatePicker::make('date_naissance')
                             ->date()
-                            ->maxDate(now()->subYears(18))
-                            ->required(),
+                            ->label('Date de naissance')
+                            ->maxDate(now()->subYears(18)),
                         Forms\Components\TextInput::make('lieu_naissance')
                             ->maxLength(20)
-                            ->required()
+                            ->label('Lieu de naissance')
                             ->default(null),
                         Forms\Components\Select::make('situation_matrimoniale')
+                            ->label('Situation matrimoniale')
                             ->options([
                                 'Célibataire' => 'Célibataire',
                                 'Mariée' => 'Mariée',
@@ -140,6 +159,7 @@ class EmployeeResource extends Resource
                             ])
                             ->default(null),
                         Forms\Components\Select::make('sexe')
+                            ->label('Sexe')
                             ->options([
                                 'M' => 'Masculin',
                                 'F' => 'Féminin',
@@ -148,7 +168,6 @@ class EmployeeResource extends Resource
                             ->default(null),
                         Forms\Components\TextInput::make('nb_enfants')
                             ->label("Nombre d'enfants")
-                            ->numeric()
                             ->integer()
                             ->default(0),
                     ]),
@@ -167,16 +186,30 @@ class EmployeeResource extends Resource
                             ->preload(),
                         Forms\Components\TextInput::make('numero_compte')
                             ->maxLength(15)
+                            ->label('Numéro de compte')
                             ->numeric()
                             ->default(null),
                         Forms\Components\TextInput::make('salaire')
+                            ->label('Salaire brut')
                             ->required()
-                            ->numeric()
+                            ->live()
+                            ->mask(RawJs::make('$money($input)'))
+                            ->stripCharacters(',')
                             ->suffix('FCFA')
-                            ->default(0),
+                            ->numeric()
+                            ->afterStateUpdated(fn (Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state))))
+                            ->default(0)
+                            ->columnSpanFull(Pages\EditEmployee::class),
                         Forms\Components\TextInput::make('tauxCnss')
                             ->numeric()
-                            ->maxLength(2)
+                            ->hiddenOn(Pages\EditEmployee::class)
+                            ->label('Taux CNSS')
+                            ->suffix('%')
+                            ->default(3.6),
+                        Forms\Components\TextInput::make('tauxIts')
+                            ->hidden()
+                            ->numeric()
+                            ->label('Taux ITS')
                             ->suffix('%')
                             ->default(0),
 
@@ -185,9 +218,11 @@ class EmployeeResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('nb_jours_conges_acquis')
                             ->numeric()
+                            ->label('Nombre de jours de congés acquis')
                             ->default(0),
                         Forms\Components\TextInput::make('solde_jours_conges_payes')
                             ->numeric()
+                            ->label('Solde de jours de congés payés')
                             ->default(0),
                     ]),
 
@@ -207,16 +242,20 @@ class EmployeeResource extends Resource
                 Tables\Columns\TextColumn::make('nom')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('prenoms')
+                    ->label('Prénoms')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('telephone')
+                PhoneColumn::make('telephone')
+                    ->label('Téléphone')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('categorie')
+                Tables\Columns\TextColumn::make('category.nom')
+                    ->label('Catégorie')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('cadre')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('salaire')
+                    ->label('Salaire brut')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -240,11 +279,11 @@ class EmployeeResource extends Resource
                     ->placeholder('Employés'),
             ])
             ->actions([
-                Tables\Actions\Action::make('cotisations')
-//                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
-                    ->icon('heroicon-o-currency-dollar')
-                    ->color('success')
-                    ->label('Cotisations'),
+                //                Tables\Actions\Action::make('cotisations')
+                ////                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
+                //                    ->icon('heroicon-o-currency-dollar')
+                //                    ->color('success')
+                //                    ->label('Cotisations'),
                 Tables\Actions\Action::make('payer')
                     ->icon('heroicon-o-banknotes')
                     ->color('tertiary')
@@ -277,7 +316,7 @@ class EmployeeResource extends Resource
                                     ->label('Type de paiement')
                                     ->required()
                                     ->searchable()
-                                    ->live(onBlur: true)
+                                    ->live()
                                     ->preload()
                                     ->options(TypePaiement::query()->where('nom', '!=', 'Salaire')->pluck('nom', 'id'))
                                     ->createOptionForm([
@@ -301,13 +340,13 @@ class EmployeeResource extends Resource
                                     ->label('Jours travaillés dans le mois')
                                     ->default(function (Employee $record) {
                                         return CalculerSalaireMensuel::nbreJoursTravaille($record);
-                                    } )
+                                    })
                                     ->required(),
                                 Forms\Components\TextInput::make('pas')
                                     ->visible(fn (Forms\Get $get) => $get('type_paiement_id') == TypePaiement::PRET)
                                     ->columnSpan(2)
                                     ->helperText('Echelonner le paiement')
-                                    ->numeric()
+                                    ->numeric(),
 
                             ])->columns(2),
                         //                        $this->getContentSection(),
@@ -374,18 +413,23 @@ class EmployeeResource extends Resource
 
                             foreach ($records as $record) {
                                 $salaire_mensuel = (new CalculerSalaireMensuel())->handle($record);
-                                $montantJoursCongesPaye = $record->demandeConges()->where('statut', 'paye')->count() * $record->solde_jours_conges_payes;
-                                $montantAvanceSalaire = $record->paiements()->where('type_paiement_id', 1)->sum('solde');
-                                Paiement::create([
+                                $startDate = new DateTime($record->demandeConges()->where('statut', 'paye')->first()?->date_debut);
+                                $endDate = new DateTime($record->demandeConges()->where('statut', 'paye')->first()?->date_fin);
+                                $montantJoursCongesPaye = date_diff($startDate, $endDate)->days * $record->solde_jours_conges_payes;
+                                $montantAvanceSalaire = $record->paiements()->where('type_paiement_id', TypePaiement::AVANCE)->sum('solde');
+                                $prets = CalculerSalaireMensuel::sommePrets($record);
+                                Paiement::updateOrCreate([
+                                    'employee_id' => $record->id,
+                                ], [
                                     'date_paiement' => now(),
                                     'employee_id' => $record->id,
                                     'statut' => 'effectue',
-                                    'solde' => $salaire_mensuel ,
+                                    'solde' => $salaire_mensuel,
                                     'mode_paiement_id' => $data['mode_paiement_id'],
                                     'type_paiement_id' => TypePaiement::SALAIRE,
                                 ]);
                                 foreach ($donnes as $donne) {
-                                    $record->soldeComptes()->firstOrCreate([
+                                    $record->soldeComptes()->updateOrCreate([
                                         'mois' => now()->format('F'),
                                         'employee_id' => $record->id,
                                         'donnees' => $donne,
@@ -396,11 +440,11 @@ class EmployeeResource extends Resource
                                             'montant' => match ($donne) {
                                                 SoldeCompte::SALAIRE_MENSUEL => $salaire_mensuel,
                                                 SoldeCompte::TREIZIEME_MOIS => 0,
-                                                SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU => $montantJoursCongesPaye ,
+                                                SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU => $montantJoursCongesPaye,
                                                 SoldeCompte::PREAVIS => 0,
                                                 SoldeCompte::AVANCE_SUR_SALAIRE => $montantAvanceSalaire,
-                                                SoldeCompte::PRET_ENTREPRISE => 0,
-                                                SoldeCompte::TOTAL => $salaire_mensuel + $montantJoursCongesPaye - $montantAvanceSalaire,
+                                                SoldeCompte::PRET_ENTREPRISE => $prets,
+                                                SoldeCompte::TOTAL => $salaire_mensuel + $montantJoursCongesPaye - $montantAvanceSalaire - $prets,
                                             },
                                         ]);
                                 }
@@ -412,7 +456,7 @@ class EmployeeResource extends Resource
                                 ->iconColor('tertiary')
                                 ->icon('heroicon-o-banknotes')
                                 ->send();
-                            $this->redirect(EmployeeResource::getUrl('salaires-paiements', ['records' => $records->pluck('id')->implode(',')]));
+                            redirect(EmployeeResource::getUrl('salaires-paiements', ['records' => $records->pluck('id')->implode(',')]));
                         })
 //                        ->url(fn($records) => EmployeeResource::getUrl('salaires-paiements', ['records' => $records]))
 //                        ->requiresConfirmation()
@@ -421,6 +465,12 @@ class EmployeeResource extends Resource
                     Tables\Actions\RestoreBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
+                ExportBulkAction::make()
+                    ->exports([
+                        ExcelExport::make()
+                            ->fromTable()
+                            ->withFilename('Liste des employés'),
+                    ]),
             ]);
     }
 
@@ -429,6 +479,7 @@ class EmployeeResource extends Resource
         return [
             DemandeCongesRelationManager::class,
             AbsencesRelationManager::class,
+            MisAPiedsRelationManager::class,
         ];
     }
 
@@ -451,5 +502,10 @@ class EmployeeResource extends Resource
     public static function getGloballySearchableAttributes(): array
     {
         return ['nom', 'prenoms'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return "$record->nom, $record->prenoms"; // TODO: Change the autogenerated stub
     }
 }
