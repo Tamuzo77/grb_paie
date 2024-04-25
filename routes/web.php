@@ -26,16 +26,16 @@ Route::get('/test', function () {
     return view('test');
 });
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->middleware(['auth', 'twofactor']);
+//Route::get('/', function () {
+//    return Inertia::render('Welcome', [
+//        'canLogin' => Route::has('login'),
+//        'canRegister' => Route::has('register'),
+//        'laravelVersion' => Application::VERSION,
+//        'phpVersion' => PHP_VERSION,
+//    ]);
+//})->middleware(['auth', 'twofactor']);
 
-Route::get('/dashboard', function () {
+Route::get('/', function () {
     if (auth()->user()->login_count == 1) {
         return redirect()->route('first');
     }
@@ -54,9 +54,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('/client', ClientController::class);
     Route::get('fichepaie', [FicheController::class, 'index']);
     Route::get('etat', [EtatController::class, 'etat']);
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+//    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 });
 
