@@ -41,6 +41,7 @@ class SoldePage extends ListRecords
     public function table(Table $table): Table
     {
         return $table
+            ->heading("Employé: " . $this->record->nom . " " . $this->record->prenoms)
             ->query(SoldeCompte::query()->where('employee_id', $this->record->id))
             ->recordUrl(null)
             ->columns([
