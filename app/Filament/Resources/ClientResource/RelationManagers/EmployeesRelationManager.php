@@ -65,6 +65,7 @@ class EmployeesRelationManager extends RelationManager
                                 '1' => 'accent',
                                 '0' => 'error',
                             ])
+                            ->default('0')
                             ->grouped()
                             ->inline(),
                         Forms\Components\DatePicker::make('date_embauche')
@@ -158,11 +159,12 @@ class EmployeesRelationManager extends RelationManager
                             ->stripCharacters(',')
                             ->suffix('FCFA')
                             ->numeric()
-                            ->columnSpanFull('edit')
+                            ->columnSpan(EmployeeResource::getPages()['edit'] ? 2 : 1)
                             ->default(0),
                         Forms\Components\TextInput::make('tauxCnss')
                             ->label('Taux CNSS')
                             ->numeric()
+                            ->columnSpanFull()
                             ->hiddenOn('edit')
 //                            ->inputMode('decimal')
                             ->suffix('%')
@@ -176,7 +178,7 @@ class EmployeesRelationManager extends RelationManager
                             ->numeric()
                             ->default(0),
                         Forms\Components\TextInput::make('solde_jours_conges_payes')
-                            ->label('Solde de jours de congés payés')
+                            ->label('Coût unitaire')
                             ->numeric()
                             ->default(0),
                     ]),
@@ -282,7 +284,21 @@ class EmployeesRelationManager extends RelationManager
                     ->form([
                         Forms\Components\Section::make('Paiements')
                             ->schema([
+                                Forms\Components\Select::make('type_paiement_id')
+                                    ->label('Type de paiement')
+                                    ->required()
+                                    ->searchable()
+                                    ->live(onBlur: true)
+                                    ->preload()
+                                    ->options(TypePaiement::query()->where('nom', '!=', 'Salaire')->pluck('nom', 'id'))
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('nom')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                                    ->optionsLimit(3),
                                 Forms\Components\TextInput::make('solde')
+                                    ->label('Montant')
                                     ->required()
                                     ->mask(RawJs::make('$money($input)'))
                                     ->stripCharacters(',')
@@ -306,19 +322,6 @@ class EmployeesRelationManager extends RelationManager
                                     })
                                     ->optionsLimit(3)
                                     ->required(),
-                                Forms\Components\Select::make('type_paiement_id')
-                                    ->label('Type de paiement')
-                                    ->required()
-                                    ->searchable()
-                                    ->live(onBlur: true)
-                                    ->preload()
-                                    ->options(TypePaiement::query()->where('nom', '!=', 'Salaire')->pluck('nom', 'id'))
-                                    ->createOptionForm([
-                                        Forms\Components\TextInput::make('nom')
-                                            ->required()
-                                            ->maxLength(255),
-                                    ])
-                                    ->optionsLimit(3),
                                 Forms\Components\DateTimePicker::make('date_debut')
                                     ->helperText('Intervalle du service payé')
                                     ->hidden()
@@ -331,12 +334,13 @@ class EmployeesRelationManager extends RelationManager
                                     ->label('Date de fin'),
                                 Forms\Components\TextInput::make('nb_jours_travaille')
                                     ->numeric()
-                                    ->label('Jours travaillés dans le mois')
+                                    ->label('Nombre de jours travaillés')
                                     ->default(function (Employee $record) {
                                         return CalculerSalaireMensuel::nbreJoursTravaille($record);
                                     })
                                     ->required(),
                                 Forms\Components\TextInput::make('pas')
+                                    ->label('Echelon')
                                     ->visible(fn (Forms\Get $get) => $get('type_paiement_id') == TypePaiement::PRET)
                                     ->columnSpan(2)
                                     ->default(1)

@@ -100,6 +100,7 @@ class EmployeeResource extends Resource
                                 '1' => 'accent',
                                 '0' => 'error',
                             ])
+                            ->default('0')
                             ->grouped()
                             ->inline(),
                         Forms\Components\DatePicker::make('date_embauche')
@@ -222,7 +223,7 @@ class EmployeeResource extends Resource
                             ->default(0),
                         Forms\Components\TextInput::make('solde_jours_conges_payes')
                             ->numeric()
-                            ->label('Solde de jours de congés payés')
+                            ->label('Coût unitaire')
                             ->default(0),
                     ]),
 
@@ -290,7 +291,21 @@ class EmployeeResource extends Resource
                     ->form([
                         Forms\Components\Section::make('Paiements')
                             ->schema([
+                                Forms\Components\Select::make('type_paiement_id')
+                                    ->label('Type de paiement')
+                                    ->required()
+                                    ->searchable()
+                                    ->live()
+                                    ->preload()
+                                    ->options(TypePaiement::query()->where('nom', '!=', 'Salaire')->pluck('nom', 'id'))
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('nom')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                                    ->optionsLimit(3),
                                 Forms\Components\TextInput::make('solde')
+                                    ->label('Montant')
                                     ->required()
                                     ->numeric()
                                     ->live(onBlur: true)
@@ -312,19 +327,6 @@ class EmployeeResource extends Resource
                                     })
                                     ->optionsLimit(3)
                                     ->required(),
-                                Forms\Components\Select::make('type_paiement_id')
-                                    ->label('Type de paiement')
-                                    ->required()
-                                    ->searchable()
-                                    ->live()
-                                    ->preload()
-                                    ->options(TypePaiement::query()->where('nom', '!=', 'Salaire')->pluck('nom', 'id'))
-                                    ->createOptionForm([
-                                        Forms\Components\TextInput::make('nom')
-                                            ->required()
-                                            ->maxLength(255),
-                                    ])
-                                    ->optionsLimit(3),
                                 Forms\Components\DateTimePicker::make('date_debut')
                                     ->helperText('Intervalle du service payé')
                                     ->hidden()
@@ -337,12 +339,13 @@ class EmployeeResource extends Resource
                                     ->label('Date de fin'),
                                 Forms\Components\TextInput::make('nb_jours_travaille')
                                     ->numeric()
-                                    ->label('Jours travaillés dans le mois')
+                                    ->label('Nombre de jours travaillés')
                                     ->default(function (Employee $record) {
                                         return CalculerSalaireMensuel::nbreJoursTravaille($record);
                                     })
                                     ->required(),
                                 Forms\Components\TextInput::make('pas')
+                                    ->label('Echelon')
                                     ->visible(fn (Forms\Get $get) => $get('type_paiement_id') == TypePaiement::PRET)
                                     ->columnSpan(2)
                                     ->helperText('Echelonner le paiement')
