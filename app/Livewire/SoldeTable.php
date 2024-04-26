@@ -10,6 +10,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Resources\Concerns\HasTabs;
 use Filament\Support\Enums\FontWeight;
+use Filament\Support\RawJs;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
@@ -49,6 +50,7 @@ class SoldeTable extends Component implements HasForms, HasTable
                     ->weight(fn ($record) => $record->donnees == SoldeCompte::TOTAL ? FontWeight::Bold : null)
                     ->size(fn ($record) => $record->donnees == SoldeCompte::TOTAL ? TextColumn\TextColumnSize::Large : null),
                 TextInputColumn::make('montant')
+                    ->mask(RawJs::make('$money($input)'))
                     ->type(fn ($record) => $record->donnees == SoldeCompte::TREIZIEME_MOIS || $record->donnees == SoldeCompte::PREAVIS ? 'select' : 'text')
                     ->afterStateUpdated(function ($record, $state) {
                         if ($record->donnees == SoldeCompte::TREIZIEME_MOIS || $record->donnees == SoldeCompte::PREAVIS) {

@@ -1,3 +1,3 @@
 <div>
-     {{__('global-filter')}}
+     {{__(' ')}}
 </div>
