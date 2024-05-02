@@ -41,6 +41,7 @@ class AdminPanelProvider extends PanelProvider
             PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
             fn () => Blade::render('@livewire(\'global-filter \')')
         );
+
         return $panel
             ->default()
             ->id('admin')

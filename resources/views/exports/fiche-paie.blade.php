@@ -147,7 +147,8 @@
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">RETENUES OBLIGATOIRES</td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">{{$retenueObligatoire == 0 ? ' ' : $retenueObligatoire}}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
+            colspan="4">{{$retenueObligatoire == 0 ? ' ' : $retenueObligatoire}}</td>
     </tr>
     <tr>
         <td style="height:35px"></td>
@@ -186,18 +187,29 @@
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="14" class='py-3'></td>
     </tr> --}}
+    <tr>
+        <td style="height:35px"></td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Salaire net 20 jours</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
+            colspan="4">{{$salaireForTwentyDays}}</td>
+    </tr>
+    <tr>
+        <td style="height:35px"></td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Mise à
+            pied: {{$misApiedsJours}} jour(s)
+        </td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
+            colspan="4">{{$misApieds}}</td>
+    </tr>
+    @if(isset($primes) && !empty($primes))
         <tr>
             <td style="height:35px"></td>
-            <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Salaire net 20 jours</td>
+            <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Primes
+            </td>
             <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-                colspan="4">{{$salaireForTwentyDays}}</td>
+                colspan="4">{{$primes}}</td>
         </tr>
-        <tr>
-            <td style="height:35px"></td>
-            <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Mise à pied: {{$misApiedsJours}} jour(s)</td>
-            <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-                colspan="4">{{$misApieds}}</td>
-        </tr>
+    @endif
     <tr class="">
         <td style="height:50px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db;background-color: #3498db;"
@@ -257,7 +269,8 @@
     </tr>
     <tr>
         <td style="height:50px;"></td>
-        <td style="height:50px;vertical-align:middle;border-top:1px solid white;border-bottom:1px solid white" colspan="11"></td>
+        <td style="height:50px;vertical-align:middle;border-top:1px solid white;border-bottom:1px solid white"
+            colspan="11"></td>
         <td style="height:100px;vertical-align:middle;border-bottom:1px solid white;border-left:1px solid white;border-top:1px solid white;font-weight:bold;text-align:center"
             colspan="3">
             @if($company->signature)

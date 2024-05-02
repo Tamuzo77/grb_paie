@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-
 use App\Models\Annee;
 use App\Models\Employee;
 use App\Models\User;
@@ -15,6 +14,7 @@ class EmployeePolicy
     use InteractsWithPageFilters;
 
     protected static ?Annee $annee = null;
+
     public function __construct()
     {
         self::$annee = Annee::whereSlug($filters['annee_id'] ?? now()->year)->firstOrFail();

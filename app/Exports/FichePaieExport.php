@@ -3,7 +3,6 @@
 namespace App\Exports;
 
 use AllowDynamicProperties;
-use App\Actions\CalculerSalaireMensuel;
 use App\Models\Company;
 use App\Models\Paiement;
 use App\Models\SoldeCompte;
@@ -54,6 +53,13 @@ use Rmunate\Utilities\SpellNumber;
             $misApiedsJours += $misAPied->nbre_jours;
             $misApieds += $misAPied->montant * $misAPied->nbre_jours;
         }
+        $primes = 0;
+        foreach ($this->paiement->employee->primes as $prime) {
+            $date = new DateTime($prime->date);
+            if ($date->format('m') == now()->format('m')) {
+                $primes += $prime->montant;
+            }
+        }
         $salaire = $this->paiement->employee->salaire * (1 - $this->paiement->employee->tauxIts - $this->paiement->employee->tauxCnss);
 
         $retenueObligatoire += $nb_jours_absences * $salaire / 20;
@@ -77,6 +83,7 @@ use Rmunate\Utilities\SpellNumber;
             'nb_jours_travaille' => $nb_jours_travaille,
             'nb_jours_conges_paye' => $nb_jours_conges_paye,
             'misApiedsJours' => $misApiedsJours,
+            'primes' => $primes,
         ]);
     }
 }

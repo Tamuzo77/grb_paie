@@ -1,5 +1,4 @@
 import React from "react";
-import '/home/esperance/Documents/GRB_paie/grb_paie/resources/css/style.css';
 export default function Fiche(){
     return (
             <section className=''>
