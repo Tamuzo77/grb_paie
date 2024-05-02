@@ -14,9 +14,22 @@ class TypePaiementSeeder extends Seeder
     public function run(): void
     {
         $typePaiements = [
-            ['nom' => 'Avance'],
-            ['nom' => 'Prêt'],
-            ['nom' => 'Salaire'],
+            [
+                'id' => TypePaiement::AVANCE,
+                'nom' => 'Avance',
+            ],
+            [
+                'id' => TypePaiement::PRET,
+                'nom' => 'Prêt',
+            ],
+            [
+                'id' => TypePaiement::SALAIRE,
+                'nom' => 'Salaire',
+            ],
+            [
+                'id' => TypePaiement::PRIMES,
+                'nom' => 'Primes',
+            ],
         ];
 
         foreach ($typePaiements as $typePaiement) {

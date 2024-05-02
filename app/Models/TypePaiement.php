@@ -30,6 +30,8 @@ class TypePaiement extends Model
 
     public const SALAIRE = 3;
 
+    public const PRIMES = 4;
+
     /**
      * @var array
      */

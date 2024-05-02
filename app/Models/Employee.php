@@ -130,6 +130,11 @@ class Employee extends Model
         return $this->hasMany('App\Models\MisAPied');
     }
 
+    public function primes()
+    {
+        return $this->hasMany('App\Models\Prime');
+    }
+
     public function sluggable(): array
     {
         return [

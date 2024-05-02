@@ -6,8 +6,6 @@ export default function ApplicationLogo(props) {
         <div>
 
                     <img className=" hidden dark:block" src="/image/logoGrb3-black.svg" alt="" />
-
-
                     <img className=" dark:hidden" src="/image/logoGrb3-white.svg" alt="" />
         </div>
 

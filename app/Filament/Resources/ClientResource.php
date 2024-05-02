@@ -12,7 +12,6 @@ use App\Models\CotisationEmploye;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Actions\Action;
-use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\Split;
 use Filament\Infolists\Components\TextEntry;
@@ -32,6 +31,7 @@ class ClientResource extends Resource
     use InteractsWithPageFilters;
 
     const string HEROICON_O_PHONE = 'heroicon-o-phone';
+
     protected static ?string $model = Client::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
@@ -322,6 +322,7 @@ class ClientResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         $record = $infolist->record;
+
         return $infolist->schema([
             Split::make([
                 Section::make('Informations Générales')
@@ -331,7 +332,7 @@ class ClientResource extends Resource
                         Action::make('edit')
                             ->label('Modifier')
                             ->url(function () use ($record) {
-                                return static::getUrl('edit', ['record' => $record ]);
+                                return static::getUrl('edit', ['record' => $record]);
                             }),
                     ])
                     ->schema([
@@ -366,12 +367,12 @@ class ClientResource extends Resource
                     ->columns(3)
                     ->columnSpan(3)
                     ->footerActions([
-                            Action::make('rc')
-                                ->visible(fn() => $record->rc)
-                                ->action(function () use ($record) {
-                                    return response()->download(storage_path("app/public/{$record->rc}"));
-                                })
-                                ->label('Télécharger Registre de commerce')
+                        Action::make('rc')
+                            ->visible(fn () => $record->rc)
+                            ->action(function () use ($record) {
+                                return response()->download(storage_path("app/public/{$record->rc}"));
+                            })
+                            ->label('Télécharger Registre de commerce'),
                     ])
                     ->collapsible(),
                 Section::make('Informations de contacts')
@@ -392,7 +393,7 @@ class ClientResource extends Resource
                     ->collapsible(),
             ])
                 ->columns(4)
-            ->columnSpanFull()
+                ->columnSpanFull(),
 
         ]);
     }

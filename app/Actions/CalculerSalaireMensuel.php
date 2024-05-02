@@ -19,13 +19,18 @@ class CalculerSalaireMensuel
             $nb_jours_absences += date_diff($startDate, $endDate)->days;
         }
         $nb_jours_travaille = 20 - $nb_jours_absences;
-
         $result = $salaire * $nb_jours_travaille / 20;
         $soustraire = 0;
         foreach ($employee->misAPieds as $misAPied) {
             $soustraire += $misAPied->montant * $misAPied->nbre_jours;
         }
         $result -= $soustraire;
+        foreach ($employee->primes as $prime) {
+            $date = new DateTime($prime->date);
+            if ($date->format('m') == now()->format('m')) {
+                $result += $prime->montant;
+            }
+        }
 
         return $result;
     }

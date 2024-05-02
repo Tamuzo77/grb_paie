@@ -7,6 +7,7 @@ use App\Filament\Resources\EmployeeResource\Pages;
 use App\Filament\Resources\EmployeeResource\RelationManagers\AbsencesRelationManager;
 use App\Filament\Resources\EmployeeResource\RelationManagers\DemandeCongesRelationManager;
 use App\Filament\Resources\EmployeeResource\RelationManagers\MisAPiedsRelationManager;
+use App\Filament\Resources\EmployeeResource\RelationManagers\PrimesRelationManager;
 use App\Models\Annee;
 use App\Models\Employee;
 use App\Models\ModePaiement;
@@ -483,6 +484,7 @@ class EmployeeResource extends Resource
             DemandeCongesRelationManager::class,
             AbsencesRelationManager::class,
             MisAPiedsRelationManager::class,
+            PrimesRelationManager::class,
         ];
     }
 
