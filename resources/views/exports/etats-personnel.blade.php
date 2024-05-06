@@ -11,7 +11,7 @@
                     <table style="border:2px solid  #3498db;">
                         <thead className='text-center bg-primary'>
                         <tr rowspan="3">
-                            <th colspan="32" style="background-color: #3498db;color: #ffffff;height:50px;vertical-align:middle;font-weight:bold;text-align:center">ETAT DES SALAIRES ET ACCESOIRES DU PERSONNEL DE {{$client->nom}}</th>
+                            <th colspan="32" style="background-color: #3498db;color: #ffffff;height:50px;vertical-align:middle;font-weight:bold;text-align:center">ETAT DES SALAIRES ET ACCESSOIRES DU PERSONNEL DE {{$client->nom}}</th>
                         </tr>
 
                         </thead>
@@ -28,7 +28,7 @@
                                 <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Salaire net </td>
                                 <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Versement patronale (VPS) </td>
                                 <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Masse salariale </td>
-                                <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Signature et PI </td>
+                                <td colspan="3" style=" text-align: center; border:2px solid #3498db;font-weight:500;height:35px;vertical-align:middle;text-align:center"> Signature </td>
                             </tr>
                         @forelse($employees as $employee)
                             @php

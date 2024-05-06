@@ -304,7 +304,7 @@ class EmployeesRelationManager extends RelationManager
                                     ->stripCharacters(',')
                                     ->suffix('FCFA')
                                     ->numeric()
-                                    ->live(onBlur: true)
+                                    ->live()
                                     ->hidden(fn (Forms\Get $get) => $get('type_paiement_id') == TypePaiement::SALAIRE)
                                     ->maxValue(function (Employee $record, Forms\Get $get) {
                                         if ($get('type_paiement_id') == TypePaiement::AVANCE) {
@@ -317,9 +317,7 @@ class EmployeesRelationManager extends RelationManager
                                     ->searchable()
                                     ->options(ModePaiement::query()->pluck('nom', 'id'))
                                     ->preload()
-                                    ->columnSpan(function (Forms\Get $get) {
-                                        return $get('type_paiement_id') == TypePaiement::SALAIRE ? 2 : 1;
-                                    })
+                                    ->columnSpan(fn(Forms\Get $get) => $get('type_paiement_id') == TypePaiement::PRET ? 1 : 2)
                                     ->optionsLimit(3)
                                     ->required(),
                                 Forms\Components\DateTimePicker::make('date_debut')
@@ -330,7 +328,7 @@ class EmployeesRelationManager extends RelationManager
                                 Forms\Components\DateTimePicker::make('date_fin')
                                     ->helperText('Intervalle du service payé')
                                     ->hidden()
-                                    ->columnSpan(2)
+                                    ->columnSpan(fn(Forms\Get $get) => $get('type_paiement_id') == TypePaiement::PRET ? 2 : 'full')
                                     ->label('Date de fin'),
                                 Forms\Components\TextInput::make('nb_jours_travaille')
                                     ->numeric()
@@ -338,13 +336,14 @@ class EmployeesRelationManager extends RelationManager
                                     ->default(function (Employee $record) {
                                         return CalculerSalaireMensuel::nbreJoursTravaille($record);
                                     })
+                                    ->hidden()
                                     ->required(),
                                 Forms\Components\TextInput::make('pas')
-                                    ->label('Echelon')
+                                    ->label('Echéance')
                                     ->visible(fn (Forms\Get $get) => $get('type_paiement_id') == TypePaiement::PRET)
-                                    ->columnSpan(2)
+//                                    ->columnSpan(2)
                                     ->default(1)
-                                    ->helperText('Echelonner le paiement')
+                                    ->helperText('Echéance de paiement')
                                     ->numeric(),
 
                             ])->columns(2),

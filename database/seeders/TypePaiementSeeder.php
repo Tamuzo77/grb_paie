@@ -26,10 +26,6 @@ class TypePaiementSeeder extends Seeder
                 'id' => TypePaiement::SALAIRE,
                 'nom' => 'Salaire',
             ],
-            [
-                'id' => TypePaiement::PRIMES,
-                'nom' => 'Primes',
-            ],
         ];
 
         foreach ($typePaiements as $typePaiement) {
