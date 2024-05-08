@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\DemandeConge;
+use App\Models\Prime;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class DemandeCongePolicy
+class PrimePolicy
 {
     use HandlesAuthorization;
 
@@ -15,15 +15,15 @@ class DemandeCongePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_demande::conge');
+        return $user->can('view_any_prime');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, DemandeConge $demandeConge): bool
+    public function view(User $user, Prime $prime): bool
     {
-        return $user->can('view_demande::conge');
+        return $user->can('view_prime');
     }
 
     /**
@@ -31,23 +31,23 @@ class DemandeCongePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_demande::conge');
+        return $user->can('create_prime');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, DemandeConge $demandeConge): bool
+    public function update(User $user, Prime $prime): bool
     {
-        return $user->can('update_demande::conge');
+        return $user->can('update_prime');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, DemandeConge $demandeConge): bool
+    public function delete(User $user, Prime $prime): bool
     {
-        return $user->can('delete_demande::conge');
+        return $user->can('delete_prime');
     }
 
     /**
@@ -55,15 +55,15 @@ class DemandeCongePolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_demande::conge');
+        return $user->can('delete_any_prime');
     }
 
     /**
      * Determine whether the user can permanently delete.
      */
-    public function forceDelete(User $user, DemandeConge $demandeConge): bool
+    public function forceDelete(User $user, Prime $prime): bool
     {
-        return $user->can('force_delete_demande::conge');
+        return $user->can('force_delete_prime');
     }
 
     /**
@@ -71,15 +71,15 @@ class DemandeCongePolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_demande::conge');
+        return $user->can('force_delete_any_prime');
     }
 
     /**
      * Determine whether the user can restore.
      */
-    public function restore(User $user, DemandeConge $demandeConge): bool
+    public function restore(User $user, Prime $prime): bool
     {
-        return $user->can('restore_demande::conge');
+        return $user->can('restore_prime');
     }
 
     /**
@@ -87,15 +87,15 @@ class DemandeCongePolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_demande::conge');
+        return $user->can('restore_any_prime');
     }
 
     /**
      * Determine whether the user can replicate.
      */
-    public function replicate(User $user, DemandeConge $demandeConge): bool
+    public function replicate(User $user, Prime $prime): bool
     {
-        return $user->can('replicate_demande::conge');
+        return $user->can('replicate_prime');
     }
 
     /**
@@ -103,6 +103,6 @@ class DemandeCongePolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_demande::conge');
+        return $user->can('reorder_prime');
     }
 }

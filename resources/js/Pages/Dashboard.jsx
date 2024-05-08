@@ -32,7 +32,6 @@
 //     );
 // }
 
-
 import React from "react";
 import { Link } from "@inertiajs/inertia-react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
@@ -42,11 +41,14 @@ export default function BienvenuePage({ auth }) {
         <div className="h-screen flex flex-col justify-center items-center dark:bg-gray-900 bg-slate-50">
             <div className="text-center">
                 <div className="flex justify-center items-center my-16">
-                <ApplicationLogo className="" />
+                    <ApplicationLogo className="" />
                 </div>
-                <h1 className="text-4xl font-bold mb-2 dark:text-cyan-600 text-blue-800">Bienvenue, {auth.user.name} !</h1>
+                <h1 className="text-4xl font-bold mb-2 dark:text-cyan-600 text-blue-800">
+                    Bienvenue, {auth.user.name} !
+                </h1>
                 <p className="text-lg mb-8 text-slate-800 dark:text-slate-400">
-                    Nous sommes ravis de vous voir. Que voulez-vous faire ensuite ?
+                    Nous sommes ravis de vous voir. Que voulez-vous faire
+                    ensuite ?
                 </p>
 
                 <div className="space-y-4">
@@ -57,7 +59,7 @@ export default function BienvenuePage({ auth }) {
                         Aller au Dashboard
                     </a>
                     <Link
-                        href={route('logout')}
+                        href={route("logout")}
                         method="post"
                         as="button"
                         className="w-full block py-2 px-4 font-bold text-lg bg-red-500 text-white rounded hover:bg-red-600 transition"

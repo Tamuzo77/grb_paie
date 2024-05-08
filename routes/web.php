@@ -26,21 +26,21 @@ Route::get('/test', function () {
     return view('test');
 });
 
-//Route::get('/', function () {
-//    return Inertia::render('Welcome', [
-//        'canLogin' => Route::has('login'),
-//        'canRegister' => Route::has('register'),
-//        'laravelVersion' => Application::VERSION,
-//        'phpVersion' => PHP_VERSION,
-//    ]);
-//})->middleware(['auth', 'twofactor']);
+Route::get('/', function () {
+   return Inertia::render('Welcome', [
+       'canLogin' => Route::has('login'),
+       'canRegister' => Route::has('register'),
+       'laravelVersion' => Application::VERSION,
+       'phpVersion' => PHP_VERSION,
+   ]);
+})->middleware(['auth', 'twofactor']);
 
 Route::get('/', function () {
     if (auth()->user()->login_count == 1) {
         return redirect()->route('first');
     }
 
-    return Inertia::render('Dashboard');
+    return Inertia::render('/admin');
 })->middleware(['auth', 'twofactor'])->name('dashboard');
 Route::get('/first', function () {
     $user = auth()->user();
