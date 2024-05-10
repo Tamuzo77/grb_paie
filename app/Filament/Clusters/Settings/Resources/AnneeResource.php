@@ -111,7 +111,7 @@ class AnneeResource extends Resource
                 Tables\Actions\EditAction::make(),
                 //Tables\Actions\DeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
-                //\Actions\ForceDeleteAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
