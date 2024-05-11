@@ -24,11 +24,11 @@ use Rmunate\Utilities\SpellNumber;
     public function view(): View
     {
         $donnes = [SoldeCompte::SALAIRE_MENSUEL, SoldeCompte::TREIZIEME_MOIS, SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU, SoldeCompte::PREAVIS, SoldeCompte::AVANCE_SUR_SALAIRE, SoldeCompte::PRET_ENTREPRISE, SoldeCompte::TOTAL];
-        $solde = SoldeCompte::where('employee_id', $this->paiement->employee_id)->where('mois', now()->format('F'));
-        $salaireMensuel = SoldeCompte::where('employee_id', $this->paiement->employee_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->get('montant');
-        $montantAvance = SoldeCompte::where('employee_id', $this->paiement->employee_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::AVANCE_SUR_SALAIRE)->get('montant');
-        $montantPrete = SoldeCompte::where('employee_id', $this->paiement->employee_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::PRET_ENTREPRISE)->get('montant');
-        $montantConges = SoldeCompte::where('employee_id', $this->paiement->employee_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU)->get('montant');
+        $solde = SoldeCompte::where('contrat_id', $this->paiement->contrat_id)->where('mois', now()->format('F'));
+        $salaireMensuel = SoldeCompte::where('contrat_id', $this->paiement->contrat_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->get('montant');
+        $montantAvance = SoldeCompte::where('contrat_id', $this->paiement->contrat_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::AVANCE_SUR_SALAIRE)->get('montant');
+        $montantPrete = SoldeCompte::where('contrat_id', $this->paiement->contrat_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::PRET_ENTREPRISE)->get('montant');
+        $montantConges = SoldeCompte::where('contrat_id', $this->paiement->contrat_id)->where('mois', now()->format('F'))->where('donnees', \App\Models\SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU)->get('montant');
         $totalNet = $solde->where('donnees', \App\Models\SoldeCompte::TOTAL)->get('montant');
         $montantLettre = SpellNumber::value($totalNet[0]['montant'])->locale('fr')->toLetters();
         $retenueObligatoire = 0;
@@ -60,8 +60,7 @@ use Rmunate\Utilities\SpellNumber;
                 $primes += $prime->montant;
             }
         }
-        $salaire = $this->paiement->employee->salaire * (1 - $this->paiement->employee->tauxIts - $this->paiement->employee->tauxCnss);
-
+        $salaire = $this->paiement->employee->salaire_brut * (1 - $this->paiement->employee->tauxIts - $this->paiement->employee->client->tauxCnss);
         $retenueObligatoire += $nb_jours_absences * $salaire / 20;
         $retenueObligatoire += $montantPrete[0]['montant'];
 

@@ -16,6 +16,8 @@ class CreateClient extends CreateRecord
         $annee = Annee::latest()->first()->get();
         $data['annee_id'] = $annee[0]['id'] ?? 1;
 
+        $data['prenom_donneur_ordre'] = $data['prenom_donneur_ordre'] ?? $data['nom_donneur_ordre'];
+
         return $data;
     }
 

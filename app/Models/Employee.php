@@ -42,6 +42,7 @@ use Wildside\Userstamps\Userstamps;
  * @property int $updated_by
  * @property int $deleted_by
  * @property string $deleted_at
+ * @property string $full_name
  * @property Fonction[] $fonctions
  * @property Annee $annee
  * @property Client $client
@@ -135,11 +136,19 @@ class Employee extends Model
         return $this->hasMany('App\Models\Prime');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function contrats()
+    {
+        return $this->hasMany('App\Models\Contrat');
+    }
+
     public function sluggable(): array
     {
         return [
             'slug' => [
-                'source' => ['nom', 'prenoms', 'client.nom'],
+                'source' => ['nom', 'prenoms'],
             ],
         ];
     }
@@ -157,6 +166,11 @@ class Employee extends Model
             },
         );
 
+    }
+
+    public function getFullName()
+    {
+        return $this->nom . ' ' . $this->prenoms;
     }
 
     public function tauxCnss(): Attribute

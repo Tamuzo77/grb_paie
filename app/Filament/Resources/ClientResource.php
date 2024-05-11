@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Actions\GenereCode;
 use App\Events\EtatsPersonnelEvent;
 use App\Filament\Resources\ClientResource\Pages;
 use App\Filament\Resources\ClientResource\RelationManagers\EmployeesRelationManager;
@@ -60,6 +61,7 @@ class ClientResource extends Resource
                                     ->required()
                                     ->unique(ignoreRecord: true)
                                     ->alphaNum(true)
+                                    ->default((new GenereCode())->handle(Client::class, 'C'))
                                     ->minLength(6)
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('nom')
@@ -76,27 +78,22 @@ class ClientResource extends Resource
                                     ->label('Téléphone')
                                     ->hint('Contact téléphonique')
                                     ->required()
-                                    ->unique(ignoreRecord : true),
-                                //                                    ->maxLength(8),
+                                    ->unique(ignoreRecord: true),
+                                Forms\Components\TextInput::make('email')
+                                    ->email()
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->maxLength(255),
+
+                                Forms\Components\TextInput::make('nom_donneur_ordre')
+                                    ->label('Nom & Prénoms du donneur ordre')
+                                    ->columns(1)
+                                    ->required()
+                                    ->maxLength(255),
                                 Forms\Components\TextInput::make('ifu')
                                     ->placeholder('Ex: 1234567890123')
                                     ->helperText('Numéro IFU de l\'entreprise')
                                     ->label('Numéro IFU'),
-                                Forms\Components\FileUpload::make('rc')
-                                    ->label('Registre de commerce')
-                                    ->previewable(true)
-                                    ->directory('rc')
-                                    ->preserveFilenames()
-                                    ->downloadable(true)
-//                                    ->required()
-                                    ->acceptedFileTypes(['image/*', 'application/pdf'])
-                                    ->hint('Fichier PDF ou image'),
-                                //                                    ->maxFiles(1),
-                                Forms\Components\TextInput::make('email')
-                                    ->email()
-                                    ->required()
-                                    ->unique(ignoreRecord : true)
-                                    ->maxLength(255),
                                 Forms\Components\Select::make('bank_id')
                                     ->label('Banque')
                                     ->live()
@@ -105,16 +102,30 @@ class ClientResource extends Resource
                                     ->required()
                                     ->optionsLimit(5)
                                     ->preload(),
-                                Forms\Components\TextInput::make('nom_donneur_ordre')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('prenom_donneur_ordre')
-                                    ->required()
-                                    ->label('Prénoms donneur ordre')
-                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('tauxCnss')
+                                    ->label('Taux CNSS')
+                                    ->hint('Taux  CNSS')
+                                    ->numeric()
+                                    ->placeholder(3.6)
+                                    ->suffix('%')
+                                    ->default(3.6)
+                                    ->columns(1)
+                                    ->required(),
+                                Forms\Components\FileUpload::make('rc')
+                                    ->label('Registre de commerce')
+                                    ->previewable(true)
+                                    ->directory('rc')
+                                    ->preserveFilenames()
+                                    ->columnSpan('full')
+                                    ->downloadable(true)
+//                                    ->required()
+                                    ->acceptedFileTypes(['image/*', 'application/pdf'])
+                                    ->hint('Fichier PDF ou image'),
+                                //                                    ->maxFiles(1),
                             ])
+                            ->columns(3)
                             ->grow(),
-                    ]),
+                    ])
 
             ]);
     }
@@ -147,7 +158,7 @@ class ClientResource extends Resource
                     ->label('Corbeille')
                     ->placeholder('Clients'),
             ])
-            ->recordUrl(fn ($record) => static::getUrl('view', ['record' => $record]))
+            ->recordUrl(fn($record) => static::getUrl('view', ['record' => $record]))
             ->actions([
                 Tables\Actions\Action::make('cotisations')
                     ->action(function ($record) {
@@ -197,8 +208,8 @@ class ClientResource extends Resource
                         }
 
                         foreach ($record->employees as $employee) {
-                            $sommeSalaireBrut += $employee->salaire;
-                            $sommeCotisations += $employee->salaire * 0.23;
+                            $sommeSalaireBrut += $employee->salaire_brut;
+                            $sommeCotisations += $employee->salaire_brut * 0.23;
                         }
                         $currentMonth = now()->format('F');
                         CotisationClient::updateOrCreate([
@@ -261,18 +272,21 @@ class ClientResource extends Resource
                             $sommeCnss = 0;
                             $sommeIts = 0;
                             $sommeTotal = 0;
-                            foreach ($record->employees as $employee) {
-                                $cnss = $employee->tauxCnss ? $employee->salaire * $employee->tauxCnss : $employee->salaire * 0.036;
-                                $its = $employee->tauxIts ? $employee->salaire * $employee->tauxIts : $employee->salaire * 0.05;
+                            foreach ($record->employees()->where(fn($query) => $query->where('date_debut', '<=', now())
+                                ->where('date_fin', '>=', now())
+                                ->where('statut', 'En cours')
+                                ->orWhereNull('date_fin'))->get() as $employee) {
+                                $cnss = $record->tauxCnss ? $employee->salaire_brut * $record->tauxCnss : $employee->salaire_brut * 0.036;
+                                $its = $employee->tauxIts ? $employee->salaire_brut * $employee->tauxIts : $employee->salaire_brut * 0.05;
                                 $total = $cnss + $its;
                                 CotisationEmploye::updateOrCreate([
                                     'client_id' => $record->id,
-                                    'agent' => "$employee->nom $employee->prenoms",
+                                    'agent' => "{$employee->employee->nom} {$employee->employee->prenoms}",
                                     'annee_id' => self::$annee->id,
                                     'mois' => now()->format('F'),
                                 ], [
                                     'client_id' => $record->id,
-                                    'agent' => "$employee->nom $employee->prenoms",
+                                    'agent' => "{$employee->employee->nom} {$employee->employee->prenoms}",
                                     'annee_id' => self::$annee->id,
                                     'cnss' => $cnss,
                                     'its' => $its,
@@ -368,7 +382,7 @@ class ClientResource extends Resource
                     ->columnSpan(3)
                     ->footerActions([
                         Action::make('rc')
-                            ->visible(fn () => $record->rc)
+                            ->visible(fn() => $record->rc)
                             ->action(function () use ($record) {
                                 return response()->download(storage_path("app/public/{$record->rc}"));
                             })

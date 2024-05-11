@@ -29,21 +29,21 @@ class DemandeConge extends Model
     /**
      * @var array
      */
-    protected $fillable = ['employee_id', 'slug', 'date_debut', 'date_fin', 'statut', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
+    protected $fillable = ['employee_id', 'contrat_id', 'slug', 'date_debut', 'date_fin', 'statut', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function employee()
     {
-        return $this->belongsTo('App\Models\Employee');
+        return $this->belongsTo('App\Models\Contrat', 'contrat_id');
     }
 
     public function sluggable(): array
     {
         return [
             'slug' => [
-                'source' => ['employee.nom', 'employee.prenoms', 'date_debut', 'date_fin'],
+                'source' => ['employee.employee.nom', 'employee.employee.prenoms', 'date_debut', 'date_fin'],
             ],
         ];
     }

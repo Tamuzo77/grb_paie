@@ -107,7 +107,7 @@ class MisAPiedResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('employee.nom')
+                Tables\Columns\TextColumn::make('employee.employee.nom')
                     ->label('Employé')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nom'),

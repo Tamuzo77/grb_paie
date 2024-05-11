@@ -73,30 +73,50 @@
         @php
             $nbJoursCongesJouis = 0;
             $nbJoursCongesDus = 0;
-            $a = $employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * 0.036;
-            $b = $employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * $employee->tauxIts;
-            $c = $a + $b;
+            $nbJoursCongesAcquis = 0;
+            $a = 0;
+            $b = 0;
+            $c = 0;
+            $misAPiedConservatoire = 0;
+            $misAPiedDisciplinaire = 0;
+            $salaireBrutTotal = 0;
+            $salaireNetTotal = 0;
 
-            $totalSalaireAnnuelBrut += $employee->salaire * 12;
-            $totalSalaireAnnuelNet += $employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant');
-            $totalA += $a;
-            $totalB += $b;
-            $totalC += $c;
+//            $a = $employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * 0.036;
+            foreach ($employee->contrats as $contrat) {
+                $a += $contrat->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * $contrat->client->tauxCnss;
+                $b += $contrat->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * $contrat->client->tauxIts;
+                $c += $a + $b;
+                $salaireBrutTotal += $contrat->salaire_brut;
+                $salaireNetTotal += $contrat->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant');
+                $totalSalaireAnnuelNet += $contrat->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant');
 
-            $misAPiedConservatoire = $employee->misAPieds->where('type', \App\Models\MisAPied::CONSERVATOIRE)->sum('montant');
-            $misAPiedDisciplinaire = $employee->misAPieds->where('type', \App\Models\MisAPied::DISCIPLINAIRE)->sum('montant');
-            $totalMisAPiedConservatoire += $misAPiedConservatoire;
-            $totalMisAPiedDisciplinaire += $misAPiedDisciplinaire;
+                         $misAPiedConservatoire += $contrat->misAPieds->where('type', \App\Models\MisAPied::CONSERVATOIRE)->sum('montant');
+            $misAPiedDisciplinaire += $contrat->misAPieds->where('type', \App\Models\MisAPied::DISCIPLINAIRE)->sum('montant');
+            $nbJoursCongesAcquis += $contrat->nb_jours_conges_acquis;
 
-            $totalJoursCongesAcquis += $employee->nb_jours_conges_acquis;
-
-             foreach ($employee->demandeConges as $demandeConge) {
+             foreach ($contrat->demandeConges as $demandeConge) {
                 $start = new DateTime($demandeConge->date_debut);
                 $end = new DateTime($demandeConge->date_fin);
                 $nbJoursCongesJouis += $start->diff($end)->days;
              }
 
-            $nbJoursCongesDus += max(0, $employee->nb_jours_conges_acquis - $nbJoursCongesJouis);
+            }
+
+            $totalSalaireAnnuelBrut += $employee->contrats()->sum('salaire_brut');
+//            $totalSalaireAnnuelNet += $employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant');
+
+            $totalA += $a;
+            $totalB += $b;
+            $totalC += $c;
+
+
+            $totalMisAPiedConservatoire += $misAPiedConservatoire;
+            $totalMisAPiedDisciplinaire += $misAPiedDisciplinaire;
+
+
+            $nbJoursCongesDus += $nbJoursCongesAcquis - $nbJoursCongesJouis;
+            $totalJoursCongesAcquis += $nbJoursCongesAcquis;
             $totalJoursCongesJouis += $nbJoursCongesJouis;
             $totalJoursCongesDus += $nbJoursCongesDus;
         @endphp
@@ -106,10 +126,10 @@
                 {{$employee->nom . ' ' . $employee->prenoms}}
             </td>
             <td colspan="3"
-                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$employee->salaire * 12}}
+                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$salaireBrutTotal}}
             </td>
             <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">
-                {{$employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant')}}
+                {{$salaireNetTotal}}
             </td>
             <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">
                 {{$a}}
@@ -120,7 +140,7 @@
             <td colspan="3"
                 style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$c}}</td>
             <td colspan="2"
-                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$employee->nb_jours_conges_acquis}}</td>
+                style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$nbJoursCongesAcquis}}</td>
             <td colspan="2"
                 style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$nbJoursCongesJouis}}</td>
             <td colspan="2"
@@ -130,7 +150,8 @@
             <td colspan="2"
                 style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{$misAPiedDisciplinaire}}</td>
 
-            <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">35555
+            <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">
+                {{$employee->contrats()->latest()->first()->statut }}
             </td>
         </tr>
     @endforeach

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PaiementResource\Pages;
 use App\Models\Annee;
 use App\Models\Client;
+use App\Models\Contrat;
 use App\Models\Employee;
 use App\Models\Paiement;
 use App\Models\TypePaiement;
@@ -124,9 +125,9 @@ class PaiementResource extends Resource
                 Tables\Columns\TextColumn::make('employee.client.nom')
                     ->searchable(isIndividual: true, isGlobal: true)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('employee.nom')
+                Tables\Columns\TextColumn::make('employee.employee.nom')
                     ->label('Employé')
-                    ->description(fn ($record) => $record->employee->prenoms, position: 'above')
+                    ->description(fn ($record) => $record->employee->employee->prenoms, position: 'above')
                     ->separator()
                     ->searchable()
                     ->sortable(),
@@ -184,7 +185,7 @@ class PaiementResource extends Resource
                     ->color(Color::Teal)
                     ->label('Voir Solde')
                     ->url(function (Paiement $paiement) {
-                        $employee = Employee::where('id', $paiement->employee_id)->firstOrFail();
+                        $employee = Contrat::where('id', $paiement->contrat_id)->firstOrFail();
 
                         return EmployeeResource::getUrl('solde', ['record' => $employee]);
                     })

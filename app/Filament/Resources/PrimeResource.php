@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PrimeResource\Pages;
 use App\Models\Client;
+use App\Models\Contrat;
 use App\Models\Employee;
 use App\Models\Prime;
 use Filament\Forms;
@@ -43,23 +44,23 @@ class PrimeResource extends Resource
                             ->label('Client')
                             ->dehydrated(false)
                             ->options(Client::pluck('nom', 'id')),
-                        Forms\Components\Select::make('employee_id')
+                        Forms\Components\Select::make('contrat_id')
                             ->label('Employé')
                             ->placeholder(fn (Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
                             ->hintColor('accent')
                             ->selectablePlaceholder(fn (Forms\Get $get): bool => empty($get('client_id')))
                             ->options(function (?Prime $record, Forms\Get $get, Forms\Set $set) {
-                                $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
+                                $employees = Contrat::where('client_id', $get('client_id'))->pluck('employee_id', 'id');
                                 if (! is_null($record) && $get('client_id') == null) {
                                     $set('client_id', $record->employee->client_id);
-                                    $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
+                                    $employees = Contrat::where('client_id', $get('client_id'))->pluck('employee_id', 'id');
                                     $set('client_id', array_key_first($employees->toArray()));
                                 }
 
                                 return $employees;
                             })
 //                            ->relationship('employee', modifyQueryUsing: fn(Builder $query) => $query->orderBy('nom')->orderBy('prenoms'))
-                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom} {$record->prenoms}")
+                            ->getOptionLabelFromRecordUsing(fn (Model $record) => " Bla bla")
                             ->hintIcon('heroicon-o-user-group')
                             ->searchable(['nom', 'prenoms'])
                             ->required()
@@ -82,7 +83,7 @@ class PrimeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('employee.nom')
+                Tables\Columns\TextColumn::make('employee.employee.nom')
                     ->label('Employé')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nom'),

@@ -32,29 +32,29 @@
                             </tr>
                         @forelse($employees as $employee)
                             @php
-                            $cnss = $employee->tauxCnss ? $employee->salaire * $employee->tauxCnss : $employee->salaire * 0.036;
-                            $irpp = $employee->salaire * $employee->tauxIts;
+                            $cnss = $client->tauxCnss ? $employee->salaire_brut * $client->tauxCnss : $employee->salaire_brut * 0.036;
+                            $irpp = $employee->salaire_brut * $employee->tauxIts;
  @endphp
                             <tr>
                                 <td colspan="2" style="height:35px;vertical-align:middle;text-align:center;border:2px solid #3498db">{{ $loop->iteration }}</td>
-                                <td colspan="3" style="height:35px;vertical-align:middle;font-weight:500;text-align:center;border:2px solid #3498db">{{ $employee->nom . ' '. $employee->prenoms }}</td>
-                                <td colspan="3" style="height:35px;vertical-align:middle;font-weight:500;text-align:center;border:2px solid #3498db">{{ $employee->fonctions()->first()?->nom }}</td>
-                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->nb_enfants }}</td>
-                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->salaire }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;font-weight:500;text-align:center;border:2px solid #3498db">{{ $employee->employee->nom . ' '. $employee->employee->prenoms }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;font-weight:500;text-align:center;border:2px solid #3498db">{{ $employee->fonction->nom }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->employee->nb_enfants }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->salaire_brut }}</td>
                                 <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $cnss }}</td>
                                 <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $irpp }}</td>
                                 <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ (new \App\Actions\CalculerSalaireMensuel)->handle($employee)}}</td>
-                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->salaire * 0.23 }}</td>
+                                <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->salaire_brut * 0.23 }}</td>
                                 <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->payroll_mass?? 0 }}</td>
                                 <td colspan="3" style="height:35px;vertical-align:middle;text-align:center;text-align:center;border:2px solid #3498db">{{ $employee->signature }}</td>
                             </tr>
                             @php
 
-                                $sommeSalaire = $sommeSalaire + $employee->salaire;
+                                $sommeSalaire = $sommeSalaire + $employee->salaire_brut;
                                 $sommeCnss = $sommeCnss + $cnss;
                                 $sommeIrpp = $sommeIrpp + $irpp;
                                 $sommeSalaireNet = $sommeSalaireNet + (new \App\Actions\CalculerSalaireMensuel)->handle($employee);
-                                $sommeVps = $sommeVps + ($employee->salaire * 0.23);
+                                $sommeVps = $sommeVps + ($employee->salaire_brut * 0.23);
                                 $sommeMasseSalariale = $sommeMasseSalariale + $employee->payroll_mass??0;
                             @endphp
                         @empty

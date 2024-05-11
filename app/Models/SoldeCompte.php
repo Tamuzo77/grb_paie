@@ -10,6 +10,7 @@ use Wildside\Userstamps\Userstamps;
 /**
  * @property int $id
  * @property int $employee_id
+ * @property int $contrat_id
  * @property string $mois
  * @property string $slug
  * @property string $donnees
@@ -29,7 +30,7 @@ class SoldeCompte extends Model
     /**
      * @var array
      */
-    protected $fillable = ['employee_id', 'mois', 'slug', 'donnees', 'montant', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
+    protected $fillable = ['employee_id', 'contrat_id', 'mois', 'slug', 'donnees', 'montant', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
 
     public const SALAIRE_MENSUEL = 'Salaire mensuel';
 
@@ -50,14 +51,14 @@ class SoldeCompte extends Model
      */
     public function employee()
     {
-        return $this->belongsTo('App\Models\Employee');
+        return $this->belongsTo('App\Models\Contrat', 'contrat_id');
     }
 
     public function sluggable(): array
     {
         return [
             'slug' => [
-                'source' => ['employee.nom', 'mois'],
+                'source' => ['employee.employee.nom', 'mois'],
             ],
         ];
     }

@@ -110,9 +110,9 @@ class DemandeCongeResource extends Resource
                 Tables\Columns\TextColumn::make('employee.client.nom')
                     ->searchable(isIndividual: true)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('employee.nom')
+                Tables\Columns\TextColumn::make('employee.employee.nom')
                     ->label('Employé')
-                    ->description(fn ($record) => $record->employee->prenoms)
+                    ->description(fn ($record) => $record->employee->employee->prenoms)
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_debut')

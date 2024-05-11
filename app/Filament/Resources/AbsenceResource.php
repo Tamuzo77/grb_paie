@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\AbsenceResource\Pages;
 use App\Models\Absence;
 use App\Models\Client;
+use App\Models\Contrat;
 use App\Models\Employee;
 use Filament\Forms;
 use Filament\Forms\Components\ToggleButtons;
@@ -47,17 +48,17 @@ class AbsenceResource extends Resource
                             ->hintColor('accent')
                             ->selectablePlaceholder(fn (Forms\Get $get): bool => empty($get('client_id')))
                             ->options(function (?Absence $record, Forms\Get $get, Forms\Set $set) {
-                                $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
+                                $employees = Contrat::where('client_id', $get('client_id'))->with(['employee'])->pluck('employee_id', 'id');
                                 if (! is_null($record) && $get('client_id') == null) {
                                     $set('client_id', $record->employee->client_id);
-                                    $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
+                                    $employees = Contrat::where('client_id', $get('client_id'))->with('employee')->pluck('employee_id', 'id');
                                     $set('client_id', array_key_first($employees->toArray()));
                                 }
 
                                 return $employees;
                             })
 //                            ->relationship('employee', modifyQueryUsing: fn(Builder $query) => $query->orderBy('nom')->orderBy('prenoms'))
-                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom} {$record->prenoms}")
+                            ->getOptionLabelUsing(fn (Model $record) => "{$record->employee->nom} {$record->employee->prenoms}")
                             ->hintIcon('heroicon-o-user-group')
                             ->searchable(['nom', 'prenoms'])
                             ->required()
@@ -97,9 +98,9 @@ class AbsenceResource extends Resource
                     ->searchable(isIndividual: true)
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('employee.nom')
+                Tables\Columns\TextColumn::make('employee.employee.nom')
                     ->label('Employé')
-                    ->description(fn ($record) => $record->employee->prenoms)
+                    ->description(fn ($record) => $record->employee->employee->prenoms)
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_debut')

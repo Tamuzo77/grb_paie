@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\EmployeeResource\Pages;
 
 use App\Filament\Resources\EmployeeResource;
+use App\Models\Contrat;
 use App\Models\Employee;
 use App\Models\SoldeCompte;
 use Filament\Notifications\Notification;
@@ -26,8 +27,7 @@ class SoldePage extends ListRecords
 
     public function mount(): void
     {
-        $this->record = Employee::whereSlug(request('record'))->first();
-
+        $this->record = Contrat::whereSlug(request('record'))->first();
     }
 
     public function getBreadcrumb(): ?string
@@ -41,8 +41,8 @@ class SoldePage extends ListRecords
     public function table(Table $table): Table
     {
         return $table
-            ->heading('Employé: '.$this->record->nom.' '.$this->record->prenoms)
-            ->query(SoldeCompte::query()->where('employee_id', $this->record->id))
+            ->heading('Employé: '.$this->record->employee->nom.' '.$this->record->employee->prenoms)
+            ->query(SoldeCompte::query()->where('contrat_id', $this->record->id))
             ->recordUrl(null)
             ->columns([
                 TextColumn::make('donnees')
