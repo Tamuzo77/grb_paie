@@ -105,7 +105,7 @@ class FacturationResource extends Resource
                 Tables\Actions\Action::make('details')
                     ->label('Détails')
                     ->action(function (Facturation $record) {
-                        return Pages\EditFacturation::route($record);
+                        redirect()->route('download-facturation', $record->id);
                     })
                     ->icon('heroicon-o-information-circle'),
                 Tables\Actions\ActionGroup::make([

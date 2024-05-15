@@ -71,5 +71,5 @@ Route::get('/download-soldes/{records}', [AdminController::class, 'downloadSolde
 Route::get('/download-cotisations-employes/{records}', [AdminController::class, 'downloadCotisationsEmployes'])->name('download-cotisations-employes');
 Route::get('/download-cotisations-clients/{records}', [AdminController::class, 'downloadCotisationsClients'])->name('download-cotisations-clients');
 Route::get('/download-bilan-annuel/{record}', [AdminController::class, 'downloadBilanAnnuel'])->name('download-bilan-annuel');
-Route::get('/download-details-facturation/{record}', [AdminController::class, 'downloadDetailsFacturation'])->name('download-bilan-annuel');
+Route::get('/download-details-facturation/{record}', [AdminController::class, 'downloadDetailsFacturation'])->name('download-facturation');
 require __DIR__.'/auth.php';

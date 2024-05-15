@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,6 +14,8 @@ use Wildside\Userstamps\Userstamps;
  * @property string $slug
  * @property string $date_debut
  * @property string $date_fin
+ * @property integer $montant_facture
+ * @property string $periode
  * @property integer $taux
  * @property integer $total_salaire_brut
  * @property string $created_at
@@ -46,5 +49,10 @@ class Facturation extends Model
                 'source' => ['client.nom', 'date_debut', 'date_fin'],
             ],
         ];
+    }
+
+    public function getPeriode()
+    {
+        return Carbon::make($this->date_debut)->format('d/m/Y') . ' - ' . Carbon::make($this->date_fin)->format('d/m/Y');
     }
 }
