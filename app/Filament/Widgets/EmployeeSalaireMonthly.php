@@ -16,7 +16,7 @@ class EmployeeSalaireMonthly extends ApexChartWidget
 
     protected static ?int $sort = 2;
 
-    protected int|string|array $columnSpan = 'full';
+//    protected int|string|array $columnSpan = 'full';
 
     /**
      * Chart Id
@@ -34,7 +34,7 @@ class EmployeeSalaireMonthly extends ApexChartWidget
      */
     protected function getOptions(): array
     {
-        $annee = Annee::whereSlug($this->filters['annee_id'] ?? now()->year)->firstOrFail();
+        $annee = getAnnee();
         $startDate = Carbon::parse("$annee->nom-01-01");
         $endDate = Carbon::parse("$annee->nom-12-31");
         $data = Trend::model(Paiement::class)

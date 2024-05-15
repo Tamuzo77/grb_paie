@@ -11,26 +11,26 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
 /**
- * @property integer $id
- * @property integer $annee_id
- * @property integer $client_id
- * @property integer $employee_id
- * @property integer $fonction_id
+ * @property int $id
+ * @property int $annee_id
+ * @property int $client_id
+ * @property int $employee_id
+ * @property int $fonction_id
  * @property string $slug
  * @property string $date_signature
  * @property string $date_debut
  * @property string $date_fin
  * @property string $statut
- * @property integer $salaire_brut
- * @property integer $nb_jours_conges_acquis
- * @property integer $solde_jours_conges_payes
- * @property integer $tauxIts
- * @property boolean $est_cadre
+ * @property int $salaire_brut
+ * @property int $nb_jours_conges_acquis
+ * @property int $solde_jours_conges_payes
+ * @property int $tauxIts
+ * @property bool $est_cadre
  * @property string $created_at
  * @property string $updated_at
- * @property integer $created_by
- * @property integer $updated_by
- * @property integer $deleted_by
+ * @property int $created_by
+ * @property int $updated_by
+ * @property int $deleted_by
  * @property string $deleted_at
  * @property Absence[] $absences
  * @property Paiement[] $paiements
@@ -43,6 +43,7 @@ use Wildside\Userstamps\Userstamps;
 class Contrat extends Model
 {
     use HasFactory, Sluggable, SoftDeletes, Userstamps;
+
     /**
      * @var array
      */
@@ -133,6 +134,7 @@ class Contrat extends Model
     {
         return $this->hasMany('App\Models\Prime');
     }
+
     public function soldeComptes()
     {
         return $this->hasMany('App\Models\SoldeCompte');
@@ -142,8 +144,8 @@ class Contrat extends Model
     {
         return [
             'slug' => [
-                'source' => ['client.nom', 'employee.nom', 'employee.prenom', 'fonction.nom']
-            ]
+                'source' => ['client.nom', 'employee.nom', 'employee.prenom', 'fonction.nom'],
+            ],
         ];
     }
 }

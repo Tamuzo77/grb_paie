@@ -15,7 +15,7 @@ class StatsOverview extends BaseWidget
 {
     use InteractsWithPageFilters;
 
-    protected static ?int $sort = 1;
+    protected static ?int $sort = -2;
 
     protected int|string|array $columnSpan = [
         'md' => 2,
@@ -24,7 +24,7 @@ class StatsOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        $annee = Annee::whereSlug($this->filters['annee_id'] ?? now()->year)->firstOrFail();
+        $annee = getAnnee();
         $clients = Client::where('annee_id', $annee->id)->count();
         $employees = Employee::where('annee_id', $annee->id)->count();
         $paiements = Paiement::where('annee_id', $annee->id)->count();

@@ -54,6 +54,11 @@ class Client extends Model
         return $this->hasMany('App\Models\Contrat');
     }
 
+    public function facturations()
+    {
+        return $this->hasMany('App\Models\Facturation');
+    }
+
     public function sluggable(): array
     {
         return [
@@ -80,4 +85,5 @@ class Client extends Model
         );
 
     }
+
 }

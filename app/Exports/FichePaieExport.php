@@ -13,9 +13,10 @@ use Rmunate\Utilities\SpellNumber;
 
 #[AllowDynamicProperties] class FichePaieExport implements FromView
 {
-    public function __construct(Paiement $paiement)
+    public function __construct(Paiement $paiement, $preferences = [])
     {
         $this->paiement = $paiement;
+        $this->preferences = $preferences ?? [];
     }
 
     /**
@@ -47,6 +48,7 @@ use Rmunate\Utilities\SpellNumber;
             $nb_jours_conges_paye += date_diff($startDate, $endDate)->days;
         }
 
+//        $conges_restants = $this->paiement->employee->nb_jours_conges_acquis - $this->paiement->employee->nb_jours_conges_pris;
         $misApieds = 0;
         $misApiedsJours = 0;
         foreach ($this->paiement->employee->misAPieds as $misAPied) {
@@ -63,6 +65,8 @@ use Rmunate\Utilities\SpellNumber;
         $salaire = $this->paiement->employee->salaire_brut * (1 - $this->paiement->employee->tauxIts - $this->paiement->employee->client->tauxCnss);
         $retenueObligatoire += $nb_jours_absences * $salaire / 20;
         $retenueObligatoire += $montantPrete[0]['montant'];
+
+        $absences = $nb_jours_absences * $salaire / 20;
 
         $company = Company::first();
 
@@ -83,6 +87,8 @@ use Rmunate\Utilities\SpellNumber;
             'nb_jours_conges_paye' => $nb_jours_conges_paye,
             'misApiedsJours' => $misApiedsJours,
             'primes' => $primes,
+            'preferences' => $this->preferences,
+            'absences' => $absences,
         ]);
     }
 }

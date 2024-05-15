@@ -58,7 +58,7 @@ class Employee extends Model
     /**
      * @var array
      */
-    protected $fillable = ['annee_id', 'client_id', 'bank_id', 'slug', 'npi', 'nom', 'prenoms', 'telephone', 'email', 'date_naissance', 'lieu_naissance', 'situation_matrimoniale', 'sexe', 'nb_enfants', 'date_embauche', 'date_depart', 'categorie', 'category_id', 'cadre', 'salaire', 'numero_compte', 'tauxIts', 'tauxCnss', 'nb_jours_conges_acquis', 'solde_jours_conges_payes', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
+    protected $fillable = ['annee_id', 'client_id', 'bank_id', 'slug', 'npi', 'nom', 'prenoms', 'telephone', 'email', 'date_naissance', 'lieu_naissance', 'situation_matrimoniale', 'sexe', 'nb_enfants', 'date_embauche', 'date_depart', 'categorie', 'category_id', 'cadre', 'salaire', 'numero_compte', 'tauxIts', 'tauxCnss', 'nb_jours_conges_acquis', 'solde_jours_conges_payes', 'ifu', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -170,7 +170,7 @@ class Employee extends Model
 
     public function getFullName()
     {
-        return $this->nom . ' ' . $this->prenoms;
+        return $this->nom.' '.$this->prenoms;
     }
 
     public function tauxCnss(): Attribute

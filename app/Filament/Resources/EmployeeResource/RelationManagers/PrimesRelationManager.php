@@ -31,7 +31,7 @@ class PrimesRelationManager extends RelationManager
 //                            ->mask(RawJs::make('$money($input)'))
                             ->numeric()
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('nom', state: "Prime de  " . $state . " FCFA"))
+                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('nom', state: 'Prime de  '.$state.' FCFA'))
                             ->default(0),
                         Forms\Components\DatePicker::make('date')
                             ->required()

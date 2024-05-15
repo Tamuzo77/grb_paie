@@ -15,7 +15,7 @@ class GenereCode
         if ($last_numero == null) {
             $last_id = '';
         } else {
-            $last_id = $last_numero->code;
+            $last_id = $last_numero->code ?? $last_numero->matricule;
         }
 
         if (! empty($last_id)) {

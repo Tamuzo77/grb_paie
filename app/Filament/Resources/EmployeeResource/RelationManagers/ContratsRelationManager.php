@@ -11,9 +11,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ContratsRelationManager extends RelationManager
 {
@@ -29,7 +27,7 @@ class ContratsRelationManager extends RelationManager
                             ->label('Client')
                             ->relationship('client', 'nom')
                             ->searchable()
-                            ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->nom}")
+                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom}")
                             ->required()
                             ->columnSpanFull()
                             ->optionsLimit(5)
@@ -86,7 +84,7 @@ class ContratsRelationManager extends RelationManager
                             ->stripCharacters(',')
                             ->suffix('FCFA')
                             ->numeric()
-                            ->afterStateUpdated(fn(Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state)))
+                            ->afterStateUpdated(fn (Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state)))
                             )
                             ->default(0),
                         Forms\Components\Select::make('statut')
@@ -182,10 +180,10 @@ class ContratsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                ->mutateFormDataUsing(fn (array $data) => array_merge($data, [
-                    'annee_id' => Annee::latest()->first()->id,
-                    'tauxIts' => ItsService::getIts(intval($data['salaire_brut'])),
-                ]))
+                    ->mutateFormDataUsing(fn (array $data) => array_merge($data, [
+                        'annee_id' => Annee::latest()->first()->id,
+                        'tauxIts' => ItsService::getIts(intval($data['salaire_brut'])),
+                    ])),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()

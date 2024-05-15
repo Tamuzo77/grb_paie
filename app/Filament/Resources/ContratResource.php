@@ -13,18 +13,17 @@ use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ContratResource extends Resource
 {
     protected static ?string $model = Contrat::class;
+
     protected static bool $shouldRegisterNavigation = true;
 
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
 
-    public  static function form(Form $form): Form
+    public static function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -34,7 +33,7 @@ class ContratResource extends Resource
                             ->label('Client')
                             ->relationship('client', 'nom')
                             ->searchable()
-                            ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->nom}")
+                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom}")
                             ->required()
                             ->columnSpan(3)
                             ->optionsLimit(5)
@@ -43,7 +42,7 @@ class ContratResource extends Resource
                             ->label('Employé')
                             ->relationship('employee', 'nom')
                             ->searchable()
-                            ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->nom} {$record->prenoms}")
+                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom} {$record->prenoms}")
                             ->required()
                             ->columnSpan(3)
                             ->optionsLimit(5)
@@ -101,7 +100,7 @@ class ContratResource extends Resource
                             ->stripCharacters(',')
                             ->suffix('FCFA')
                             ->numeric()
-                            ->afterStateUpdated(fn(Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state)))
+                            ->afterStateUpdated(fn (Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state)))
                             )
                             ->default(0),
                         Forms\Components\Select::make('statut')

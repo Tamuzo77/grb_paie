@@ -59,6 +59,7 @@ class ClientResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('matricule')
                                     ->required()
+                                    ->readOnly()
                                     ->unique(ignoreRecord: true)
                                     ->alphaNum(true)
                                     ->default((new GenereCode())->handle(Client::class, 'C'))
@@ -99,14 +100,16 @@ class ClientResource extends Resource
                                     ->live()
                                     ->relationship('bank', 'code')
                                     ->searchable()
+                                    ->columnSpan(fn($component) => $component->getContainer()->getComponent('tauxCnss') ? 1 : 2)
                                     ->required()
                                     ->optionsLimit(5)
                                     ->preload(),
                                 Forms\Components\TextInput::make('tauxCnss')
+                                    ->key('tauxCnss')
                                     ->label('Taux CNSS')
                                     ->hint('Taux  CNSS')
                                     ->numeric()
-                                    ->placeholder(3.6)
+                                    ->hiddenOn('edit')
                                     ->suffix('%')
                                     ->default(3.6)
                                     ->columns(1)
@@ -125,7 +128,7 @@ class ClientResource extends Resource
                             ])
                             ->columns(3)
                             ->grow(),
-                    ])
+                    ]),
 
             ]);
     }
@@ -147,8 +150,7 @@ class ClientResource extends Resource
                     ->label('Téléphone')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nom_donneur_ordre')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('prenom_donneur_ordre')
+                    ->label('Donneur ordre')
                     ->searchable(),
             ])
             ->filters([
@@ -266,56 +268,56 @@ class ClientResource extends Resource
                     ->icon('heroicon-o-table-cells')
                     ->color(Color::Sky)
                     ->label('Etats'),
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\Action::make('cotisations-employes')
-                        ->action(function ($record) {
-                            $sommeCnss = 0;
-                            $sommeIts = 0;
-                            $sommeTotal = 0;
-                            foreach ($record->employees()->where(fn($query) => $query->where('date_debut', '<=', now())
-                                ->where('date_fin', '>=', now())
-                                ->where('statut', 'En cours')
-                                ->orWhereNull('date_fin'))->get() as $employee) {
-                                $cnss = $record->tauxCnss ? $employee->salaire_brut * $record->tauxCnss : $employee->salaire_brut * 0.036;
-                                $its = $employee->tauxIts ? $employee->salaire_brut * $employee->tauxIts : $employee->salaire_brut * 0.05;
-                                $total = $cnss + $its;
-                                CotisationEmploye::updateOrCreate([
-                                    'client_id' => $record->id,
-                                    'agent' => "{$employee->employee->nom} {$employee->employee->prenoms}",
-                                    'annee_id' => self::$annee->id,
-                                    'mois' => now()->format('F'),
-                                ], [
-                                    'client_id' => $record->id,
-                                    'agent' => "{$employee->employee->nom} {$employee->employee->prenoms}",
-                                    'annee_id' => self::$annee->id,
-                                    'cnss' => $cnss,
-                                    'its' => $its,
-                                    'total' => $total,
-                                    'mois' => now()->format('F'),
-                                ]);
-                                $sommeCnss = $sommeCnss + $cnss;
-                                $sommeIts = $sommeIts + $its;
-                                $sommeTotal = $sommeTotal + $total;
-                            }
+                Tables\Actions\Action::make('cotisations-employes')
+                    ->action(function ($record) {
+                        $sommeCnss = 0;
+                        $sommeIts = 0;
+                        $sommeTotal = 0;
+                        foreach ($record->employees()->where(fn($query) => $query->where('date_debut', '<=', now())
+                            ->where('date_fin', '>=', now())
+                            ->where('statut', 'En cours')
+                            ->orWhereNull('date_fin'))->get() as $employee) {
+                            $cnss = $record->tauxCnss ? $employee->salaire_brut * $record->tauxCnss : $employee->salaire_brut * 0.036;
+                            $its = $employee->tauxIts ? $employee->salaire_brut * $employee->tauxIts : $employee->salaire_brut * 0.05;
+                            $total = $cnss + $its;
                             CotisationEmploye::updateOrCreate([
                                 'client_id' => $record->id,
-                                'agent' => 'Total',
+                                'agent' => "{$employee->employee->nom} {$employee->employee->prenoms}",
                                 'annee_id' => self::$annee->id,
                                 'mois' => now()->format('F'),
                             ], [
                                 'client_id' => $record->id,
-                                'agent' => 'Total',
+                                'agent' => "{$employee->employee->nom} {$employee->employee->prenoms}",
                                 'annee_id' => self::$annee->id,
-                                'cnss' => $sommeCnss,
-                                'its' => $sommeIts,
-                                'total' => $sommeTotal,
+                                'cnss' => $cnss,
+                                'its' => $its,
+                                'total' => $total,
                                 'mois' => now()->format('F'),
                             ]);
-                            redirect(static::getUrl('cotisations-employes', ['record' => $record]));
-                        })
-                        ->icon('heroicon-o-currency-dollar')
-                        ->color(Color::Orange)
-                        ->label('Cotisations employés'),
+                            $sommeCnss = $sommeCnss + $cnss;
+                            $sommeIts = $sommeIts + $its;
+                            $sommeTotal = $sommeTotal + $total;
+                        }
+                        CotisationEmploye::updateOrCreate([
+                            'client_id' => $record->id,
+                            'agent' => 'Total',
+                            'annee_id' => self::$annee->id,
+                            'mois' => now()->format('F'),
+                        ], [
+                            'client_id' => $record->id,
+                            'agent' => 'Total',
+                            'annee_id' => self::$annee->id,
+                            'cnss' => $sommeCnss,
+                            'its' => $sommeIts,
+                            'total' => $sommeTotal,
+                            'mois' => now()->format('F'),
+                        ]);
+                        redirect(static::getUrl('cotisations-employes', ['record' => $record]));
+                    })
+                    ->icon('heroicon-o-currency-dollar')
+                    ->color(Color::Orange)
+                    ->label('Cotisations employés'),
+                Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
@@ -326,6 +328,33 @@ class ClientResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\BulkAction::make('facturation')
+                        ->form([
+                            Forms\Components\DatePicker::make('date_debut')
+                                ->label('Date de début')
+                                ->required(),
+                            Forms\Components\DatePicker::make('date_fin')
+                                ->label('Date de fin')
+                                ->after('date_debut')
+                                ->required(),
+                        ])
+                        ->action(function ( array $data ,$records) {
+                            foreach ($records as $record) {
+                                $record->facturations()->updateOrCreate([
+                                    'date_debut' => $data['date_debut'],
+                                    'date_fin' => $data['date_fin'],
+                                ],[
+                                    'montant_facture' => 0,
+                                    'taux' => 0,
+                                    'date_debut' => $data['date_debut'],
+                                    'date_fin' => $data['date_fin'],
+                                ]);
+                            }
+
+                            redirect(FacturationResource::getUrl('index'));
+                        })
+                        ->icon('heroicon-o-currency-dollar')
+                        ->label('Facturer'),
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),

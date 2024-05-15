@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\Contrat;
-use App\Models\Employee;
 use App\Models\SoldeCompte;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;

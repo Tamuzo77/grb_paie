@@ -240,6 +240,7 @@
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
             {{ $salaireForTwentyDays }}</td>
     </tr>
+    @if(in_array('include_mis_a_pied', $preferences))
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Mise à
@@ -248,31 +249,38 @@
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
             {{ $misApieds }}</td>
     </tr>
+    @endif
+
+    @if(in_array('include_conges'))
 
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">
-            Congés restants
+            Congés
         </td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
         </td>
     </tr>
+    @endif
 
-    <tr>
+    @if(in_array('include_absences', $preferences))
+        <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">
             Absences
         </td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
+            {{ $absences ?? 0}}
         </td>
     </tr>
-    @if (isset($primes) && !empty($primes))
+    @endif
+    @if (in_array('include_primes', $preferences))
         <tr>
             <td style="height:35px"></td>
             <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Primes
             </td>
             <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-                colspan="4">{{ $primes }}</td>
+                colspan="4">{{ $primes ?? 0 }}</td>
         </tr>
     @endif
     <tr class="">

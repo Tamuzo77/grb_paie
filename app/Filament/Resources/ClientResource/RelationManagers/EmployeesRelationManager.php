@@ -21,10 +21,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\DB;
 use PHPUnit\Exception;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
@@ -36,8 +33,11 @@ class EmployeesRelationManager extends RelationManager
     protected static string $relationship = 'employees';
 
     protected static ?string $modelLabel = 'Employé';
+
     protected static ?string $pluralModelLabel = 'Employés';
+
     protected static ?string $label = 'Employés';
+
     protected static ?string $title = 'Employés';
 
     public function form(Form $form): Form
@@ -83,9 +83,11 @@ class EmployeesRelationManager extends RelationManager
                             ->inline(),
                         Forms\Components\DatePicker::make('date_debut')
                             ->label('Date d\'embauche')
+                            ->required()
                             ->date(),
                         Forms\Components\DatePicker::make('date_fin')
                             ->label('Date de fin de contrat')
+                            ->required()
                             ->date()
                             ->after('date_debut'),
                         Forms\Components\TextInput::make('salaire_brut')
@@ -97,7 +99,7 @@ class EmployeesRelationManager extends RelationManager
                             ->stripCharacters(',')
                             ->suffix('FCFA')
                             ->numeric()
-                            ->afterStateUpdated(fn(Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state))))
+                            ->afterStateUpdated(fn (Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state))))
                             ->default(0),
                         Forms\Components\Select::make('statut')
                             ->label('Statut')
@@ -122,7 +124,6 @@ class EmployeesRelationManager extends RelationManager
                             ->suffix('%')
                             ->default(0),
 
-
                     ])
                     ->columns(3),
                 Forms\Components\Fieldset::make(label: 'Informations personnelles')
@@ -135,7 +136,6 @@ class EmployeesRelationManager extends RelationManager
                             ->default(null),
                         Forms\Components\TextInput::make('nom')
                             ->required()
-                            ->columnSpan(2)
                             ->autocapitalize(),
                         Forms\Components\TextInput::make('prenoms')
                             ->label('Prénoms')
@@ -155,6 +155,12 @@ class EmployeesRelationManager extends RelationManager
                             ->unique(table: 'employees', column: 'email')
                             ->required()
                             ->maxLength(255)
+                            ->default(null),
+                        Forms\Components\TextInput::make('ifu')
+                            ->numeric()
+                            ->placeholder('Ex: 1234567890123')
+                            ->label('Identifiant fiscal unique (IFU)')
+                            ->maxLength(16)
                             ->default(null),
                         Forms\Components\DatePicker::make('date_naissance')
                             ->date()
@@ -255,7 +261,7 @@ class EmployeesRelationManager extends RelationManager
                         $annee = Annee::latest()->first();
                         $data['annee_id'] = $annee->id ?? 1;
                         $dataForEmployee = [];
-//                        $dataForEmployee['npi'] = $data['npi'];
+                        //                        $dataForEmployee['npi'] = $data['npi'];
                         $dataForEmployee['annee_id'] = $data['annee_id'];
                         $dataForEmployee['nom'] = $data['nom'];
                         $dataForEmployee['prenoms'] = $data['prenoms'];
@@ -271,34 +277,33 @@ class EmployeesRelationManager extends RelationManager
                         $data['employee_id'] = $employee->id;
                         $data['date_signature'] = now();
 
-//                        $filterData = [];
-//                        $filterData['client_id'] = $data['client_id'];
-//                        $filterData['employee_id'] = $data['employee_id'];
-//                        $filterData['date_signature'] = $data['date_signature'];
-//                        $filterData['date_debut'] = $data['date_debut'];
-//                        $filterData['date_fin'] = $data['date_fin'];
-//                        $filterData['salaire_brut'] = $data['salaire_brut'];
-//                        $filterData['nb_jours_conges_acquis'] = $data['nb_jours_conges_acquis'];
-//                        $filterData['solde_jours_conges_payes'] = $data['solde_jours_conges_payes'];
-//                        $filterData['tauxIts'] = ItsService::getIts(intval($data['salaire_brut']));
-//                        $filterData['est_cadre'] = $data['est_cadre'];
-//                        $filterData['category_id'] = $data['category_id'];
-//                        $filterData['fonction_id'] = $data['fonction_id'];
-//                        $filterData['statut'] = $data['statut'];
-
+                        //                        $filterData = [];
+                        //                        $filterData['client_id'] = $data['client_id'];
+                        //                        $filterData['employee_id'] = $data['employee_id'];
+                        //                        $filterData['date_signature'] = $data['date_signature'];
+                        //                        $filterData['date_debut'] = $data['date_debut'];
+                        //                        $filterData['date_fin'] = $data['date_fin'];
+                        //                        $filterData['salaire_brut'] = $data['salaire_brut'];
+                        //                        $filterData['nb_jours_conges_acquis'] = $data['nb_jours_conges_acquis'];
+                        //                        $filterData['solde_jours_conges_payes'] = $data['solde_jours_conges_payes'];
+                        //                        $filterData['tauxIts'] = ItsService::getIts(intval($data['salaire_brut']));
+                        //                        $filterData['est_cadre'] = $data['est_cadre'];
+                        //                        $filterData['category_id'] = $data['category_id'];
+                        //                        $filterData['fonction_id'] = $data['fonction_id'];
+                        //                        $filterData['statut'] = $data['statut'];
 
                         return $data;
                     }),
-//                Tables\Actions\Action::make('Ajout de contrat')
-//                    ->color('secondary')
-//                    ->form()
-//                    ->action(function (array $data) {
-//                        $employee = Employee::find($data['employee_id']);
-//                        $data['date_signature'] = now();
-//                        $data['tauxIts'] = ItsService::getIts(intval($data['salaire_brut']));
-//                        $employee->contrats()->create($data);
-//                    })
-//                    ->label('Ajouter un contrat'),
+                //                Tables\Actions\Action::make('Ajout de contrat')
+                //                    ->color('secondary')
+                //                    ->form()
+                //                    ->action(function (array $data) {
+                //                        $employee = Employee::find($data['employee_id']);
+                //                        $data['date_signature'] = now();
+                //                        $data['tauxIts'] = ItsService::getIts(intval($data['salaire_brut']));
+                //                        $employee->contrats()->create($data);
+                //                    })
+                //                    ->label('Ajouter un contrat'),
                 Tables\Actions\AttachAction::make()
                     ->modalHeading('Ajouter un contrat')
                     ->form([
@@ -308,7 +313,7 @@ class EmployeesRelationManager extends RelationManager
                                     ->label('Employé')
                                     ->relationship('employee', 'nom')
                                     ->searchable()
-                                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->nom} {$record->prenoms}")
+                                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom} {$record->prenoms}")
                                     ->required()
                                     ->columnSpanFull()
                                     ->optionsLimit(5)
@@ -349,10 +354,12 @@ class EmployeesRelationManager extends RelationManager
                                     ->inline(),
                                 Forms\Components\DatePicker::make('date_debut')
                                     ->label('Date de début de contrat')
+                                    ->required()
                                     ->columnSpan(3)
                                     ->date(),
                                 Forms\Components\DatePicker::make('date_fin')
                                     ->label('Date de fin de contrat')
+                                    ->required()
                                     ->columnSpan(2)
                                     ->date()
                                     ->after('date_debut'),
@@ -365,7 +372,7 @@ class EmployeesRelationManager extends RelationManager
                                     ->stripCharacters(',')
                                     ->suffix('FCFA')
                                     ->numeric()
-                                    ->afterStateUpdated(fn(Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state)))
+                                    ->afterStateUpdated(fn (Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state)))
                                     )
                                     ->default(0),
                                 Forms\Components\Select::make('statut')
@@ -546,7 +553,7 @@ class EmployeesRelationManager extends RelationManager
                                 $montantAvanceSalaire = $record->paiements()->where('type_paiement_id', TypePaiement::AVANCE)->sum('solde');
                                 $prets = CalculerSalaireMensuel::sommePrets($record);
                                 $total = $salaire_mensuel + $montantJoursCongesPaye - $montantAvanceSalaire - $prets;
-//                                dd('salaire mensuel: ' . $salaire_mensuel, 'montant jours de congés payés: ' . $montantJoursCongesPaye, 'montant avance salaire: ' . $montantAvanceSalaire, 'prets: ' . $prets, 'total: ' . ($salaire_mensuel + $montantJoursCongesPaye - $montantAvanceSalaire - $prets)  );
+                                //                                dd('salaire mensuel: ' . $salaire_mensuel, 'montant jours de congés payés: ' . $montantJoursCongesPaye, 'montant avance salaire: ' . $montantAvanceSalaire, 'prets: ' . $prets, 'total: ' . ($salaire_mensuel + $montantJoursCongesPaye - $montantAvanceSalaire - $prets)  );
                                 Paiement::updateOrCreate([
                                     'contrat_id' => $record->id,
                                 ], [

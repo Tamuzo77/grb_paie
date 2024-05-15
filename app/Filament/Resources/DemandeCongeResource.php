@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\DemandeCongeResource\Pages;
-use App\Models\Client;
+use App\Models\Contrat;
 use App\Models\DemandeConge;
 use App\Models\Employee;
 use Closure;
@@ -14,7 +14,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class DemandeCongeResource extends Resource
@@ -36,32 +35,13 @@ class DemandeCongeResource extends Resource
                 Forms\Components\Section::make('Demande de congés')
                     ->description('Enregsitrement des demandes de congés des employés')
                     ->schema([
-                        Forms\Components\Select::make('client_id')
-                            ->live()
-                            ->required()
-                            ->searchable()
-                            ->label('Client')
-                            ->dehydrated(false)
-                            ->options(Client::pluck('nom', 'id')),
-                        Forms\Components\Select::make('employee_id')
+                        Forms\Components\Select::make('contrat_id')
                             ->label('Employé')
-                            ->placeholder(fn (Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
                             ->hintColor('accent')
-                            ->selectablePlaceholder(fn (Forms\Get $get): bool => empty($get('client_id')))
-                            ->options(function (?DemandeConge $record, Forms\Get $get, Forms\Set $set) {
-                                $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
-                                if (! is_null($record) && $get('client_id') == null) {
-                                    $set('client_id', $record->employee->client_id);
-                                    $employees = Employee::where('client_id', $get('client_id'))->pluck('nom', 'id');
-                                    $set('client_id', array_key_first($employees->toArray()));
-                                }
-
-                                return $employees;
-                            })
-//                            ->relationship('employee', modifyQueryUsing: fn(Builder $query) => $query->orderBy('nom')->orderBy('prenoms'))
-                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom} {$record->prenoms}")
+                            ->relationship('employee', titleAttribute: 'slug', modifyQueryUsing: fn ($query) => $query->where('statut', 'En cours'))
+                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->employee->nom} {$record->employee->prenoms} ({$record->client->nom})")
                             ->hintIcon('heroicon-o-user-group')
-                            ->searchable(['nom', 'prenoms'])
+                            ->searchable()
                             ->required()
                             ->optionsLimit(5)
                             ->preload(),
@@ -75,7 +55,7 @@ class DemandeCongeResource extends Resource
                                     $startDate = new DateTime($get('date_debut'));
                                     $endDate = new DateTime($value);
                                     $nbre_jours = date_diff($startDate, $endDate)->days;
-                                    $nbre_jours_acquis = Employee::find($get('employee_id'))->nb_jours_conges_acquis;
+                                    $nbre_jours_acquis = Contrat::find($get('contrat_id'))->nb_jours_conges_acquis;
                                     if ($nbre_jours > $nbre_jours_acquis) {
                                         $fail(' Le nombre de jours de congés demandés est supérieur au nombre de jours de congés acquis');
                                     }

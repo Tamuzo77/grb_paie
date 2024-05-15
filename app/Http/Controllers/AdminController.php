@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\BilanAnnuelExport;
 use App\Exports\CotisationClientExport;
 use App\Exports\CotisationEmployeExport;
+use App\Exports\DetailsFacturationExport;
 use App\Exports\EtatPersonnelExport;
 use App\Exports\FichePaieExport;
 use App\Exports\SoldesExport;
@@ -13,6 +14,7 @@ use App\Models\Client;
 use App\Models\CotisationClient;
 use App\Models\CotisationEmploye;
 use App\Models\Employee;
+use App\Models\Facturation;
 use App\Models\Paiement;
 use App\Models\SoldeCompte;
 use Maatwebsite\Excel\Facades\Excel;
@@ -31,8 +33,11 @@ class AdminController extends Controller
 
     public function downloadFicheDePaie($id)
     {
+        $preferences = request()->query('preferences');
+
+
         $paiement = Paiement::find($id);
-        $export = new FichePaieExport($paiement);
+        $export = new FichePaieExport($paiement, $preferences);
         $excel = Excel::download($export, "fiche-de-paie-{$paiement->employee->nom}.xlsx");
 
         return $excel;
@@ -78,5 +83,13 @@ class AdminController extends Controller
         //            'annee' => $annee,
         //            'employees' => $employees,
         //        ]);
+    }
+
+    public function downloadDetailsFacturation($record)
+    {
+        $facturation = Facturation::find($record);
+        $export = new DetailsFacturationExport($facturation);
+
+        return Excel::download($export, 'details-facturation.xlsx');
     }
 }

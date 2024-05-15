@@ -3,16 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PrimeResource\Pages;
-use App\Models\Client;
-use App\Models\Contrat;
-use App\Models\Employee;
 use App\Models\Prime;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class PrimeResource extends Resource
@@ -37,32 +33,13 @@ class PrimeResource extends Resource
                     ->description('Enregsitrement ')
                     ->columns(2)
                     ->schema([
-                        Forms\Components\Select::make('client_id')
-                            ->live()
-                            ->required()
-                            ->searchable()
-                            ->label('Client')
-                            ->dehydrated(false)
-                            ->options(Client::pluck('nom', 'id')),
                         Forms\Components\Select::make('contrat_id')
                             ->label('Employé')
-                            ->placeholder(fn (Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
                             ->hintColor('accent')
-                            ->selectablePlaceholder(fn (Forms\Get $get): bool => empty($get('client_id')))
-                            ->options(function (?Prime $record, Forms\Get $get, Forms\Set $set) {
-                                $employees = Contrat::where('client_id', $get('client_id'))->pluck('employee_id', 'id');
-                                if (! is_null($record) && $get('client_id') == null) {
-                                    $set('client_id', $record->employee->client_id);
-                                    $employees = Contrat::where('client_id', $get('client_id'))->pluck('employee_id', 'id');
-                                    $set('client_id', array_key_first($employees->toArray()));
-                                }
-
-                                return $employees;
-                            })
-//                            ->relationship('employee', modifyQueryUsing: fn(Builder $query) => $query->orderBy('nom')->orderBy('prenoms'))
-                            ->getOptionLabelFromRecordUsing(fn (Model $record) => " Bla bla")
+                            ->relationship('employee', titleAttribute: 'slug', modifyQueryUsing: fn ($query) => $query->where('statut', 'En cours'))
+                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->employee->nom} {$record->employee->prenoms} ({$record->client->nom})")
                             ->hintIcon('heroicon-o-user-group')
-                            ->searchable(['nom', 'prenoms'])
+                            ->searchable()
                             ->required()
                             ->optionsLimit(5)
                             ->preload(),
@@ -75,7 +52,8 @@ class PrimeResource extends Resource
                             ->required()
                             ->default(now()),
 
-                    ]),
+                    ])
+                    ->columns(3),
             ]);
     }
 
