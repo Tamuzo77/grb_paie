@@ -51,7 +51,7 @@ class ContratResource extends Resource
                             ->label('Catégorie')
                             ->relationship('category', 'nom')
                             ->searchable()
-                            ->columnSpan(3)
+                            ->columnSpan(2)
                             ->required()
                             ->optionsLimit(5)
                             ->preload(),
@@ -59,7 +59,7 @@ class ContratResource extends Resource
                             ->label('Fonction')
                             ->relationship(name: 'fonction', titleAttribute: 'nom')
                             ->searchable()
-                            ->columnSpan(3)
+                            ->columnSpan(2)
                             ->required()
                             ->createOptionForm([
                                 Forms\Components\TextInput::make('nom')
@@ -68,6 +68,14 @@ class ContratResource extends Resource
                             ])
                             ->optionsLimit(5)
                             ->preload(),
+                        Forms\Components\Select::make('position_hierachique_id')
+                            ->label('Position Hiérachique')
+                            ->relationship(name: 'positionHierachique', titleAttribute: 'nom')
+                            ->searchable()
+                            ->columnSpan(2)
+                            ->optionsLimit(5)
+                            ->preload(),
+
                         ToggleButtons::make('est_cadre')
                             ->label('Est il cadre ?')
                             ->options([

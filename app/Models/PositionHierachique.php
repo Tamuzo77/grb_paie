@@ -27,7 +27,6 @@ class PositionHierachique extends Model
 {
     use Sluggable, SoftDeletes, Userstamps;
 
-    //TODO: Create the resource
     /**
      * @var array
      */
@@ -39,6 +38,15 @@ class PositionHierachique extends Model
     public function positionHierachique()
     {
         return $this->belongsTo('App\Models\PositionHierachique', 'parent_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+
+    public function employees()
+    {
+        return $this->hasMany('App\Models\Employee');
     }
 
     public function sluggable(): array

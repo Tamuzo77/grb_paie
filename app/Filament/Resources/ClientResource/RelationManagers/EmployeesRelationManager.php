@@ -60,12 +60,19 @@ class EmployeesRelationManager extends RelationManager
                             ->relationship(name: 'fonction', titleAttribute: 'nom')
                             ->searchable()
                             ->required()
-                            ->columnSpan(2)
+                            ->columnSpan(1)
                             ->createOptionForm([
                                 Forms\Components\TextInput::make('nom')
                                     ->required()
                                     ->maxLength(255),
                             ])
+                            ->optionsLimit(5)
+                            ->preload(),
+                        Forms\Components\Select::make('position_hierachique_id')
+                            ->label('Position Hiérachique')
+                            ->relationship(name: 'positionHierachique', titleAttribute: 'nom')
+                            ->searchable()
+                            ->columnSpan(1)
                             ->optionsLimit(5)
                             ->preload(),
                         ToggleButtons::make('est_cadre')
@@ -259,7 +266,7 @@ class EmployeesRelationManager extends RelationManager
                     ->label('Ajouter un employé')
                     ->mutateFormDataUsing(function (array $data) {
                         $annee = Annee::latest()->first();
-                        $data['annee_id'] = $annee->id ?? 1;
+                        $data['annee_id'] = getAnnee()->id;
                         $dataForEmployee = [];
                         //                        $dataForEmployee['npi'] = $data['npi'];
                         $dataForEmployee['annee_id'] = $data['annee_id'];
@@ -294,16 +301,6 @@ class EmployeesRelationManager extends RelationManager
 
                         return $data;
                     }),
-                //                Tables\Actions\Action::make('Ajout de contrat')
-                //                    ->color('secondary')
-                //                    ->form()
-                //                    ->action(function (array $data) {
-                //                        $employee = Employee::find($data['employee_id']);
-                //                        $data['date_signature'] = now();
-                //                        $data['tauxIts'] = ItsService::getIts(intval($data['salaire_brut']));
-                //                        $employee->contrats()->create($data);
-                //                    })
-                //                    ->label('Ajouter un contrat'),
                 Tables\Actions\AttachAction::make()
                     ->modalHeading('Ajouter un contrat')
                     ->form([
@@ -322,7 +319,7 @@ class EmployeesRelationManager extends RelationManager
                                     ->label('Catégorie')
                                     ->relationship('category', 'nom')
                                     ->searchable()
-                                    ->columnSpan(3)
+                                    ->columnSpan(2)
                                     ->required()
                                     ->optionsLimit(5)
                                     ->preload(),
@@ -330,13 +327,20 @@ class EmployeesRelationManager extends RelationManager
                                     ->label('Fonction')
                                     ->relationship(name: 'fonction', titleAttribute: 'nom')
                                     ->searchable()
-                                    ->columnSpan(3)
+                                    ->columnSpan(2)
                                     ->required()
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('nom')
                                             ->required()
                                             ->maxLength(255),
                                     ])
+                                    ->optionsLimit(5)
+                                    ->preload(),
+                                Forms\Components\Select::make('position_hierachique_id')
+                                    ->label('Position Hiérachique')
+                                    ->relationship(name: 'positionHierachique', titleAttribute: 'nom')
+                                    ->searchable()
+                                    ->columnSpan(2)
                                     ->optionsLimit(5)
                                     ->preload(),
                                 ToggleButtons::make('est_cadre')
@@ -401,7 +405,7 @@ class EmployeesRelationManager extends RelationManager
                     ->action(function (array $data) {
                         $data['client_id'] = self::getOwnerRecord()->id;
                         $employee = Employee::find($data['employee_id']);
-                        $data['annee_id'] = Annee::latest()->first()->id ?? 1;
+                        $data['annee_id'] = getAnnee()->id;
                         $data['date_signature'] = now();
                         $data['tauxIts'] = ItsService::getIts(intval($data['salaire_brut']));
                         $employee->contrats()->create($data);
@@ -412,7 +416,7 @@ class EmployeesRelationManager extends RelationManager
                             ->success()
                             ->title('Contrat ajouté avec succès')
                     )
-                    ->modalWidth('3xl'),
+                    ->modalWidth('4xl'),
             ])
             ->actions([
                 Tables\Actions\Action::make('payer')
