@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\ClientResource\RelationManagers;
 
 use App\Actions\CalculerSalaireMensuel;
-use App\Filament\Resources\ContratResource;
 use App\Filament\Resources\EmployeeResource;
 use App\Models\Annee;
 use App\Models\Contrat;

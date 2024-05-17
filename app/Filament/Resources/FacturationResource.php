@@ -3,17 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\FacturationResource\Pages;
-use App\Filament\Resources\FacturationResource\RelationManagers;
 use App\Models\Facturation;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
-use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class FacturationResource extends Resource
@@ -40,14 +35,14 @@ class FacturationResource extends Resource
                     ->required(),
                 Forms\Components\DateTimePicker::make('date_debut'),
                 Forms\Components\DateTimePicker::make('date_fin'),
-//                Forms\Components\TextInput::make('taux')
-//                    ->required()
-//                    ->numeric()
-//                    ->default(0),
-//                Forms\Components\TextInput::make('total_salaire_brut')
-//                    ->required()
-//                    ->numeric()
-//                    ->default(0),
+                //                Forms\Components\TextInput::make('taux')
+                //                    ->required()
+                //                    ->numeric()
+                //                    ->default(0),
+                //                Forms\Components\TextInput::make('total_salaire_brut')
+                //                    ->required()
+                //                    ->numeric()
+                //                    ->default(0),
             ]);
     }
 
@@ -111,17 +106,17 @@ class FacturationResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\RestoreAction::make(),
-                    Tables\Actions\ForceDeleteAction::make()
+                    Tables\Actions\ForceDeleteAction::make(),
                 ])
                     ->color('neutral')
-                    ->label('Actions')
+                    ->label('Actions'),
 
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     ExportBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make()
+                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -137,8 +132,8 @@ class FacturationResource extends Resource
     {
         return [
             'index' => Pages\ListFacturations::route('/'),
-//            'create' => Pages\CreateFacturation::route('/create'),
-//            'edit' => Pages\EditFacturation::route('/{record}/edit'),
+            //            'create' => Pages\CreateFacturation::route('/create'),
+            //            'edit' => Pages\EditFacturation::route('/{record}/edit'),
         ];
     }
 }

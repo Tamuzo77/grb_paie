@@ -5,7 +5,6 @@ namespace App\Filament\Clusters\Settings\Resources\PositionHierachiqueResource\P
 use App\Actions\GenereCode;
 use App\Filament\Clusters\Settings\Resources\PositionHierachiqueResource;
 use App\Models\PositionHierachique;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePositionHierachique extends CreateRecord

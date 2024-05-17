@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Models\Annee;
 use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -12,15 +11,13 @@ use Filament\Forms\Form;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Resources\Concerns\HasTabs;
 use Filament\Tables\Columns\SelectColumn;
-use Filament\Tables\Concerns\InteractsWithTable;
-use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Livewire\Component;
 
 class GlobalFilter extends Component implements HasForms
 {
-    use HasTabs, InteractsWithForms, HasFiltersForm;
+    use HasFiltersForm, HasTabs, InteractsWithForms;
 
     public function table(Table $table): Table
     {
@@ -30,14 +27,14 @@ class GlobalFilter extends Component implements HasForms
             ->columns([
                 SelectColumn::make('annee_id')
                     ->label('Année d\'exercice')
-                    ->options(fn() => Annee::pluck('nom', 'slug'))
+                    ->options(fn () => Annee::pluck('nom', 'slug'))
                     ->default(Annee::latest()->first()?->slug),
 
             ])
             ->filters([
                 SelectFilter::make('annee_id')
                     ->label('Année d\'exercice')
-                    ->options(fn() => Annee::pluck('nom', 'slug'))
+                    ->options(fn () => Annee::pluck('nom', 'slug'))
                     ->default(Annee::latest()->first()?->slug),
 
             ]);
@@ -54,7 +51,7 @@ class GlobalFilter extends Component implements HasForms
                             ->label('Année d\'exercice')
                             ->live()
                             ->inlineLabel()
-                            ->options(fn() => Annee::pluck('nom', 'id'))
+                            ->options(fn () => Annee::pluck('nom', 'id'))
                             ->native(false)
                             ->searchable()
                             ->preload()
@@ -65,7 +62,7 @@ class GlobalFilter extends Component implements HasForms
                                 session()->put('ANNEE_ID', $state);
                             }),
                     ])
-                    ->columns(1)
+                    ->columns(1),
             ])
             ->columns(1);
     }
@@ -78,7 +75,7 @@ class GlobalFilter extends Component implements HasForms
                     ->label('Année d\'exercice')
                     ->live()
                     ->inlineLabel()
-                    ->options(fn() => Annee::pluck('nom', 'id'))
+                    ->options(fn () => Annee::pluck('nom', 'id'))
                     ->native(false)
                     ->searchable()
                     ->preload()

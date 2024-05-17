@@ -47,7 +47,7 @@ class Contrat extends Model
     /**
      * @var array
      */
-    protected $fillable = ['annee_id', 'client_id', 'employee_id', 'fonction_id', 'slug', 'date_signature', 'date_debut', 'position_hierachique_id' ,'date_fin', 'statut', 'salaire_brut', 'nb_jours_conges_acquis', 'solde_jours_conges_payes', 'tauxIts', 'category_id', 'position_id', 'est_cadre', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
+    protected $fillable = ['annee_id', 'client_id', 'employee_id', 'fonction_id', 'slug', 'date_signature', 'date_debut', 'position_hierachique_id', 'date_fin', 'statut', 'salaire_brut', 'nb_jours_conges_acquis', 'solde_jours_conges_payes', 'tauxIts', 'category_id', 'position_id', 'est_cadre', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

@@ -38,7 +38,7 @@ class MisAPiedResource extends Resource
                         Forms\Components\Select::make('contrat_id')
                             ->label('Employé')
                             ->hintColor('accent')
-                            ->relationship('employee', titleAttribute: 'slug',modifyQueryUsing: fn ($query) => $query->where('statut', 'En cours'))
+                            ->relationship('employee', titleAttribute: 'slug', modifyQueryUsing: fn ($query) => $query->where('statut', 'En cours'))
                             ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->employee->nom} {$record->employee->prenoms} ({$record->client->nom})")
                             ->hintIcon('heroicon-o-user-group')
                             ->searchable()

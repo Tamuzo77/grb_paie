@@ -12,6 +12,7 @@ class CreateContrat extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['annee_id'] = getAnnee()->id;
+
         return $data;
     }
 }

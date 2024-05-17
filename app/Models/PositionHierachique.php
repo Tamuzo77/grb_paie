@@ -8,18 +8,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 
 /**
- * @property integer $id
- * @property integer $parent_id
+ * @property int $id
+ * @property int $parent_id
  * @property string $slug
  * @property string $code
  * @property string $nom
- * @property integer $niveau
+ * @property int $niveau
  * @property string $description
  * @property string $created_at
  * @property string $updated_at
- * @property integer $created_by
- * @property integer $updated_by
- * @property integer $deleted_by
+ * @property int $created_by
+ * @property int $updated_by
+ * @property int $deleted_by
  * @property string $deleted_at
  * @property PositionHierachique $positionHierachique
  */
@@ -43,7 +43,6 @@ class PositionHierachique extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-
     public function employees()
     {
         return $this->hasMany('App\Models\Employee');

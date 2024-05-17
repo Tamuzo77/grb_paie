@@ -2,9 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Annee;
 use App\Models\Contrat;
-use App\Models\Paiement;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
@@ -17,7 +15,7 @@ class EmployeeSalaireMonthly extends ApexChartWidget
 
     protected static ?int $sort = 2;
 
-//    protected int|string|array $columnSpan = 'full';
+    //    protected int|string|array $columnSpan = 'full';
 
     /**
      * Chart Id

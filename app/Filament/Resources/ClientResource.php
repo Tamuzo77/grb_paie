@@ -100,7 +100,7 @@ class ClientResource extends Resource
                                     ->live()
                                     ->relationship('bank', 'code')
                                     ->searchable()
-                                    ->columnSpan(fn($component) => $component->getContainer()->getComponent('tauxCnss') ? 1 : 2)
+                                    ->columnSpan(fn ($component) => $component->getContainer()->getComponent('tauxCnss') ? 1 : 2)
                                     ->required()
                                     ->optionsLimit(5)
                                     ->preload(),
@@ -160,7 +160,7 @@ class ClientResource extends Resource
                     ->label('Corbeille')
                     ->placeholder('Clients'),
             ])
-            ->recordUrl(fn($record) => static::getUrl('view', ['record' => $record]))
+            ->recordUrl(fn ($record) => static::getUrl('view', ['record' => $record]))
             ->actions([
                 Tables\Actions\Action::make('cotisations')
                     ->action(function ($record) {
@@ -273,7 +273,7 @@ class ClientResource extends Resource
                         $sommeCnss = 0;
                         $sommeIts = 0;
                         $sommeTotal = 0;
-                        foreach ($record->employees()->where(fn($query) => $query->where('date_debut', '<=', now())
+                        foreach ($record->employees()->where(fn ($query) => $query->where('date_debut', '<=', now())
                             ->where('date_fin', '>=', now())
                             ->where('statut', 'En cours')
                             ->orWhereNull('date_fin'))->get() as $employee) {
@@ -338,12 +338,12 @@ class ClientResource extends Resource
                                 ->after('date_debut')
                                 ->required(),
                         ])
-                        ->action(function ( array $data ,$records) {
+                        ->action(function (array $data, $records) {
                             foreach ($records as $record) {
                                 $record->facturations()->updateOrCreate([
                                     'date_debut' => $data['date_debut'],
                                     'date_fin' => $data['date_fin'],
-                                ],[
+                                ], [
                                     'montant_facture' => 0,
                                     'taux' => 0,
                                     'date_debut' => $data['date_debut'],
@@ -411,7 +411,7 @@ class ClientResource extends Resource
                     ->columnSpan(3)
                     ->footerActions([
                         Action::make('rc')
-                            ->visible(fn() => $record->rc)
+                            ->visible(fn () => $record->rc)
                             ->action(function () use ($record) {
                                 return response()->download(storage_path("app/public/{$record->rc}"));
                             })

@@ -35,7 +35,6 @@ class AdminController extends Controller
     {
         $preferences = request()->query('preferences');
 
-
         $paiement = Paiement::find($id);
         $export = new FichePaieExport($paiement, $preferences);
         $excel = Excel::download($export, "fiche-de-paie-{$paiement->employee->nom}.xlsx");

@@ -27,17 +27,20 @@ function getAnnee()
         $annee = Annee::latest()->first();
         session()->put('ANNEE_ID', $annee ? $annee->id : null);
     }
+
     return $annee;
 }
 
 function getLastAnnee()
 {
     $annee = Annee::latest()->first();
+
     return $annee;
 }
 
 function archive()
 {
     $annees = Annee::where('id', '<>', getLastAnnee()->id)->orderBy('nom', 'desc')->get();
+
     return $annees;
 }

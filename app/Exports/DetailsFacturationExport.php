@@ -6,7 +6,6 @@ use AllowDynamicProperties;
 use App\Models\Contrat;
 use App\Models\Facturation;
 use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromView;
 use Rmunate\Utilities\SpellNumber;
 
@@ -17,7 +16,6 @@ use Rmunate\Utilities\SpellNumber;
         $this->facturation = $facturation;
     }
 
-
     public function view(): View
     {
         $employees = Contrat::where('client_id', $this->facturation->client_id)
@@ -26,10 +24,11 @@ use Rmunate\Utilities\SpellNumber;
             ->whereStatut('En cours')
             ->get();
         $montantLettre = SpellNumber::value($this->facturation->montant_facture)->locale('fr')->toLetters();
+
         return \view('exports.details-facturation', [
             'facturation' => $this->facturation,
             'employees' => $employees,
-            'montantLettre' => $montantLettre
+            'montantLettre' => $montantLettre,
         ]);
     }
 }

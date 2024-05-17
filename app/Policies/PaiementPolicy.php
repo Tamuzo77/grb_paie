@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Paiement;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PaiementPolicy
@@ -103,6 +103,6 @@ class PaiementPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_paiement')&& getAnnee()->hasStatutEnCours();
+        return $user->can('reorder_paiement') && getAnnee()->hasStatutEnCours();
     }
 }

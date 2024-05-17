@@ -53,17 +53,17 @@ class PaiementResource extends Resource
                     ->options(Client::all()->pluck('nom', 'id')),
                 Forms\Components\Select::make('employee_id')
                     ->label('Employé')
-                    ->placeholder(fn(Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
+                    ->placeholder(fn (Forms\Get $get) => empty($get('client_id')) ? 'Sélectionner un client' : 'Sélectionner un employé')
                     ->hintColor('accent')
                     ->options(function (Forms\Get $get) {
                         return Employee::where('client_id', $get('client_id'))->get()->pluck('nom', 'id');
                     })
 //                            ->relationship('employee', modifyQueryUsing: fn(Builder $query) => $query->orderBy('nom')->orderBy('prenoms'))
-                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->nom} {$record->prenoms}")
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom} {$record->prenoms}")
                     ->hintIcon('heroicon-o-user-group')
                     ->searchable(['nom', 'prenoms'])
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn(Forms\Set $set, ?string $state) => $set('solde', Employee::whereId($state)->first()->salaire ?? 0))
+                    ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('solde', Employee::whereId($state)->first()->salaire ?? 0))
                     ->required()
                     ->optionsLimit(5)
                     ->preload(),
@@ -127,7 +127,7 @@ class PaiementResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('employee.employee.nom')
                     ->label('Employé')
-                    ->description(fn($record) => $record->employee->employee->prenoms, position: 'above')
+                    ->description(fn ($record) => $record->employee->employee->prenoms, position: 'above')
                     ->separator()
                     ->searchable()
                     ->sortable(),
@@ -176,8 +176,8 @@ class PaiementResource extends Resource
                         DatePicker::make('until')
                             ->label('Au'),
                     ])->query(function ($query, array $data) {
-                        return $query->when($data['from'], fn($query) => $query->whereDate('date_debut', '>=', $data['from']))
-                            ->when($data['until'], fn($query) => $query->whereDate('date_debut', '<=', $data['until']));
+                        return $query->when($data['from'], fn ($query) => $query->whereDate('date_debut', '>=', $data['from']))
+                            ->when($data['until'], fn ($query) => $query->whereDate('date_debut', '<=', $data['until']));
                     }),
 
             ])
@@ -186,7 +186,7 @@ class PaiementResource extends Resource
                 Tables\Actions\Action::make('voir solde')
                     ->color(Color::Teal)
                     ->label('Voir Solde')
-                    ->visible(fn(Paiement $record) => $record->type_paiement_id == TypePaiement::SALAIRE)
+                    ->visible(fn (Paiement $record) => $record->type_paiement_id == TypePaiement::SALAIRE)
                     ->url(function (Paiement $paiement) {
                         $employee = Contrat::where('id', $paiement->contrat_id)->firstOrFail();
 
@@ -196,7 +196,7 @@ class PaiementResource extends Resource
                 Tables\Actions\Action::make('fiche_de_paie')
                     ->color(Color::Blue)
                     ->label('Fiche de paie')
-                    ->visible(fn(Paiement $record) => $record->type_paiement_id == TypePaiement::SALAIRE)
+                    ->visible(fn (Paiement $record) => $record->type_paiement_id == TypePaiement::SALAIRE)
                     ->form([
                         Forms\Components\Section::make('')
                             ->schema([

@@ -4,7 +4,6 @@ namespace App\Filament\Resources\MisAPiedResource\Pages;
 
 use App\Filament\Resources\MisAPiedResource;
 use App\Models\Contrat;
-use App\Models\Employee;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 

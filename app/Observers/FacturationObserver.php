@@ -29,7 +29,7 @@ class FacturationObserver
      */
     public function updated(Facturation $facturation): void
     {
-//        $facturation->update(['montant_facture' => $facturation->total_salaire_brut * $facturation->taux / 100]);
+        //        $facturation->update(['montant_facture' => $facturation->total_salaire_brut * $facturation->taux / 100]);
         Facturation::where('id', $facturation->id)->update(['montant_facture' => $facturation->total_salaire_brut * $facturation->taux / 100]);
     }
 

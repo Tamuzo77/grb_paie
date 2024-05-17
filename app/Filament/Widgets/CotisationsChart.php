@@ -12,28 +12,24 @@ class CotisationsChart extends ApexChartWidget
 {
     /**
      * Chart Id
-     *
-     * @var string
      */
     protected static ?string $chartId = 'cotisationsChart';
 
     /**
      * Widget Title
-     *
-     * @var string|null
      */
     protected static ?string $heading = 'CotisationsChart';
 
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
+
     /**
      * Chart options (series, labels, types, size, animations...)
      * https://apexcharts.com/docs/options
-     *
-     * @return array
      */
     protected function getOptions(): array
     {
         $misAPiedCount = MisAPied::count();
+
         return [
             'chart' => [
                 'type' => 'treemap',
@@ -42,7 +38,7 @@ class CotisationsChart extends ApexChartWidget
             'series' => [
                 [
                     'data' => [
-                        ['x' => "Mis A Pied", 'y' => $misAPiedCount ],
+                        ['x' => 'Mis A Pied', 'y' => $misAPiedCount],
                         ['x' => 'Avances', 'y' => Paiement::where('type_paiement_id', TypePaiement::AVANCE)->count()],
                         ['x' => 'Prêts', 'y' => Paiement::where('type_paiement_id', TypePaiement::PRET)->count()],
                         ['x' => 'Primes', 'y' => Prime::count()],

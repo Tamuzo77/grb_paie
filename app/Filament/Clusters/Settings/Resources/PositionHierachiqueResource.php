@@ -4,15 +4,12 @@ namespace App\Filament\Clusters\Settings\Resources;
 
 use App\Filament\Clusters\Settings;
 use App\Filament\Clusters\Settings\Resources\PositionHierachiqueResource\Pages;
-use App\Filament\Clusters\Settings\Resources\PositionHierachiqueResource\RelationManagers;
 use App\Models\PositionHierachique;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PositionHierachiqueResource extends Resource
 {
@@ -61,7 +58,7 @@ class PositionHierachiqueResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
                     ->placeholder('Non renseigné')
-                    ->formatStateUsing(fn(string $state) => str($state)->markdown()->toHtmlString())
+                    ->formatStateUsing(fn (string $state) => str($state)->markdown()->toHtmlString())
                     ->limit(50)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('positionHierachique.nom')
@@ -85,17 +82,17 @@ class PositionHierachiqueResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make()
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\RestoreAction::make(),
-                Tables\Actions\ForceDeleteAction::make()
+                Tables\Actions\ForceDeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make()
+                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }

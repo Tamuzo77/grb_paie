@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Contrat;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ContratPolicy
@@ -63,7 +63,7 @@ class ContratPolicy
      */
     public function forceDelete(User $user, Contrat $contrat): bool
     {
-        return $user->can('force_delete_contrat')  && getAnnee()->hasStatutEnCours();
+        return $user->can('force_delete_contrat') && getAnnee()->hasStatutEnCours();
     }
 
     /**
