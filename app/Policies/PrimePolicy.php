@@ -31,7 +31,7 @@ class PrimePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_prime');
+        return $user->can('create_prime') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -39,7 +39,7 @@ class PrimePolicy
      */
     public function update(User $user, Prime $prime): bool
     {
-        return $user->can('update_prime');
+        return $user->can('update_prime') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -47,7 +47,7 @@ class PrimePolicy
      */
     public function delete(User $user, Prime $prime): bool
     {
-        return $user->can('delete_prime');
+        return $user->can('delete_prime') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -55,7 +55,7 @@ class PrimePolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_prime');
+        return $user->can('delete_any_prime') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -63,7 +63,7 @@ class PrimePolicy
      */
     public function forceDelete(User $user, Prime $prime): bool
     {
-        return $user->can('force_delete_prime');
+        return $user->can('force_delete_prime') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -71,7 +71,7 @@ class PrimePolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_prime');
+        return $user->can('force_delete_any_prime') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -79,7 +79,7 @@ class PrimePolicy
      */
     public function restore(User $user, Prime $prime): bool
     {
-        return $user->can('restore_prime');
+        return $user->can('restore_prime') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -87,7 +87,7 @@ class PrimePolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_prime');
+        return $user->can('restore_any_prime') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -95,7 +95,7 @@ class PrimePolicy
      */
     public function replicate(User $user, Prime $prime): bool
     {
-        return $user->can('replicate_prime');
+        return $user->can('replicate_prime') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -103,6 +103,6 @@ class PrimePolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_prime');
+        return $user->can('reorder_prime') && getAnnee()->hasStatutEnCours();
     }
 }

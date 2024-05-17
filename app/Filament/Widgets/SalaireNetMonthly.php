@@ -2,23 +2,27 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Paiement;
+use Flowframe\Trend\Trend;
+use Flowframe\Trend\TrendValue;
+use Illuminate\Support\Carbon;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
-class ContratsChart extends ApexChartWidget
+class SalaireNetMonthly extends ApexChartWidget
 {
     /**
      * Chart Id
      *
      * @var string
      */
-    protected static ?string $chartId = 'contratsChart';
+    protected static ?string $chartId = 'salaireNetMonthly';
 
     /**
      * Widget Title
      *
      * @var string|null
      */
-    protected static ?string $heading = 'ContratsChart';
+    protected static ?string $heading = 'Salaires Net payé par mois';
 
     /**
      * Chart options (series, labels, types, size, animations...)
@@ -28,31 +32,29 @@ class ContratsChart extends ApexChartWidget
      */
     protected function getOptions(): array
     {
+        $annee = getAnnee();
+        $startDate = Carbon::parse("$annee->nom-01-01");
+        $endDate = Carbon::parse("$annee->nom-12-31");
+        $data = Trend::model(Paiement::class)
+            ->between(
+                start: $startDate,
+                end: $endDate,
+            )
+            ->perMonth()
+            ->sum('solde');
         return [
             'chart' => [
-                'type' => 'rangeArea',
+                'type' => 'area',
                 'height' => 300,
             ],
             'series' => [
                 [
-                    'name' => 'ContratsChart',
-                    'data' => [
-                        ['x' => 'Jan', 'y' => [0, 0]],
-                        ['x' => 'Feb', 'y' => [3, 25]],
-                        ['x' => 'Mar', 'y' => [5, 30]],
-                        ['x' => 'Apr', 'y' => [4, 45]],
-                        ['x' => 'May', 'y' => [10, 40]],
-                        ['x' => 'Jun', 'y' => [11, 40]],
-                        ['x' => 'Jul', 'y' => [20, 55]],
-                        ['x' => 'Aug', 'y' => [15, 60]],
-                        ['x' => 'Sep', 'y' => [8, 40]],
-                        ['x' => 'Oct', 'y' => [7, 30]],
-                        ['x' => 'Nov', 'y' => [3, 25]],
-                        ['x' => 'Dec', 'y' => [0, 0]],
-                    ],
+                    'name' => 'SalaireNetMonthly',
+                    'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
                 ],
             ],
             'xaxis' => [
+                'categories' => $data->map(fn (TrendValue $value) => gmdate('M ', strtotime($value->date))),
                 'labels' => [
                     'style' => [
                         'fontFamily' => 'inherit',
@@ -66,7 +68,7 @@ class ContratsChart extends ApexChartWidget
                     ],
                 ],
             ],
-            'colors' => ['#f59e0b'],
+            'colors' => ['#2196F3'],
             'stroke' => [
                 'curve' => 'smooth',
             ],

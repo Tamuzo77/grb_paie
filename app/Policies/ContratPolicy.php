@@ -31,7 +31,7 @@ class ContratPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_contrat');
+        return $user->can('create_contrat') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -39,7 +39,7 @@ class ContratPolicy
      */
     public function update(User $user, Contrat $contrat): bool
     {
-        return $user->can('update_contrat');
+        return $user->can('update_contrat') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -47,7 +47,7 @@ class ContratPolicy
      */
     public function delete(User $user, Contrat $contrat): bool
     {
-        return $user->can('delete_contrat');
+        return $user->can('delete_contrat') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -55,7 +55,7 @@ class ContratPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_contrat');
+        return $user->can('delete_any_contrat') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -63,7 +63,7 @@ class ContratPolicy
      */
     public function forceDelete(User $user, Contrat $contrat): bool
     {
-        return $user->can('force_delete_contrat');
+        return $user->can('force_delete_contrat')  && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -71,7 +71,7 @@ class ContratPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_contrat');
+        return $user->can('force_delete_any_contrat') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -79,7 +79,7 @@ class ContratPolicy
      */
     public function restore(User $user, Contrat $contrat): bool
     {
-        return $user->can('restore_contrat');
+        return $user->can('restore_contrat') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -87,7 +87,7 @@ class ContratPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_contrat');
+        return $user->can('restore_any_contrat') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -95,7 +95,7 @@ class ContratPolicy
      */
     public function replicate(User $user, Contrat $contrat): bool
     {
-        return $user->can('replicate_contrat');
+        return $user->can('replicate_contrat') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -103,6 +103,6 @@ class ContratPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_contrat');
+        return $user->can('reorder_contrat') && getAnnee()->hasStatutEnCours();
     }
 }

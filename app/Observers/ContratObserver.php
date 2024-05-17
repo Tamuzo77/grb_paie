@@ -12,8 +12,9 @@ class ContratObserver
      */
     public function created(Contrat $contrat): void
     {
-        $contrat->tauxIts = ItsService::getIts($contrat->salaire_brut);
-        $contrat->save();
+        $contratO = Contrat::find($contrat->id);
+        $contratO->tauxIts = ItsService::getIts($contrat->salaire_brut);
+        $contratO->save();
     }
 
     /**
@@ -21,8 +22,9 @@ class ContratObserver
      */
     public function updated(Contrat $contrat): void
     {
-        $contrat->tauxIts = ItsService::getIts($contrat->salaire_brut);
-        $contrat->save();
+        $contratO = Contrat::find($contrat->id);
+        $contratO->tauxIts = ItsService::getIts($contrat->salaire_brut);
+        $contratO->save();
     }
 
     /**

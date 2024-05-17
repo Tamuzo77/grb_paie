@@ -70,6 +70,9 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function ($query) {
+                $query->where('id', '!=', 1);
+            })
             ->columns([
                 Tables\Columns\Layout\Split::make([
                     Tables\Columns\ImageColumn::make('avatar')
@@ -156,6 +159,6 @@ class UserResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return User::count();
+        return User::where('id', '!=', 1)->count();
     }
 }

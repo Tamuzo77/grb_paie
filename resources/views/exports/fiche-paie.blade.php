@@ -121,7 +121,7 @@
             Position hiérachique: xxxxx</td>
         <td colspan="4"
             style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
-            Date d'ancienneté: {{ DateTime::createFromFormat('l d F Y', $employee->date_debut)  }}</td>
+            Date d'ancienneté: {{ $date_ancienete  }}</td>
         <td colspan="4"
             style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
         </td>
@@ -251,7 +251,7 @@
     </tr>
     @endif
 
-    @if(in_array('include_conges'))
+    @if(in_array('include_conges', $preferences))
 
     <tr>
         <td style="height:35px"></td>

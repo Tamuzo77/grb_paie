@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
         Paiement::observe(PaiementObserver::class);
         SoldeCompte::observe(SoldeCompteObserver::class);
         Employee::observe(EmployeeObserver::class);
-        //        Contrat::observe(ContratObserver::class);
+        Contrat::observe(ContratObserver::class);
         Facturation::observe(FacturationObserver::class);
         CotisationClient::observe(CotisationClientObserver::class);
     }

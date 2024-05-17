@@ -8,6 +8,7 @@ use App\Models\Paiement;
 use App\Models\SoldeCompte;
 use DateTime;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromView;
 use Rmunate\Utilities\SpellNumber;
 
@@ -69,7 +70,7 @@ use Rmunate\Utilities\SpellNumber;
         $absences = $nb_jours_absences * $salaire / 20;
 
         $company = Company::first();
-
+        $date_ancienete = (new DateTime($this->paiement->employee->date_entree))->format('d/m/Y');
         return view('exports.fiche-paie', [
             'paiement' => $this->paiement,
             'employee' => $this->paiement->employee,
@@ -89,6 +90,7 @@ use Rmunate\Utilities\SpellNumber;
             'primes' => $primes,
             'preferences' => $this->preferences,
             'absences' => $absences,
+            'date_ancienete' => $date_ancienete
         ]);
     }
 }

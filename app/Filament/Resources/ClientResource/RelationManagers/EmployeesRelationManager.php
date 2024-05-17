@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ClientResource\RelationManagers;
 
 use App\Actions\CalculerSalaireMensuel;
+use App\Filament\Resources\ContratResource;
 use App\Filament\Resources\EmployeeResource;
 use App\Models\Annee;
 use App\Models\Contrat;
@@ -134,6 +135,8 @@ class EmployeesRelationManager extends RelationManager
                     ])
                     ->columns(3),
                 Forms\Components\Fieldset::make(label: 'Informations personnelles')
+                    ->key('informations_personnelles')
+                    ->hiddenOn('edit')
                     ->schema([
                         Forms\Components\TextInput::make('npi')
                             ->label('Numero d\' idendentification personnelle (NPI)')
@@ -207,6 +210,7 @@ class EmployeesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('employee.nom')
+            ->recordUrl(null)
             ->columns([
                 Tables\Columns\TextColumn::make('employee.nom')
                     ->label('Nom')
@@ -282,6 +286,7 @@ class EmployeesRelationManager extends RelationManager
 
                         $employee = Employee::create($dataForEmployee);
                         $data['employee_id'] = $employee->id;
+                        $data['tauIts'] = ItsService::getIts(intval($data['salaire_brut']));
                         $data['date_signature'] = now();
 
                         //                        $filterData = [];
@@ -513,7 +518,8 @@ class EmployeesRelationManager extends RelationManager
                     })
                     ->label('Effectuer un paiement'),
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(false),
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
                     Tables\Actions\ForceDeleteAction::make(),

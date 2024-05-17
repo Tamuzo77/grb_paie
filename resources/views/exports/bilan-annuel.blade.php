@@ -85,7 +85,7 @@
 //            $a = $employee->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * 0.036;
             foreach ($employee->contrats as $contrat) {
                 $a += $contrat->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * $contrat->client->tauxCnss;
-                $b += $contrat->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * $contrat->client->tauxIts;
+                $b += $contrat->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant') * $contrat->tauxIts;
                 $c += $a + $b;
                 $salaireBrutTotal += $contrat->salaire_brut;
                 $salaireNetTotal += $contrat->soldeComptes->where('donnees', \App\Models\SoldeCompte::SALAIRE_MENSUEL)->sum('montant');
