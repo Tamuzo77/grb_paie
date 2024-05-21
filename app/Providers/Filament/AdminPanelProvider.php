@@ -48,7 +48,7 @@ class AdminPanelProvider extends PanelProvider
 //            ->font('Montserrat Alternates', provider: GoogleFontProvider::class)
             ->font('Inter', provider: GoogleFontProvider::class)
             ->path('admin')
-            ->login()
+//            ->login()
             ->brandLogo(fn () => view('filament.admin.logo-light'))
             ->darkModeBrandLogo(fn () => view('filament.admin.logo'))
             ->brandLogoHeight('3.5rem')
