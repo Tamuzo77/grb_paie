@@ -14,7 +14,7 @@ class EmployeeObserver
     public function created(Employee $employee): void
     {
         $employee->annee_id = Annee::latest()->first()->id;
-        $employee->tauxIts = ItsService::getIts($employee->salaire);
+        //                $employee->tauxIts = ItsService::getIts($employee->salaire_brut);
         $employee->save();
     }
 

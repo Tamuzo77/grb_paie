@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\EmployeeResource\Pages;
 
 use App\Filament\Resources\EmployeeResource;
+use App\Models\Contrat;
 use App\Models\Employee;
 use App\Models\ModePaiement;
 use Filament\Forms\Components\Section;
@@ -32,7 +33,7 @@ class SalaireBulkPage extends Page implements HasForms, HasTable
     public function mount()
     {
         $recordIds = explode(',', request('records'));
-        $this->records = Employee::whereIn('id', $recordIds)->get();
+        $this->records = Contrat::whereIn('id', $recordIds)->get();
     }
 
     public function getHeading(): string|Htmlable

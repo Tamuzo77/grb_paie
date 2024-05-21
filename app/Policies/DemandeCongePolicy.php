@@ -2,23 +2,13 @@
 
 namespace App\Policies;
 
-use App\Models\Annee;
 use App\Models\DemandeConge;
 use App\Models\User;
-use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DemandeCongePolicy
 {
     use HandlesAuthorization;
-    use InteractsWithPageFilters;
-
-    protected static ?Annee $annee = null;
-
-    public function __construct()
-    {
-        self::$annee = Annee::whereSlug($filters['annee_id'] ?? now()->year)->firstOrFail();
-    }
 
     /**
      * Determine whether the user can view any models.
@@ -41,7 +31,7 @@ class DemandeCongePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_demande::conge') && self::$annee->hasStatutEnCours();
+        return $user->can('create_demande::conge') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -49,7 +39,7 @@ class DemandeCongePolicy
      */
     public function update(User $user, DemandeConge $demandeConge): bool
     {
-        return $user->can('update_demande::conge');
+        return $user->can('update_demande::conge') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -57,7 +47,7 @@ class DemandeCongePolicy
      */
     public function delete(User $user, DemandeConge $demandeConge): bool
     {
-        return $user->can('delete_demande::conge');
+        return $user->can('delete_demande::conge') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -65,7 +55,7 @@ class DemandeCongePolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_demande::conge');
+        return $user->can('delete_any_demande::conge') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -73,7 +63,7 @@ class DemandeCongePolicy
      */
     public function forceDelete(User $user, DemandeConge $demandeConge): bool
     {
-        return $user->can('force_delete_demande::conge');
+        return $user->can('force_delete_demande::conge') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -81,7 +71,7 @@ class DemandeCongePolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_demande::conge');
+        return $user->can('force_delete_any_demande::conge') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -89,7 +79,7 @@ class DemandeCongePolicy
      */
     public function restore(User $user, DemandeConge $demandeConge): bool
     {
-        return $user->can('restore_demande::conge');
+        return $user->can('restore_demande::conge') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -97,7 +87,7 @@ class DemandeCongePolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_demande::conge');
+        return $user->can('restore_any_demande::conge') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -105,7 +95,7 @@ class DemandeCongePolicy
      */
     public function replicate(User $user, DemandeConge $demandeConge): bool
     {
-        return $user->can('replicate_demande::conge');
+        return $user->can('replicate_demande::conge') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -113,6 +103,6 @@ class DemandeCongePolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_demande::conge');
+        return $user->can('reorder_demande::conge') && getAnnee()->hasStatutEnCours();
     }
 }

@@ -11,8 +11,8 @@
         'September' => 'Septembre',
         'October' => 'Octobre',
         'November' => 'Novembre',
-        'December' => 'Décembre'
-    ]
+        'December' => 'Décembre',
+    ];
 @endphp
 <table>
     <thead>
@@ -25,11 +25,17 @@
     <tr>
         <td style="height:35px"></td>
         <td style="height:50px;border:2px solid #3498db;text-align:center;vertical-align:middle;font-weight:bold;text-align:center;"
-            colspan="4">{{$employee->client->nom}}</td>
+            colspan="4">{{ $employee->client->nom }}</td>
         <td style="height:50px;border:2px solid #3498db;vertical-align:middle;font-weight:bold;text-align:center;"
             colspan="10"></td>
     </tr>
-
+    <tr>
+        <td style="height:35px"></td>
+        <td style="height:50px;border:2px solid #3498db;text-align:center;vertical-align:middle;font-weight:bold;text-align:center;"
+            colspan="4">Numéro IFU :{{$employee->client->ifu}}</td>
+        <td style="height:50px;border:2px solid #3498db;vertical-align:middle;font-weight:bold;text-align:center;"
+            colspan="10"></td>
+    </tr>
     <tr>
         <td style="height:35px"></td>
         <td style="height:50px;vertical-align:middle;border:2px solid #3498db;text-align:center;font-size:18px;font-weight:bold;"
@@ -40,7 +46,8 @@
         <td style="height:35px"></td>
         <td style="height:30px;vertical-align:middle;border:2px solid #3498db" colspan="9"></td>
         <td style="height:30px;vertical-align:middle;border:2px solid #3498db" colspan="5">
-            <h3>Fait le {{ now()->locale('fr')->format('d ') . $mois[now()->format('F')] . ' ' . now()->year }} </h3>
+            <h3>Fait le {{ now()->locale('fr')->format('d ') . $mois[now()->format('F')] . ' ' . now()->year }}
+            </h3>
     </tr>
     <tr>
         <td style="height:30px"></td>
@@ -48,11 +55,11 @@
         <td style="height:30px;vertical-align:middle;border:2px solid #3498db" colspan="5" class='py-3'>
             Periode: {{ $mois[now()->format('F')] . ' ' . now()->year }}</td>
     </tr>
-    {{--        <tr class="">--}}
-    {{--            <td style="height:30px;"></td>--}}
-    {{--            <td style="height:30px;vertical-align:middle;border:2px solid #3498db" colspan="9"></td>--}}
-    {{--            <td style="height:30px;vertical-align:middle;border:2px solid #3498db" colspan="5">xxxxx</td>--}}
-    {{--        </tr>--}}
+    {{--        <tr class=""> --}}
+    {{--            <td style="height:30px;"></td> --}}
+    {{--            <td style="height:30px;vertical-align:middle;border:2px solid #3498db" colspan="9"></td> --}}
+    {{--            <td style="height:30px;vertical-align:middle;border:2px solid #3498db" colspan="5">xxxxx</td> --}}
+    {{--        </tr> --}}
     <tr class="">
         <td style="height:35px"></td>
         <td style="height:35px" colspan="9"></td>
@@ -71,36 +78,65 @@
         <td style="height:35px"></td>
         <td colspan="6"
             style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">Nom
-            : {{$employee->nom}}</td>
+            : {{ $employee->employee->nom }}</td>
         <td colspan="4"
             style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
             Prénoms:
         </td>
         <td colspan="4"
-            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">{{$employee->prenoms}}</td>
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
+            {{ $employee->employee->prenoms }}</td>
     </tr>
     <tr>
         <td style="height:35px"></td>
         <td colspan="6"
             style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
-            Fonction : {{$employee->fonctions()->first()->nom ?? ' '}}</td>
+            Fonction : {{ $employee->fonction?->nom ?? ' ' }}</td>
         <td colspan="4"
             style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
             Catégorie:
         </td>
         <td colspan="4"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">{{$employee->category?->nom}}</td>
+            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            {{ $employee->category?->nom }}</td>
+    </tr>
+
+    <tr>
+        <td style="height:35px"></td>
+        <td colspan="6"
+            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            Situation matrimoniale : {{ $employee->employee->situation_matrimoniale }}</td>
+        <td colspan="4"
+            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            Nombre
+            d'enfants: {{ $employee->employee->nb_enfants }}</td>
+        <td colspan="4"
+            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+        </td>
     </tr>
     <tr>
         <td style="height:35px"></td>
         <td colspan="6"
             style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
-            Situation matrimoniale : {{ $employee->situation_matrimoniale }}</td>
+            Position hiérachique: xxxxx</td>
         <td colspan="4"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">Nombre
-            d'enfants: {{$employee->nb_enfants}}</td>
+            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            Date d'ancienneté: {{ $date_ancienete  }}</td>
         <td colspan="4"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;"></td>
+            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+        </td>
+    </tr>
+    <tr>
+        <td style="height:35px"></td>
+        <td colspan="6"
+            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            Numéro IFU: {{$employee->employee->ifu}}</td>
+        <td colspan="4"
+            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+        </td>
+        <td colspan="4"
+            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+        </td>
     </tr>
     <tr>
         <td style="height:35px"></td>
@@ -109,15 +145,15 @@
     {{-- <td >
 
 
-        <tr>d'enfants: xxxxxxx</tr>
-      </td>
-      <td colSpan={2} className=''>
+    <tr>d'enfants: xxxxxxx</tr>
+  </td>
+  <td colSpan={2} className=''>
 
 
-        <tr>
-      <tr colSpan={5} className='py-3'></tr>
-    </tr>
-      </td> --}}
+    <tr>
+  <tr colSpan={5} className='py-3'></tr>
+</tr>
+  </td> --}}
     <tr class="">
         <td style="height:50px"></td>
         <td style="background-color: #3498db;color: #ffffff;height:50px;vertical-align:middle;font-weight:bold;"
@@ -130,8 +166,8 @@
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">SALAIRES BRUTES</td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-            colspan="4">{{$employee->salaire}}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
+            {{ $employee->salaire_brut }}</td>
 
     </tr>
     <tr class="">
@@ -142,36 +178,46 @@
             colspan="8">SALAIRE BRUT MENSUEL
         </td>
         <td style="background-color: #3498db;color: #ffffff;height:50px;vertical-align:middle;font-weight:bold;text-align:center"
-            colspan="4">{{$employee->salaire}}</td>
+            colspan="4">{{ $employee->salaire_brut }}</td>
     </tr>
     <tr>
         <td style="height:35px"></td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">RETENUES OBLIGATOIRES</td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-            colspan="4">{{$retenueObligatoire == 0 ? ' ' : $retenueObligatoire}}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">RETENUES OBLIGATOIRES
+        </td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
+            {{ $retenueObligatoire == 0 ? ' ' : $retenueObligatoire }}</td>
     </tr>
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">C.N.S.S</td>
         @php
-            $cnss = $employee->tauxCnss ? $employee->salaire * $employee->tauxCnss : $employee->salaire * 0.036;
-            $montantIts = $employee->salaire * $employee->tauxIts;
+            $cnss = $employee->client->tauxCnss ? $employee->salaire_brut * $employee->client->tauxCnss : $employee->salaire_brut * 0.036;
+            $montantIts = $employee->salaire_brut * $employee->tauxIts;
             $totalRetenu = $cnss + $montantAvance + $montantIts + $retenueObligatoire;
         @endphp
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-            colspan="4">{{$cnss}}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
+            {{ $cnss }}</td>
     </tr>
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">I.P.T.S</td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-            colspan="4">{{ $montantIts }}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
+            {{ $montantIts }}</td>
     </tr>
     <tr>
         <td style="height:35px"></td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">AVANCE SUR SALAIRE</td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-            colspan="4">{{ $montantAvance ==0 ? '': $montantAvance }}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Convention
+            collective
+        </td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
+        </td>
+    </tr>
+    <tr>
+        <td style="height:35px"></td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">AVANCE SUR SALAIRE
+        </td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
+            {{ $montantAvance == 0 ? '' : $montantAvance }}</td>
     </tr>
     <tr class="">
         <td style="height:50px"></td>
@@ -181,33 +227,60 @@
             colspan="8">TOTAL RETENUES OBLIGATOIRES
         </td>
         <td style="background-color: #3498db;color: #ffffff;height:50px;vertical-align:middle;font-weight:bold;text-align:center"
-            colspan="4">{{$totalRetenu}}</td>
+            colspan="4">{{ $totalRetenu }}</td>
     </tr>
     {{-- <tr>
-        <td style="height:35px"></td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="14" class='py-3'></td>
-    </tr> --}}
+    <td style="height:35px"></td>
+    <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="14" class='py-3'></td>
+</tr> --}}
     <tr>
         <td style="height:35px"></td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Salaire net 20 jours</td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-            colspan="4">{{$salaireForTwentyDays}}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Salaire net 20 jours
+        </td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
+            {{ $salaireForTwentyDays }}</td>
     </tr>
+    @if(in_array('include_mis_a_pied', $preferences))
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Mise à
-            pied: {{$misApiedsJours}} jour(s)
+            pied: {{ $misApiedsJours }} jour(s)
         </td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-            colspan="4">{{$misApieds}}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
+            {{ $misApieds }}</td>
     </tr>
-    @if(isset($primes) && !empty($primes))
+    @endif
+
+    @if(in_array('include_conges', $preferences))
+
+    <tr>
+        <td style="height:35px"></td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">
+            Congés
+        </td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
+        </td>
+    </tr>
+    @endif
+
+    @if(in_array('include_absences', $preferences))
+        <tr>
+        <td style="height:35px"></td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">
+            Absences
+        </td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
+            {{ $absences ?? 0}}
+        </td>
+    </tr>
+    @endif
+    @if (in_array('include_primes', $preferences))
         <tr>
             <td style="height:35px"></td>
             <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="10">Primes
             </td>
             <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center"
-                colspan="4">{{$primes}}</td>
+                colspan="4">{{ $primes ?? 0 }}</td>
         </tr>
     @endif
     <tr class="">
@@ -222,37 +295,39 @@
     </tr>
     <tr>
         <td style="height:35px"></td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;font-weight:bold" colspan="14">MODE DE
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;font-weight:bold" colspan="14">
+            MODE DE
             REGLEMENT DE:
         </td>
     </tr>
     <tr>
         <td style="height:35px"></td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;font-weight:bold"
-            colspan="14">{{ucwords($montantLettre)}}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db;font-weight:bold" colspan="14">
+            {{ ucwords($montantLettre) }}</td>
     </tr>
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="2">Caisse</td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db"
-            colspan="12">{{ $paiement->modePaiement->nom == 'Caisse' ? 'X' : '' }}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="12">
+            {{ $paiement->modePaiement->nom == 'Caisse' ? 'X' : '' }}</td>
     </tr>
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="2">Chèque</td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db"
-            colspan="12">{{ $paiement->modePaiement->nom == 'Chèque' ? 'X' : '' }}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="12">
+            {{ $paiement->modePaiement->nom == 'Chèque' ? 'X' : '' }}</td>
     </tr>
     <tr>
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="2">Virement</td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db"
-            colspan="12">{{ $paiement->modePaiement->nom == 'Virement'  ? 'X' : '' }}</td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="12">
+            {{ $paiement->modePaiement->nom == 'Virement' ? 'X' : '' }}</td>
     </tr>
     <tr>
         <td style="height:50px"></td>
         <td style="height:50px;vertical-align:middle;border:2px solid #3498db;font-weight:bold;text-align:center;"
-            colspan="14">DANS VOTRE INTERET ET POUR VALIDER VOS DROITS, VEILLER CONSERVER CETTE FICHE DE PAIE SANS
+            colspan="14">DANS VOTRE INTERET ET POUR VALIDER VOS DROITS, VEILLER CONSERVER CETTE FICHE DE PAIE
+            SANS
             LIMITATION DE DUREE. AUCUN DUPLICATA NE SERA DÉLIVRÉ.
         </td>
     </tr>
@@ -265,7 +340,8 @@
     </tr>
     <tr>
         <td style="height:35px"></td>
-        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="14" class='py-3'></td>
+        <td style="height:35px;vertical-align:middle;border:2px solid #3498db" colspan="14" class='py-3'>
+        </td>
     </tr>
     <tr>
         <td style="height:50px;"></td>
@@ -273,11 +349,13 @@
             colspan="11"></td>
         <td style="height:100px;vertical-align:middle;border-bottom:1px solid white;border-left:1px solid white;border-top:1px solid white;font-weight:bold;text-align:center"
             colspan="3">
-            @if($company->signature)
-                <img src="storage/{{$company->signature}}" alt="" srcset="" width="80px" height="80px">
+            @if ($company->signature)
+                <img src="storage/{{ $company->signature }}" alt="" srcset="" width="80px"
+                     height="80px">
             @else
                 <img src="image/image-null.png" alt="" srcset="">
-            @endif        </td>
+            @endif
+        </td>
     </tr>
 
     </tbody>

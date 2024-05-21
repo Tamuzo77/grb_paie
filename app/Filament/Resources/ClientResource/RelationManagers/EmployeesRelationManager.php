@@ -4,11 +4,14 @@ namespace App\Filament\Resources\ClientResource\RelationManagers;
 
 use App\Actions\CalculerSalaireMensuel;
 use App\Filament\Resources\EmployeeResource;
+use App\Models\Annee;
+use App\Models\Contrat;
 use App\Models\Employee;
 use App\Models\ModePaiement;
 use App\Models\Paiement;
 use App\Models\SoldeCompte;
 use App\Models\TypePaiement;
+use App\Services\ItsService;
 use DateTime;
 use Filament\Forms;
 use Filament\Forms\Components\ToggleButtons;
@@ -18,8 +21,12 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use PHPUnit\Exception;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
+use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 
 class EmployeesRelationManager extends RelationManager
 {
@@ -27,27 +34,33 @@ class EmployeesRelationManager extends RelationManager
 
     protected static ?string $modelLabel = 'Employé';
 
+    protected static ?string $pluralModelLabel = 'Employés';
+
+    protected static ?string $label = 'Employés';
+
     protected static ?string $title = 'Employés';
 
     public function form(Form $form): Form
     {
+
         return $form
             ->schema([
-                Forms\Components\Fieldset::make('Entreprise d\'appartenance')
+                Forms\Components\Fieldset::make('A propos du contrat')
                     ->schema([
                         Forms\Components\Select::make('category_id')
                             ->label('Catégorie')
+                            ->required()
                             ->preload()
                             ->searchable()
                             ->optionsLimit(5)
                             ->relationship('category', 'nom')
                             ->default(null),
-                        Forms\Components\Select::make('fonctions')
-                            ->label('Fonctions')
-                            ->relationship(titleAttribute: 'nom')
-                            ->multiple()
+                        Forms\Components\Select::make('fonction_id')
+                            ->label('Fonction')
+                            ->relationship(name: 'fonction', titleAttribute: 'nom')
                             ->searchable()
-                            ->columnSpan(2)
+                            ->required()
+                            ->columnSpan(1)
                             ->createOptionForm([
                                 Forms\Components\TextInput::make('nom')
                                     ->required()
@@ -55,7 +68,14 @@ class EmployeesRelationManager extends RelationManager
                             ])
                             ->optionsLimit(5)
                             ->preload(),
-                        ToggleButtons::make('cadre')
+                        Forms\Components\Select::make('position_hierachique_id')
+                            ->label('Position Hiérachique')
+                            ->relationship(name: 'positionHierachique', titleAttribute: 'nom')
+                            ->searchable()
+                            ->columnSpan(1)
+                            ->optionsLimit(5)
+                            ->preload(),
+                        ToggleButtons::make('est_cadre')
                             ->label('Est il cadre ?')
                             ->options([
                                 '1' => 'Oui',
@@ -68,15 +88,54 @@ class EmployeesRelationManager extends RelationManager
                             ->default('0')
                             ->grouped()
                             ->inline(),
-                        Forms\Components\DatePicker::make('date_embauche')
+                        Forms\Components\DatePicker::make('date_debut')
+                            ->label('Date d\'embauche')
+                            ->required()
                             ->date(),
-                        Forms\Components\DatePicker::make('date_depart')
+                        Forms\Components\DatePicker::make('date_fin')
+                            ->label('Date de fin de contrat')
+                            ->required()
                             ->date()
-                            ->after('date_embauche'),
+                            ->after('date_debut'),
+                        Forms\Components\TextInput::make('salaire_brut')
+                            ->label('Salaire brut')
+                            ->required()
+                            ->columnSpan(2)
+                            ->live()
+                            ->mask(RawJs::make('$money($input)'))
+                            ->stripCharacters(',')
+                            ->suffix('FCFA')
+                            ->numeric()
+                            ->afterStateUpdated(fn (Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state))))
+                            ->default(0),
+                        Forms\Components\Select::make('statut')
+                            ->label('Statut')
+                            ->options([
+                                'En cours' => 'En cours',
+                                'Clos' => 'Clos',
+                            ])
+                            ->default('En cours'),
+                        Forms\Components\TextInput::make('nb_jours_conges_acquis')
+                            ->numeric()
+                            ->columnSpan(2)
+                            ->label('Nombre de jours de congés acquis')
+                            ->default(0),
+                        Forms\Components\TextInput::make('solde_jours_conges_payes')
+                            ->numeric()
+                            ->label('Coût unitaire')
+                            ->default(0),
+                        Forms\Components\TextInput::make('tauxIts')
+                            ->hidden()
+                            ->numeric()
+                            ->label('Taux ITS')
+                            ->suffix('%')
+                            ->default(0),
 
                     ])
                     ->columns(3),
                 Forms\Components\Fieldset::make(label: 'Informations personnelles')
+                    ->key('informations_personnelles')
+                    ->hiddenOn('edit')
                     ->schema([
                         Forms\Components\TextInput::make('npi')
                             ->label('Numero d\' idendentification personnelle (NPI)')
@@ -86,8 +145,7 @@ class EmployeesRelationManager extends RelationManager
                             ->default(null),
                         Forms\Components\TextInput::make('nom')
                             ->required()
-                            ->columnSpan(2)
-                            ->autocapitalize(true),
+                            ->autocapitalize(),
                         Forms\Components\TextInput::make('prenoms')
                             ->label('Prénoms')
                             ->required()
@@ -97,24 +155,32 @@ class EmployeesRelationManager extends RelationManager
                             ->label('Téléphone')
                             ->hint('Contact téléphonique')
                             ->required()
-                            ->unique(ignoreRecord : true)
+                            ->unique(table: 'employees', column: 'telephone')
 //                            ->prefix('+229')
+//                            ->maxLength(8)
                             ->default(null),
                         Forms\Components\TextInput::make('email')
                             ->email()
-                            ->unique(ignoreRecord: true)
+                            ->unique(table: 'employees', column: 'email')
                             ->required()
                             ->maxLength(255)
                             ->default(null),
+                        Forms\Components\TextInput::make('ifu')
+                            ->numeric()
+                            ->placeholder('Ex: 1234567890123')
+                            ->label('Identifiant fiscal unique (IFU)')
+                            ->maxLength(16)
+                            ->default(null),
                         Forms\Components\DatePicker::make('date_naissance')
-                            ->label('Date de naissance')
                             ->date()
+                            ->label('Date de naissance')
                             ->maxDate(now()->subYears(18)),
                         Forms\Components\TextInput::make('lieu_naissance')
-                            ->label('Lieu de naissance')
                             ->maxLength(20)
+                            ->label('Lieu de naissance')
                             ->default(null),
                         Forms\Components\Select::make('situation_matrimoniale')
+                            ->label('Situation matrimoniale')
                             ->options([
                                 'Célibataire' => 'Célibataire',
                                 'Mariée' => 'Mariée',
@@ -123,6 +189,7 @@ class EmployeesRelationManager extends RelationManager
                             ])
                             ->default(null),
                         Forms\Components\Select::make('sexe')
+                            ->label('Sexe')
                             ->options([
                                 'M' => 'Masculin',
                                 'F' => 'Féminin',
@@ -134,134 +201,62 @@ class EmployeesRelationManager extends RelationManager
                             ->integer()
                             ->default(0),
                     ]),
-
-                Forms\Components\Fieldset::make('Informations financières')
-                    ->schema([
-                        Forms\Components\Select::make('bank_id')
-                            ->label('Banque')
-                            ->live()
-                            ->hintColor('accent')
-                            ->relationship('bank', 'code')
-                            ->hintIcon('far-building')
-                            ->searchable()
-                            ->required()
-                            ->optionsLimit(5)
-                            ->preload(),
-                        Forms\Components\TextInput::make('numero_compte')
-                            ->label('Numéro de compte')
-                            ->maxLength(15)
-                            ->numeric()
-                            ->default(null),
-                        Forms\Components\TextInput::make('salaire')
-                            ->label('Salaire brut')
-                            ->required()
-                            ->mask(RawJs::make('$money($input)'))
-                            ->stripCharacters(',')
-                            ->suffix('FCFA')
-                            ->numeric()
-                            ->columnSpan(EmployeeResource::getPages()['edit'] ? 2 : 1)
-                            ->default(0),
-                        Forms\Components\TextInput::make('tauxCnss')
-                            ->label('Taux CNSS')
-                            ->numeric()
-                            ->columnSpanFull()
-                            ->hiddenOn('edit')
-//                            ->inputMode('decimal')
-                            ->suffix('%')
-                            ->default(3.6),
-
-                    ]),
-                Forms\Components\Fieldset::make(label: 'Informations complémentaires')
-                    ->schema([
-                        Forms\Components\TextInput::make('nb_jours_conges_acquis')
-                            ->label('Nombre de jours de congés acquis')
-                            ->numeric()
-                            ->default(0),
-                        Forms\Components\TextInput::make('solde_jours_conges_payes')
-                            ->label('Coût unitaire')
-                            ->numeric()
-                            ->default(0),
-                    ]),
-
             ]);
-    }
 
-    protected function getContentSection()
-    {
-        return Forms\Components\Section::make('solde')
-            ->schema([
-                Forms\Components\Grid::make(columns: 1)
-                    ->schema([
-                        Forms\Components\TextInput::make('salaire_mensuel')
-                            ->label('Salaire mensuel')
-                            ->placeholder('Salaire mensuel')
-                            ->numeric()
-                            ->hiddenLabel()
-                            ->readOnly()
-                            ->suffix('FCFA'),
-                        Forms\Components\Checkbox::make('trezieme_mois')
-                            ->label('Treizième mois')
-                            ->default(false),
-                        Forms\Components\TextInput::make('nb_jours_conges_payes')
-                            ->hiddenLabel()
-                            ->placeholder('Nombre de jours de congés payés')
-                            ->numeric()
-                            ->default(11)
-                            ->maxValue(19),
-                    ])->columnSpan(1),
-                Forms\Components\Grid::make()
-                    ->schema([
-                        Forms\Components\ViewField::make('solde_preview')
-                            ->label('Solde')
-                            ->columnSpanFull()
-                            ->view('filament.employee.solde.preview'),
-                    ])->columnSpan(2),
-            ])->columns(3);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('nom')
+            ->recordTitleAttribute('employee.nom')
+            ->recordUrl(null)
             ->columns([
-                Tables\Columns\TextColumn::make('nom')
+                Tables\Columns\TextColumn::make('employee.nom')
+                    ->label('Nom')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('prenoms')
+                Tables\Columns\TextColumn::make('employee.prenoms')
                     ->label('Prénoms')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('telephone')
+                PhoneColumn::make('employee.telephone')
                     ->label('Téléphone')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                Tables\Columns\TextColumn::make('employee.email')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('category.nom')
                     ->label('Catégorie')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
-                Tables\Columns\IconColumn::make('cadre')
+                Tables\Columns\IconColumn::make('est_cadre')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Cadre')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('salaire')
+                Tables\Columns\TextColumn::make('salaire_brut')
                     ->label('Salaire brut')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('date_debut')
+                    ->label('Date d\'embauche')
+                    ->dateTime(format: ' l d F Y')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('date_fin')
+                    ->label('Date de fin de contrat')
+                    ->dateTime(format: ' l F Y')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Créé le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label('Modifié le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->label('Supprimé le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-//            ->selectable(function (Employee $record) {
-//                dd($record->paiements) ;
-//            })
             ->filters([
                 Tables\Filters\TrashedFilter::make()
                     ->trueLabel('Historique')
@@ -270,14 +265,164 @@ class EmployeesRelationManager extends RelationManager
                     ->placeholder('Employés'),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->label('Ajouter un employé')
+                    ->mutateFormDataUsing(function (array $data) {
+                        $annee = Annee::latest()->first();
+                        $data['annee_id'] = getAnnee()->id;
+                        $dataForEmployee = [];
+                        //                        $dataForEmployee['npi'] = $data['npi'];
+                        $dataForEmployee['annee_id'] = $data['annee_id'];
+                        $dataForEmployee['nom'] = $data['nom'];
+                        $dataForEmployee['prenoms'] = $data['prenoms'];
+                        $dataForEmployee['telephone'] = $data['telephone'];
+                        $dataForEmployee['email'] = $data['email'];
+                        $dataForEmployee['date_naissance'] = $data['date_naissance'];
+                        $dataForEmployee['lieu_naissance'] = $data['lieu_naissance'];
+                        $dataForEmployee['situation_matrimoniale'] = $data['situation_matrimoniale'];
+                        $dataForEmployee['sexe'] = $data['sexe'];
+                        $dataForEmployee['nb_enfants'] = $data['nb_enfants'];
+
+                        $employee = Employee::create($dataForEmployee);
+                        $data['employee_id'] = $employee->id;
+                        $data['tauIts'] = ItsService::getIts(intval($data['salaire_brut']));
+                        $data['date_signature'] = now();
+
+                        //                        $filterData = [];
+                        //                        $filterData['client_id'] = $data['client_id'];
+                        //                        $filterData['employee_id'] = $data['employee_id'];
+                        //                        $filterData['date_signature'] = $data['date_signature'];
+                        //                        $filterData['date_debut'] = $data['date_debut'];
+                        //                        $filterData['date_fin'] = $data['date_fin'];
+                        //                        $filterData['salaire_brut'] = $data['salaire_brut'];
+                        //                        $filterData['nb_jours_conges_acquis'] = $data['nb_jours_conges_acquis'];
+                        //                        $filterData['solde_jours_conges_payes'] = $data['solde_jours_conges_payes'];
+                        //                        $filterData['tauxIts'] = ItsService::getIts(intval($data['salaire_brut']));
+                        //                        $filterData['est_cadre'] = $data['est_cadre'];
+                        //                        $filterData['category_id'] = $data['category_id'];
+                        //                        $filterData['fonction_id'] = $data['fonction_id'];
+                        //                        $filterData['statut'] = $data['statut'];
+
+                        return $data;
+                    }),
+                Tables\Actions\AttachAction::make()
+                    ->modalHeading('Ajouter un contrat')
+                    ->form([
+                        Forms\Components\Section::make('')
+                            ->schema([
+                                Forms\Components\Select::make('employee_id')
+                                    ->label('Employé')
+                                    ->relationship('employee', 'nom')
+                                    ->searchable()
+                                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->nom} {$record->prenoms}")
+                                    ->required()
+                                    ->columnSpanFull()
+                                    ->optionsLimit(5)
+                                    ->preload(),
+                                Forms\Components\Select::make('category_id')
+                                    ->label('Catégorie')
+                                    ->relationship('category', 'nom')
+                                    ->searchable()
+                                    ->columnSpan(2)
+                                    ->required()
+                                    ->optionsLimit(5)
+                                    ->preload(),
+                                Forms\Components\Select::make('fonction_id')
+                                    ->label('Fonction')
+                                    ->relationship(name: 'fonction', titleAttribute: 'nom')
+                                    ->searchable()
+                                    ->columnSpan(2)
+                                    ->required()
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('nom')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                                    ->optionsLimit(5)
+                                    ->preload(),
+                                Forms\Components\Select::make('position_hierachique_id')
+                                    ->label('Position Hiérachique')
+                                    ->relationship(name: 'positionHierachique', titleAttribute: 'nom')
+                                    ->searchable()
+                                    ->columnSpan(2)
+                                    ->optionsLimit(5)
+                                    ->preload(),
+                                ToggleButtons::make('est_cadre')
+                                    ->label('Est il cadre ?')
+                                    ->options([
+                                        '1' => 'Oui',
+                                        '0' => 'Non',
+                                    ])
+                                    ->colors([
+                                        '1' => 'accent',
+                                        '0' => 'error',
+                                    ])
+                                    ->default('0')
+                                    ->grouped()
+                                    ->inline(),
+                                Forms\Components\DatePicker::make('date_debut')
+                                    ->label('Date de début de contrat')
+                                    ->required()
+                                    ->columnSpan(3)
+                                    ->date(),
+                                Forms\Components\DatePicker::make('date_fin')
+                                    ->label('Date de fin de contrat')
+                                    ->required()
+                                    ->columnSpan(2)
+                                    ->date()
+                                    ->after('date_debut'),
+                                Forms\Components\TextInput::make('salaire_brut')
+                                    ->label('Salaire brut')
+                                    ->required()
+                                    ->columnSpan(3)
+                                    ->live()
+                                    ->mask(RawJs::make('$money($input)'))
+                                    ->stripCharacters(',')
+                                    ->suffix('FCFA')
+                                    ->numeric()
+                                    ->afterStateUpdated(fn (Forms\Set $set, $state) => $set('tauxIts', ItsService::getIts(intval($state)))
+                                    )
+                                    ->default(0),
+                                Forms\Components\Select::make('statut')
+                                    ->label('Statut')
+                                    ->columnSpan(3)
+                                    ->options([
+                                        'En cours' => 'En cours',
+                                        'Clos' => 'Clos',
+                                    ])
+                                    ->default('En cours'),
+                                Forms\Components\TextInput::make('nb_jours_conges_acquis')
+                                    ->numeric()
+                                    ->columnSpan(3)
+                                    ->label('Nombre de jours de congés acquis')
+                                    ->default(0),
+                                Forms\Components\TextInput::make('solde_jours_conges_payes')
+                                    ->numeric()
+                                    ->label('Coût unitaire')
+                                    ->columnSpan(3)
+                                    ->default(0),
+
+                            ])
+                            ->columns(6),
+                    ])
+                    ->label('Ajouter un contrat à un employé existant')
+                    ->action(function (array $data) {
+                        $data['client_id'] = self::getOwnerRecord()->id;
+                        $employee = Employee::find($data['employee_id']);
+                        $data['annee_id'] = getAnnee()->id;
+                        $data['date_signature'] = now();
+                        $data['tauxIts'] = ItsService::getIts(intval($data['salaire_brut']));
+                        $employee->contrats()->create($data);
+                    })
+                    ->attachAnother(false)
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->title('Contrat ajouté avec succès')
+                    )
+                    ->modalWidth('4xl'),
             ])
             ->actions([
-                //                Tables\Actions\Action::make('cotisations')
-                ////                    ->url(fn ($record) => static::getUrl('cotisations', ['record' => $record]))
-                //                    ->icon('heroicon-o-currency-dollar')
-                //                    ->color('success')
-                //                    ->label('Cotisations'),
                 Tables\Actions\Action::make('payer')
                     ->icon('heroicon-o-banknotes')
                     ->color('tertiary')
@@ -288,7 +433,7 @@ class EmployeesRelationManager extends RelationManager
                                     ->label('Type de paiement')
                                     ->required()
                                     ->searchable()
-                                    ->live(onBlur: true)
+                                    ->live()
                                     ->preload()
                                     ->options(TypePaiement::query()->where('nom', '!=', 'Salaire')->pluck('nom', 'id'))
                                     ->createOptionForm([
@@ -300,17 +445,15 @@ class EmployeesRelationManager extends RelationManager
                                 Forms\Components\TextInput::make('solde')
                                     ->label('Montant')
                                     ->required()
-                                    ->mask(RawJs::make('$money($input)'))
-                                    ->stripCharacters(',')
-                                    ->suffix('FCFA')
                                     ->numeric()
                                     ->live(onBlur: true)
                                     ->hidden(fn (Forms\Get $get) => $get('type_paiement_id') == TypePaiement::SALAIRE)
-                                    ->maxValue(function (Employee $record, Forms\Get $get) {
+                                    ->maxValue(function (Contrat $record, Forms\Get $get) {
                                         if ($get('type_paiement_id') == TypePaiement::AVANCE) {
-                                            return $record->salaire / 2;
+                                            return $record->salaire_brut / 2;
                                         }
                                     })
+                                    ->default(5000)
                                     ->suffix('FCFA'),
                                 Forms\Components\Select::make('mode_paiement_id')
                                     ->label('Mode de paiement')
@@ -334,8 +477,9 @@ class EmployeesRelationManager extends RelationManager
                                     ->label('Date de fin'),
                                 Forms\Components\TextInput::make('nb_jours_travaille')
                                     ->numeric()
+                                    ->disabled()
                                     ->label('Nombre de jours travaillés')
-                                    ->default(function (Employee $record) {
+                                    ->default(function (Contrat $record) {
                                         return CalculerSalaireMensuel::nbreJoursTravaille($record);
                                     })
                                     ->required(),
@@ -343,7 +487,6 @@ class EmployeesRelationManager extends RelationManager
                                     ->label('Echelon')
                                     ->visible(fn (Forms\Get $get) => $get('type_paiement_id') == TypePaiement::PRET)
                                     ->columnSpan(2)
-                                    ->default(1)
                                     ->helperText('Echelonner le paiement')
                                     ->numeric(),
 
@@ -351,9 +494,8 @@ class EmployeesRelationManager extends RelationManager
                         //                        $this->getContentSection(),
 
                     ])
-                    ->action(function (array $data, Employee $record) {
+                    ->action(function (array $data, Contrat $record) {
                         try {
-                            $record->paiements()->create($data);
                             Notification::make('paiement operer')
                                 ->title('Paiement opéré')
                                 ->body('Paiement opéré. Cependant, veuillez vérifier le statut(payé) du paiement')
@@ -371,15 +513,16 @@ class EmployeesRelationManager extends RelationManager
                                 ->send();
 
                         }
+                        $record->paiements()->create($data);
                     })
                     ->label('Effectuer un paiement'),
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(false),
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
                     Tables\Actions\ForceDeleteAction::make(),
-                ]),
-
+                ])->tooltip('Actions disponibles'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -416,22 +559,24 @@ class EmployeesRelationManager extends RelationManager
                                 $startDate = new DateTime($record->demandeConges()->where('statut', 'paye')->first()?->date_debut);
                                 $endDate = new DateTime($record->demandeConges()->where('statut', 'paye')->first()?->date_fin);
                                 $montantJoursCongesPaye = date_diff($startDate, $endDate)->days * $record->solde_jours_conges_payes;
-                                $montantAvanceSalaire = $record->paiements()->where('type_paiement_id', 1)->sum('solde');
+                                $montantAvanceSalaire = $record->paiements()->where('type_paiement_id', TypePaiement::AVANCE)->sum('solde');
                                 $prets = CalculerSalaireMensuel::sommePrets($record);
+                                $total = $salaire_mensuel + $montantJoursCongesPaye - $montantAvanceSalaire - $prets;
+                                //                                dd('salaire mensuel: ' . $salaire_mensuel, 'montant jours de congés payés: ' . $montantJoursCongesPaye, 'montant avance salaire: ' . $montantAvanceSalaire, 'prets: ' . $prets, 'total: ' . ($salaire_mensuel + $montantJoursCongesPaye - $montantAvanceSalaire - $prets)  );
                                 Paiement::updateOrCreate([
-                                    'employee_id' => $record->id,
+                                    'contrat_id' => $record->id,
                                 ], [
                                     'date_paiement' => now(),
-                                    'employee_id' => $record->id,
+                                    'contrat_id' => $record->id,
                                     'statut' => 'effectue',
-                                    'solde' => $salaire_mensuel,
+                                    'solde' => $total,
                                     'mode_paiement_id' => $data['mode_paiement_id'],
                                     'type_paiement_id' => TypePaiement::SALAIRE,
                                 ]);
                                 foreach ($donnes as $donne) {
                                     $record->soldeComptes()->updateOrCreate([
                                         'mois' => now()->format('F'),
-                                        'employee_id' => $record->id,
+                                        'contrat_id' => $record->id,
                                         'donnees' => $donne,
                                     ],
                                         [
@@ -444,7 +589,7 @@ class EmployeesRelationManager extends RelationManager
                                                 SoldeCompte::PREAVIS => 0,
                                                 SoldeCompte::AVANCE_SUR_SALAIRE => $montantAvanceSalaire,
                                                 SoldeCompte::PRET_ENTREPRISE => $prets,
-                                                SoldeCompte::TOTAL => $salaire_mensuel + $montantJoursCongesPaye - $montantAvanceSalaire - $prets,
+                                                SoldeCompte::TOTAL => $total,
                                             },
                                         ]);
                                 }
@@ -456,7 +601,7 @@ class EmployeesRelationManager extends RelationManager
                                 ->iconColor('tertiary')
                                 ->icon('heroicon-o-banknotes')
                                 ->send();
-                            $this->redirect(EmployeeResource::getUrl('salaires-paiements', ['records' => $records->pluck('id')->implode(',')]));
+                            redirect(EmployeeResource::getUrl('salaires-paiements', ['records' => $records->pluck('id')->implode(',')]));
                         })
 //                        ->url(fn($records) => EmployeeResource::getUrl('salaires-paiements', ['records' => $records]))
 //                        ->requiresConfirmation()
@@ -465,6 +610,12 @@ class EmployeesRelationManager extends RelationManager
                     Tables\Actions\RestoreBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
+                ExportBulkAction::make()
+                    ->exports([
+                        ExcelExport::make()
+                            ->fromTable()
+                            ->withFilename('Liste des employés'),
+                    ]),
             ]);
     }
 }

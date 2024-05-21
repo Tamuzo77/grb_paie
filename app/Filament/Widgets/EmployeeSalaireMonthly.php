@@ -2,8 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Annee;
-use App\Models\Paiement;
+use App\Models\Contrat;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
@@ -16,7 +15,7 @@ class EmployeeSalaireMonthly extends ApexChartWidget
 
     protected static ?int $sort = 2;
 
-    protected int|string|array $columnSpan = 'full';
+    //    protected int|string|array $columnSpan = 'full';
 
     /**
      * Chart Id
@@ -26,7 +25,7 @@ class EmployeeSalaireMonthly extends ApexChartWidget
     /**
      * Widget Title
      */
-    protected static ?string $heading = 'Paiements effectués par mois';
+    protected static ?string $heading = 'Salaires brut par mois';
 
     /**
      * Chart options (series, labels, types, size, animations...)
@@ -34,16 +33,16 @@ class EmployeeSalaireMonthly extends ApexChartWidget
      */
     protected function getOptions(): array
     {
-        $annee = Annee::whereSlug($this->filters['annee_id'] ?? now()->year)->firstOrFail();
+        $annee = getAnnee();
         $startDate = Carbon::parse("$annee->nom-01-01");
         $endDate = Carbon::parse("$annee->nom-12-31");
-        $data = Trend::model(Paiement::class)
+        $data = Trend::model(Contrat::class)
             ->between(
                 start: $startDate,
                 end: $endDate,
             )
             ->perMonth()
-            ->count();
+            ->sum('salaire_brut');
 
         return [
             'chart' => [

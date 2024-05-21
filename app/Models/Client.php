@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -35,7 +36,7 @@ class Client extends Model
     /**
      * @var array
      */
-    protected $fillable = ['bank_id', 'slug', 'matricule', 'nom', 'adresse', 'telephone', 'email', 'nom_donneur_ordre', 'prenom_donneur_ordre', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at', 'annee_id', 'ifu', 'rc'];
+    protected $fillable = ['bank_id', 'slug', 'matricule', 'nom', 'adresse', 'telephone', 'email', 'nom_donneur_ordre', 'prenom_donneur_ordre', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at', 'annee_id', 'ifu', 'rc', 'tauxCnss', 'tauxRetenu'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -50,7 +51,12 @@ class Client extends Model
      */
     public function employees()
     {
-        return $this->hasMany('App\Models\Employee');
+        return $this->hasMany('App\Models\Contrat');
+    }
+
+    public function facturations()
+    {
+        return $this->hasMany('App\Models\Facturation');
     }
 
     public function sluggable(): array
@@ -65,5 +71,18 @@ class Client extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    public function tauxCnss(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                return $value / 10000;
+            },
+            set: function ($value) {
+                return $value * 100;
+            }
+        );
+
     }
 }

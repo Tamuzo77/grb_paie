@@ -10,6 +10,7 @@ use Wildside\Userstamps\Userstamps;
 /**
  * @property int $id
  * @property int $employee_id
+ * @property int $contrat_id
  * @property int $type_paiement_id
  * @property int $mode_paiement_id
  * @property string $slug
@@ -36,14 +37,14 @@ class Paiement extends Model
     /**
      * @var array
      */
-    protected $fillable = ['employee_id', 'type_paiement_id', 'mode_paiement_id', 'slug', 'date_debut', 'date_fin', 'solde', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at', 'statut', 'annee_id', 'date_paiement', 'pas', 'reste'];
+    protected $fillable = ['employee_id', 'contrat_id', 'type_paiement_id', 'mode_paiement_id', 'slug', 'date_debut', 'date_fin', 'solde', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at', 'statut', 'annee_id', 'date_paiement', 'pas', 'reste'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function employee()
     {
-        return $this->belongsTo('App\Models\Employee');
+        return $this->belongsTo('App\Models\Contrat', 'contrat_id');
     }
 
     /**
@@ -66,7 +67,7 @@ class Paiement extends Model
     {
         return [
             'slug' => [
-                'source' => ['employee.nom', 'employee.prenoms', 'date_debut', 'date_fin'],
+                'source' => ['employee.employee.nom', 'employee.employee.prenoms', 'date_debut', 'date_fin'],
             ],
         ];
     }

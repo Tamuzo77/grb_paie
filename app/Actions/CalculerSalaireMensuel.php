@@ -2,16 +2,16 @@
 
 namespace App\Actions;
 
-use App\Models\Employee;
+use App\Models\Contrat;
 use App\Models\TypePaiement;
 use DateTime;
 
 class CalculerSalaireMensuel
 {
-    public function handle(Employee $employee)
+    public function handle(Contrat $employee)
     {
-        $tauxCnss = $employee->tauxCnss ?? 0.036;
-        $salaire = $employee->salaire * (1 - $employee->tauxIts - $tauxCnss);
+        $tauxCnss = $employee->client->tauxCnss ?? 0.036;
+        $salaire = $employee->salaire_brut * (1 - $employee->tauxIts - $tauxCnss);
         $nb_jours_absences = 0;
         foreach ($employee->absences()->where('date_debut', '>=', now()->startOfMonth())->whereDeductible(true)->get() as $absence) {
             $startDate = new DateTime($absence->date_debut);
@@ -35,7 +35,7 @@ class CalculerSalaireMensuel
         return $result;
     }
 
-    public static function nbreJoursTravaille(\App\Models\Employee $employee)
+    public static function nbreJoursTravaille(\App\Models\Contrat $employee)
     {
         $nb_jours_absences = 0;
         foreach ($employee->absences()->where('date_debut', '>=', now()->startOfMonth())->whereDeductible(true)->get() as $absence) {
@@ -48,13 +48,13 @@ class CalculerSalaireMensuel
 
     }
 
-    public static function sommePrets(Employee $employee)
+    public static function sommePrets(Contrat $employee)
     {
         $montant = 0;
-        $result = Employee::query()
+        $result = Contrat::query()
             ->selectRaw('MONTHNAME(paiements.date_paiement) AS mois, SUM(paiements.solde) AS total, SUM(paiements.pas) AS pas, SUM(paiements.reste) AS reste')
-            ->join('paiements', 'employees.id', '=', 'paiements.employee_id')
-            ->where('employees.id', $employee->id)
+            ->join('paiements', 'contrats.id', '=', 'paiements.contrat_id')
+            ->where('contrats.id', $employee->id)
             ->where('paiements.type_paiement_id', TypePaiement::PRET)
             ->whereBetween('paiements.date_paiement', [now()->startOfMonth(), now()->endOfMonth()])
             ->groupBy(['mois'])

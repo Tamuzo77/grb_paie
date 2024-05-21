@@ -2,23 +2,13 @@
 
 namespace App\Policies;
 
-use App\Models\Annee;
 use App\Models\Client;
 use App\Models\User;
-use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ClientPolicy
 {
     use HandlesAuthorization;
-    use InteractsWithPageFilters;
-
-    protected static ?Annee $annee = null;
-
-    public function __construct()
-    {
-        self::$annee = Annee::whereSlug($filters['annee_id'] ?? now()->year)->firstOrFail();
-    }
 
     /**
      * Determine whether the user can view any models.
@@ -41,7 +31,7 @@ class ClientPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_client') && self::$annee->hasStatutEnCours();
+        return $user->can('create_client') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -49,7 +39,7 @@ class ClientPolicy
      */
     public function update(User $user, Client $client): bool
     {
-        return $user->can('update_client');
+        return $user->can('update_client') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -57,7 +47,7 @@ class ClientPolicy
      */
     public function delete(User $user, Client $client): bool
     {
-        return $user->can('delete_client');
+        return $user->can('delete_client') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -65,7 +55,7 @@ class ClientPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_client');
+        return $user->can('delete_any_client') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -73,7 +63,7 @@ class ClientPolicy
      */
     public function forceDelete(User $user, Client $client): bool
     {
-        return $user->can('force_delete_client');
+        return $user->can('force_delete_client') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -81,7 +71,7 @@ class ClientPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_client');
+        return $user->can('force_delete_any_client') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -89,7 +79,7 @@ class ClientPolicy
      */
     public function restore(User $user, Client $client): bool
     {
-        return $user->can('restore_client');
+        return $user->can('restore_client') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -97,7 +87,7 @@ class ClientPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_client');
+        return $user->can('restore_any_client') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -105,7 +95,7 @@ class ClientPolicy
      */
     public function replicate(User $user, Client $client): bool
     {
-        return $user->can('replicate_client');
+        return $user->can('replicate_client') && getAnnee()->hasStatutEnCours();
     }
 
     /**
@@ -113,6 +103,6 @@ class ClientPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_client');
+        return $user->can('reorder_client') && getAnnee()->hasStatutEnCours();
     }
 }

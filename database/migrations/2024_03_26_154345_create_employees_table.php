@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('slug')->unique();
             $table->foreignIdFor(\App\Models\Annee::class)->nullable()->constrained();
-            $table->foreignIdFor(\App\Models\Client::class)->constrained();
+            $table->foreignIdFor(\App\Models\Client::class)->nullable()->constrained();
             $table->foreignIdFor(\App\Models\Bank::class)->nullable()->constrained();
             $table->string('npi')->nullable();
             $table->string('nom');

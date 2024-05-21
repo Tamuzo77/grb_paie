@@ -42,6 +42,7 @@ use Wildside\Userstamps\Userstamps;
  * @property int $updated_by
  * @property int $deleted_by
  * @property string $deleted_at
+ * @property string $full_name
  * @property Fonction[] $fonctions
  * @property Annee $annee
  * @property Client $client
@@ -57,7 +58,7 @@ class Employee extends Model
     /**
      * @var array
      */
-    protected $fillable = ['annee_id', 'client_id', 'bank_id', 'slug', 'npi', 'nom', 'prenoms', 'telephone', 'email', 'date_naissance', 'lieu_naissance', 'situation_matrimoniale', 'sexe', 'nb_enfants', 'date_embauche', 'date_depart', 'categorie', 'category_id', 'cadre', 'salaire', 'numero_compte', 'tauxIts', 'tauxCnss', 'nb_jours_conges_acquis', 'solde_jours_conges_payes', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
+    protected $fillable = ['annee_id', 'client_id', 'bank_id', 'slug', 'npi', 'nom', 'prenoms', 'telephone', 'email', 'date_naissance', 'lieu_naissance', 'situation_matrimoniale', 'sexe', 'nb_enfants', 'date_embauche', 'date_depart', 'categorie', 'category_id', 'cadre', 'salaire', 'numero_compte', 'tauxIts', 'tauxCnss', 'nb_jours_conges_acquis', 'solde_jours_conges_payes', 'ifu', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -135,11 +136,19 @@ class Employee extends Model
         return $this->hasMany('App\Models\Prime');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function contrats()
+    {
+        return $this->hasMany('App\Models\Contrat');
+    }
+
     public function sluggable(): array
     {
         return [
             'slug' => [
-                'source' => ['nom', 'prenoms', 'client.nom'],
+                'source' => ['nom', 'prenoms'],
             ],
         ];
     }
@@ -157,6 +166,11 @@ class Employee extends Model
             },
         );
 
+    }
+
+    public function getFullName()
+    {
+        return $this->nom.' '.$this->prenoms;
     }
 
     public function tauxCnss(): Attribute

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PaiementResource\Pages;
 use App\Models\Annee;
 use App\Models\Client;
+use App\Models\Contrat;
 use App\Models\Employee;
 use App\Models\Paiement;
 use App\Models\TypePaiement;
@@ -24,7 +25,7 @@ class PaiementResource extends Resource
 {
     protected static ?string $model = Paiement::class;
 
-    protected static ?string $navigationGroup = 'Etats et Paiements';
+    protected static ?string $navigationGroup = 'Paiements et Facturations';
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
@@ -124,9 +125,9 @@ class PaiementResource extends Resource
                 Tables\Columns\TextColumn::make('employee.client.nom')
                     ->searchable(isIndividual: true, isGlobal: true)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('employee.nom')
+                Tables\Columns\TextColumn::make('employee.employee.nom')
                     ->label('Employé')
-                    ->description(fn ($record) => $record->employee->prenoms, position: 'above')
+                    ->description(fn ($record) => $record->employee->employee->prenoms, position: 'above')
                     ->separator()
                     ->searchable()
                     ->sortable(),
@@ -162,6 +163,8 @@ class PaiementResource extends Resource
             ])
             ->groups([
                 'employee.client.nom',
+                'typePaiement.nom',
+                'modePaiement.nom',
             ])
             ->reorderable()
             ->recordUrl(null)
@@ -183,8 +186,9 @@ class PaiementResource extends Resource
                 Tables\Actions\Action::make('voir solde')
                     ->color(Color::Teal)
                     ->label('Voir Solde')
+                    ->visible(fn (Paiement $record) => $record->type_paiement_id == TypePaiement::SALAIRE)
                     ->url(function (Paiement $paiement) {
-                        $employee = Employee::where('id', $paiement->employee_id)->firstOrFail();
+                        $employee = Contrat::where('id', $paiement->contrat_id)->firstOrFail();
 
                         return EmployeeResource::getUrl('solde', ['record' => $employee]);
                     })
@@ -193,10 +197,26 @@ class PaiementResource extends Resource
                     ->color(Color::Blue)
                     ->label('Fiche de paie')
                     ->visible(fn (Paiement $record) => $record->type_paiement_id == TypePaiement::SALAIRE)
+                    ->form([
+                        Forms\Components\Section::make('')
+                            ->schema([
+                                Forms\Components\CheckboxList::make('preferences')
+                                    ->label('Préférences')
+                                    ->options([
+                                        'include_mis_a_pied' => 'Inclure les mises à pied',
+                                        'include_primes' => 'Inclure les primes',
+                                        'include_conges' => 'Inclure les congés',
+                                        'include_absences' => 'Inclure les absences',
+                                    ])
+                                    ->columns(2)
+                                    ->gridDirection('row')
+                                    ->bulkToggleable(),
+                            ]),
+                    ])
                     ->requiresConfirmation()
-                    ->action(function (Paiement $record) {
+                    ->action(function (array $data, Paiement $record) {
                         try {
-                            redirect(route('download-fiche-de-paie', $record->id));
+                            redirect(route('download-fiche-de-paie', [$record->id, 'preferences' => $data['preferences']]));
 
                             Notification::make('Fiche de paie téléchargé avec succès')
                                 ->title('Téléchargement réussi')

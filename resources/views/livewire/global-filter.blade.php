@@ -1,3 +1,4 @@
 <div>
-     {{__(' ')}}
+    {{ $this->filtersForm }}
+
 </div>

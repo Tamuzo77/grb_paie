@@ -89,7 +89,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 NavigationGroup::make(label: 'Dépendances salariales'),
-                NavigationGroup::make(label: 'Etats et Paiements'),
+                NavigationGroup::make(label: 'Paiements et Facturations'),
                 NavigationGroup::make(label: 'Paramètres')
                     ->icon('heroicon-o-cog-6-tooth'),
                 NavigationGroup::make('Filament Shield'),
@@ -123,7 +123,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
+                //                Widgets\AccountWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
