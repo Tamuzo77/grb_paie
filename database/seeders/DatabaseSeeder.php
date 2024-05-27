@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -31,5 +32,20 @@ class DatabaseSeeder extends Seeder
         $this->call(ModePaiementSeeder::class);
         $this->call(TypePaiementSeeder::class);
         $this->call(CompanySeeder::class);
+
+        Role::create([
+            'name' => Role::DIRECTRICE_GENERALE,
+            'guard_name' => 'web',
+        ]);
+
+        Role::create([
+            'name' => Role::DIRECTRICE_OPERATIONELLE,
+            'guard_name' => 'web',
+        ]);
+
+        Role::create([
+            'name' => Role::RESPONSABLE_COMMERCIAL,
+            'guard_name' => 'web',
+        ]);
     }
 }

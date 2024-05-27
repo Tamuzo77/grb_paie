@@ -31,7 +31,7 @@ class ClientResource extends Resource
 {
     use InteractsWithPageFilters;
 
-    const string HEROICON_O_PHONE = 'heroicon-o-phone';
+//    const string HEROICON_O_PHONE = ;
 
     protected static ?string $model = Client::class;
 
@@ -420,7 +420,7 @@ class ClientResource extends Resource
                     ->collapsible(),
                 Section::make('Informations de contacts')
                     ->description('Informations de contacts')
-                    ->icon(self::HEROICON_O_PHONE)
+                    ->icon('heroicon-o-phone')
                     ->schema([
                         TextEntry::make('telephone')
                             ->copyable()

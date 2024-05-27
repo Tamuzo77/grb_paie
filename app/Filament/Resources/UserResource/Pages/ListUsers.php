@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
+use App\Models\Role;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
@@ -26,13 +27,13 @@ class ListUsers extends ListRecords
             'directeurs operationnels' => Tab::make('Directeurs Opérationnels')
                 ->modifyQueryUsing(function ($query) {
                     $query->whereHas('roles', function ($query) {
-                        $query->where('name', 'directrice_opérationnelle');
+                        $query->where('name', Role::DIRECTRICE_OPERATIONELLE);
                     });
                 }),
             'responsables commerciaux' => Tab::make('Responsables Commerciaux')
                 ->modifyQueryUsing(function ($query) {
                     $query->whereHas('roles', function ($query) {
-                        $query->where('name', 'responsable_commercial');
+                        $query->where('name', Role::RESPONSABLE_COMMERCIAL);
                     });
                 }),
         ];
