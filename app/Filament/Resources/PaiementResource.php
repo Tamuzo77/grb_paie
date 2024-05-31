@@ -161,6 +161,7 @@ class PaiementResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->groups([
                 'employee.client.nom',
                 'typePaiement.nom',

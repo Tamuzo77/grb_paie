@@ -72,6 +72,7 @@ class BankResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //                Tables\Filters\TernaryFilter::make('deleted_at')
                 //                    ->label('Corbeille')

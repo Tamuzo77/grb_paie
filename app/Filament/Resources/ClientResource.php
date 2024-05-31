@@ -153,6 +153,7 @@ class ClientResource extends Resource
                     ->label('Donneur ordre')
                     ->searchable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\TrashedFilter::make()
                     ->trueLabel('Historique')
