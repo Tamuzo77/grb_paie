@@ -70,6 +70,7 @@ class AnneeResource extends Resource
                     })
                     ->sortable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\TrashedFilter::make()
                     ->trueLabel('Toutes')

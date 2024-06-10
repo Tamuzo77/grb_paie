@@ -97,6 +97,7 @@ class MisAPiedResource extends Resource
                     ->numeric()
                     ->sortable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])

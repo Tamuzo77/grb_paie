@@ -100,6 +100,7 @@ class UserResource extends Resource
                     ])->alignEnd(),
                 ]),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\TrashedFilter::make()
                     ->trueLabel('Historique')

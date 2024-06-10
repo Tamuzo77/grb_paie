@@ -206,6 +206,7 @@ class ContratResource extends Resource
                     ->sortable()
                     ->label('Statut'),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
