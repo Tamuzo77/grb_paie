@@ -53,7 +53,7 @@
         <td style="height:30px"></td>
         <td style="height:30px" colspan="9"></td>
         <td style="height:30px;vertical-align:middle;border:2px solid #3498db" colspan="5" class='py-3'>
-            Periode: {{ $mois[now()->format('F')] . ' ' . now()->year }}</td>
+            Période: {{ $mois[now()->format('F')] . ' ' . now()->year }}</td>
     </tr>
     {{--        <tr class=""> --}}
     {{--            <td style="height:30px;"></td> --}}
@@ -90,24 +90,24 @@
     <tr>
         <td style="height:35px"></td>
         <td colspan="6"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
             Fonction : {{ $employee->fonction?->nom ?? ' ' }}</td>
         <td colspan="4"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
             Catégorie:
         </td>
         <td colspan="4"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
             {{ $employee->category?->nom }}</td>
     </tr>
 
     <tr>
         <td style="height:35px"></td>
         <td colspan="6"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
             Situation matrimoniale : {{ $employee->employee->situation_matrimoniale }}</td>
         <td colspan="4"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
             Nombre
             d'enfants: {{ $employee->employee->nb_enfants }}</td>
         <td colspan="4"
@@ -117,25 +117,37 @@
     <tr>
         <td style="height:35px"></td>
         <td colspan="6"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
-            Position hiérachique: xxxxx</td>
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
+            Position hiérachique: {{ $employee->positionHierachique?->nom ?? ' ' }}</td>
         <td colspan="4"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
             Date d'ancienneté: {{ $date_ancienete  }}</td>
         <td colspan="4"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
         </td>
     </tr>
     <tr>
         <td style="height:35px"></td>
         <td colspan="6"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
-            Numéro IFU: {{$employee->employee->ifu}}</td>
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
+            Numéro CNSS: {{$employee->employee->numero_cnss}}</td>
         <td colspan="4"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
         </td>
         <td colspan="4"
-            style="background-color: #3498db;color: #ffffff;height:>35px;vertical-align:middle;font-weight:bold;">
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
+        </td>
+    </tr>
+    <tr>
+        <td style="height:35px"></td>
+        <td colspan="6"
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
+            Numéro IFU: {{$employee->employee->ifu}}</td>
+        <td colspan="4"
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
+        </td>
+        <td colspan="4"
+            style="background-color: #3498db;color: #ffffff;height:35px;vertical-align:middle;font-weight:bold;">
         </td>
     </tr>
     <tr>
@@ -247,7 +259,7 @@
             pied: {{ $misApiedsJours }} jour(s)
         </td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
-            {{ $misApieds }}</td>
+            {{ $misApieds ?? 0}}</td>
     </tr>
     @endif
 
@@ -259,6 +271,7 @@
             Congés
         </td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db;text-align:center" colspan="4">
+            {{ $conges ?? 0}}
         </td>
     </tr>
     @endif
@@ -297,7 +310,7 @@
         <td style="height:35px"></td>
         <td style="height:35px;vertical-align:middle;border:2px solid #3498db;font-weight:bold" colspan="14">
             MODE DE
-            REGLEMENT DE:
+            RÈGLEMENT DE:
         </td>
     </tr>
     <tr>

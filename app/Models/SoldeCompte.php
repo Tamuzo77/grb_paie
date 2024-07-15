@@ -62,4 +62,16 @@ class SoldeCompte extends Model
             ],
         ];
     }
+
+        /**
+     * Set the montant attribute.
+     *
+     * @param mixed $value
+     * @return void
+     */
+    public function setMontantAttribute($value)
+    {
+        // Remove thousand separators and convert to integer
+        $this->attributes['montant'] = (int) str_replace(',', '', $value );
+    }
 }

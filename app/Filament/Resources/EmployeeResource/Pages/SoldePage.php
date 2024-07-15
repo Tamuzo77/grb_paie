@@ -58,7 +58,8 @@ class SoldePage extends ListRecords
 
                         return $record->donnees == SoldeCompte::SALAIRE_MENSUEL || $record->donnees == SoldeCompte::TREIZIEME_MOIS || $record->donnees == SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU || $record->donnees == SoldeCompte::PREAVIS ? '+ ' : '- ';
                     })
-                    ->disabled(fn ($record) => $record->donnees == SoldeCompte::SALAIRE_MENSUEL || $record->donnees == SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU || $record->donnees == SoldeCompte::TOTAL),
+                    ->disabled(fn ($record) => $record->donnees == SoldeCompte::SALAIRE_MENSUEL || $record->donnees == SoldeCompte::NOMBRE_DE_JOURS_DE_CONGES_PAYES_DU || $record->donnees == SoldeCompte::TOTAL)
+                    ->formatStateUsing(fn ($state) => number_format((int)str_replace(',', '', $state), 0, '.', '')),
 
             ])
             ->paginated(false)

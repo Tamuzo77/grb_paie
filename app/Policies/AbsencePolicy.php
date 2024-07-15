@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Absence;
 use App\Models\User;
+use App\Models\Absence;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AbsencePolicy
@@ -31,7 +31,7 @@ class AbsencePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_absence') && getAnnee()->hasStatutEnCours();
+        return $user->can('create_absence');
     }
 
     /**
@@ -39,7 +39,7 @@ class AbsencePolicy
      */
     public function update(User $user, Absence $absence): bool
     {
-        return $user->can('update_absence') && getAnnee()->hasStatutEnCours();
+        return $user->can('update_absence');
     }
 
     /**
@@ -47,7 +47,7 @@ class AbsencePolicy
      */
     public function delete(User $user, Absence $absence): bool
     {
-        return $user->can('delete_absence') && getAnnee()->hasStatutEnCours();
+        return $user->can('delete_absence');
     }
 
     /**
@@ -55,7 +55,7 @@ class AbsencePolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_absence') && getAnnee()->hasStatutEnCours();
+        return $user->can('delete_any_absence');
     }
 
     /**
@@ -63,7 +63,7 @@ class AbsencePolicy
      */
     public function forceDelete(User $user, Absence $absence): bool
     {
-        return $user->can('force_delete_absence') && getAnnee()->hasStatutEnCours();
+        return $user->can('force_delete_absence');
     }
 
     /**
@@ -71,7 +71,7 @@ class AbsencePolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_absence') && getAnnee()->hasStatutEnCours();
+        return $user->can('force_delete_any_absence');
     }
 
     /**
@@ -79,7 +79,7 @@ class AbsencePolicy
      */
     public function restore(User $user, Absence $absence): bool
     {
-        return $user->can('restore_absence') && getAnnee()->hasStatutEnCours();
+        return $user->can('restore_absence');
     }
 
     /**
@@ -87,7 +87,7 @@ class AbsencePolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_absence') && getAnnee()->hasStatutEnCours();
+        return $user->can('restore_any_absence');
     }
 
     /**
@@ -95,7 +95,7 @@ class AbsencePolicy
      */
     public function replicate(User $user, Absence $absence): bool
     {
-        return $user->can('replicate_absence') && getAnnee()->hasStatutEnCours();
+        return $user->can('replicate_absence');
     }
 
     /**
@@ -103,6 +103,6 @@ class AbsencePolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_absence') && getAnnee()->hasStatutEnCours();
+        return $user->can('reorder_absence');
     }
 }

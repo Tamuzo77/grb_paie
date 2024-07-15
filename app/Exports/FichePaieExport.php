@@ -67,7 +67,7 @@ use Rmunate\Utilities\SpellNumber;
         $retenueObligatoire += $montantPrete[0]['montant'];
 
         $absences = $nb_jours_absences * $salaire / 20;
-
+        $conges = $nb_jours_conges_paye * $montantConges[0]['montant'];
         $company = Company::first();
         $date_ancienete = (new DateTime($this->paiement->employee->date_entree))->format('d/m/Y');
 
@@ -91,6 +91,7 @@ use Rmunate\Utilities\SpellNumber;
             'preferences' => $this->preferences,
             'absences' => $absences,
             'date_ancienete' => $date_ancienete,
+            'conges' => $conges,
         ]);
     }
 }

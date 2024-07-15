@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Facturation;
 use App\Models\User;
+use App\Models\Facturation;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class FacturationPolicy

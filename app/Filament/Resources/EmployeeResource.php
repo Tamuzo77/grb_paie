@@ -90,6 +90,13 @@ class EmployeeResource extends Resource
                             ->maxLength(16)
                             ->default(null),
 
+                            Forms\Components\TextInput::make('numero_cnss')
+                            ->numeric()
+                            ->placeholder('Ex: 1234567890123')
+                            ->label('Numero CNSS')
+                            ->maxLength(16)
+                            ->default(null),
+
                         Forms\Components\DatePicker::make('date_naissance')
                             ->date()
                             ->label('Date de naissance')

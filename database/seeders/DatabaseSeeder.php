@@ -21,6 +21,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'jellaltamuzo@gmail.com',
             'password' => bcrypt('password'),
         ]);
+        \App\Models\User::factory()->create([
+            'name' => 'GRB Admin 2',
+            'email' => 'esperanceahouissou@gmail.com',
+            'password' => bcrypt('Test@8000'),
+        ]);
         //
         $this->call(AnneeSeeder::class);
         $this->call(BankSeeder::class);

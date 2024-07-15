@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\MisAPied;
 use App\Models\User;
+use App\Models\MisAPied;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MisAPiedPolicy
@@ -31,7 +31,7 @@ class MisAPiedPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_mis::a::pied') && getAnnee()->hasStatutEnCours();
+        return $user->can('create_mis::a::pied');
     }
 
     /**
@@ -39,7 +39,7 @@ class MisAPiedPolicy
      */
     public function update(User $user, MisAPied $misAPied): bool
     {
-        return $user->can('update_mis::a::pied') && getAnnee()->hasStatutEnCours();
+        return $user->can('update_mis::a::pied');
     }
 
     /**
@@ -47,7 +47,7 @@ class MisAPiedPolicy
      */
     public function delete(User $user, MisAPied $misAPied): bool
     {
-        return $user->can('delete_mis::a::pied') && getAnnee()->hasStatutEnCours();
+        return $user->can('delete_mis::a::pied');
     }
 
     /**
@@ -55,7 +55,7 @@ class MisAPiedPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_mis::a::pied') && getAnnee()->hasStatutEnCours();
+        return $user->can('delete_any_mis::a::pied');
     }
 
     /**
@@ -63,7 +63,7 @@ class MisAPiedPolicy
      */
     public function forceDelete(User $user, MisAPied $misAPied): bool
     {
-        return $user->can('force_delete_mis::a::pied') && getAnnee()->hasStatutEnCours();
+        return $user->can('force_delete_mis::a::pied');
     }
 
     /**
@@ -71,7 +71,7 @@ class MisAPiedPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_mis::a::pied') && getAnnee()->hasStatutEnCours();
+        return $user->can('force_delete_any_mis::a::pied');
     }
 
     /**
@@ -79,7 +79,7 @@ class MisAPiedPolicy
      */
     public function restore(User $user, MisAPied $misAPied): bool
     {
-        return $user->can('restore_mis::a::pied') && getAnnee()->hasStatutEnCours();
+        return $user->can('restore_mis::a::pied');
     }
 
     /**
@@ -87,7 +87,7 @@ class MisAPiedPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_mis::a::pied') && getAnnee()->hasStatutEnCours();
+        return $user->can('restore_any_mis::a::pied');
     }
 
     /**
@@ -95,7 +95,7 @@ class MisAPiedPolicy
      */
     public function replicate(User $user, MisAPied $misAPied): bool
     {
-        return $user->can('replicate_mis::a::pied') && getAnnee()->hasStatutEnCours();
+        return $user->can('replicate_mis::a::pied');
     }
 
     /**
@@ -103,6 +103,6 @@ class MisAPiedPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_mis::a::pied') && getAnnee()->hasStatutEnCours();
+        return $user->can('reorder_mis::a::pied');
     }
 }

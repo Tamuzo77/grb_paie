@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Employee;
 use App\Models\User;
+use App\Models\Employee;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EmployeePolicy
@@ -31,7 +31,7 @@ class EmployeePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_employee') && getAnnee()->hasStatutEnCours();
+        return $user->can('create_employee');
     }
 
     /**
@@ -39,7 +39,7 @@ class EmployeePolicy
      */
     public function update(User $user, Employee $employee): bool
     {
-        return $user->can('update_employee') && getAnnee()->hasStatutEnCours();
+        return $user->can('update_employee');
     }
 
     /**
@@ -47,7 +47,7 @@ class EmployeePolicy
      */
     public function delete(User $user, Employee $employee): bool
     {
-        return $user->can('delete_employee') && getAnnee()->hasStatutEnCours();
+        return $user->can('delete_employee');
     }
 
     /**
@@ -55,7 +55,7 @@ class EmployeePolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_employee') && getAnnee()->hasStatutEnCours();
+        return $user->can('delete_any_employee');
     }
 
     /**
@@ -63,7 +63,7 @@ class EmployeePolicy
      */
     public function forceDelete(User $user, Employee $employee): bool
     {
-        return $user->can('force_delete_employee') && getAnnee()->hasStatutEnCours();
+        return $user->can('force_delete_employee');
     }
 
     /**
@@ -71,7 +71,7 @@ class EmployeePolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_employee') && getAnnee()->hasStatutEnCours();
+        return $user->can('force_delete_any_employee');
     }
 
     /**
@@ -79,7 +79,7 @@ class EmployeePolicy
      */
     public function restore(User $user, Employee $employee): bool
     {
-        return $user->can('restore_employee') && getAnnee()->hasStatutEnCours();
+        return $user->can('restore_employee');
     }
 
     /**
@@ -87,7 +87,7 @@ class EmployeePolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_employee') && getAnnee()->hasStatutEnCours();
+        return $user->can('restore_any_employee');
     }
 
     /**
@@ -95,7 +95,7 @@ class EmployeePolicy
      */
     public function replicate(User $user, Employee $employee): bool
     {
-        return $user->can('replicate_employee') && getAnnee()->hasStatutEnCours();
+        return $user->can('replicate_employee');
     }
 
     /**
@@ -103,6 +103,6 @@ class EmployeePolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_employee') && getAnnee()->hasStatutEnCours();
+        return $user->can('reorder_employee');
     }
 }

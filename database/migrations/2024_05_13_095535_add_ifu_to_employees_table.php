@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('employees', function (Blueprint $table) {
             $table->string('ifu')->nullable()->after('email');
+            $table->string('numero_cnss')->nullable();
         });
     }
 
